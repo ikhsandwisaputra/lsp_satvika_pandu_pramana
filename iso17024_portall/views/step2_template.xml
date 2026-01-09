@@ -180,54 +180,164 @@
                                             <span class="material-symbols-outlined align-middle mr-1 text-primary">fact_check</span> Rincian Unit Kompetensi
                                         </h5>
                                         
-                                        <div id="comp_level1" class="comp-section">
-                                            <div class="comp-card">
-                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.01</span> Surface Prep</span> <i class="fa fa-chevron-down text-muted"></i></div>
-                                                <div class="comp-body">
-                                                    <strong>Metode Pembersihan:</strong>
-                                                    <ul class="pl-3 mb-0 mt-1">
-                                                        <li>Solvent Cleaning &amp; Chemical Stripping</li>
-                                                        <li>Hand-tools &amp; Power-tools Cleaning</li>
-                                                        <li>Dry &amp; Wet Abrasive Blasting</li>
-                                                    </ul>
-                                                </div>
+                                         <div id="comp_level1" class="comp-section">
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L1.01</span> Pembersihan Permukaan (Surface Prep)</span>
                                             </div>
-                                            <div class="comp-card">
-                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.02</span> Pra-Kualifikasi</span> <i class="fa fa-chevron-down text-muted"></i></div>
-                                                <div class="comp-body">Pengujian di Lab, Pre-job conference, Cek Angin (PIMCC).</div>
-                                            </div>
-                                            <div class="comp-card">
-                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.03</span> Aplikasi Coating</span> <i class="fa fa-chevron-down text-muted"></i></div>
-                                                <div class="comp-body">Kuas, Spray, Liquid, Galvanizing, Insulation.</div>
-                                            </div>
-                                            <div class="comp-card">
-                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.04</span> Inspeksi</span> <i class="fa fa-chevron-down text-muted"></i></div>
-                                                <div class="comp-body">Cek Lingkungan, WFT/DFT, Holiday Test.</div>
-                                            </div>
-                                        </div>
+                                            <div class="comp-body">
+                                                <strong>Memeriksa dan melakukan pembersihan permukaan dengan alat dan bahan khusus sebagai berikut:</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                   <li>Solvent</li>
+  <li>Chemical stripping</li>
+  <li>Hand-tools</li>
+  <li>Dry abrasive blasting</li>
+  <li>Wet abrasive blasting</li>
+  <li>Water jetting</li>
+  <li>Electrochemical stripping</li>
 
-                                        <div id="comp_level2" class="comp-section">
-                                            <div class="comp-card">
-                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L2.01</span> Spesifikasi</span> <i class="fa fa-chevron-down text-muted"></i></div>
-                                                <div class="comp-body">Membuat Prosedur, MSDS, ITP, Kajian Mutu.</div>
-                                            </div>
-                                            <div class="comp-card">
-                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L2.02</span> Pengujian</span> <i class="fa fa-chevron-down text-muted"></i></div>
-                                                <div class="comp-body">Uji Bahan Baku &amp; Coating Cair.</div>
-                                            </div>
-                                            <div class="comp-card">
-                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L2.03</span> Prosedur &amp; SDM</span> <i class="fa fa-chevron-down text-muted"></i></div>
-                                                <div class="comp-body">Pembuatan Prosedur Aplikasi, Kualifikasi SDM.</div>
+                                                </ul>
                                             </div>
                                         </div>
-                                        
-                                        <div class="mt-4 pt-3">
-                                            <a href="/certification/apply?edit=1" class="btn btn-outline-secondary px-4 py-2 font-weight-bold" style="border-radius: 8px;">
-                                                <i class="fa fa-arrow-left"></i> Kembali
-                                            </a>
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L1.02</span> Pra-Kualifikasi &amp; Pengujian</span>
+                                            </div>
+                                            <div class="comp-body">
+                                                <strong>Melakukan pra-kualifikasi dengan mempertimbangkan parameter sebagai berikut :</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                     <li>Pra-kualifikasi terhadap pemasok.</li>
+  <li>Melakukan pengujian liquid coating di laboratorium.</li>
+  <li>Menyelenggarakan pre-job conference.</li>
+  <li>Mengidentifikasi kecepatan angin guna mencegah kehilangan material coating. <em>(*Mengacu pada dokumen PIMCC*)</em></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L1.03</span> Pelaksanaan Pelapisan (Coating Application)</span>
+                                            </div>
+                                            <div class="comp-body">
+                                                <strong>Melaksanakan pelapisan dengan beberapa alat dan bahan khusus sebagai berikut:</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                   <li>Kuas</li>
+  <li>Conventional air spray</li>
+  <li>Airless spray</li>
+  <li>Liquid coating</li>
+  <li>Decorative coating</li>
+  <li>Tape coating</li>
+  <li>Glass lining</li>
+  <li>Hot dip galvanizing</li>
+  <li>Insulation coating</li>
+  <li>High temperature coating</li>
+  <li>Chemical resistant coating</li>
+  <li>Sealer</li>
+  <li>Putty</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L1.04</span> Inspeksi Aplikasi Coating</span>
+                                            </div>
+                                            <div class="comp-body">
+                                                <strong>Melakukan inspeksi terhadap beberapa aspek aplikasi coating sebagai berikut:</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                   <li>Lingkungan</li>
+  <li>Persiapan permukaan</li>
+  <li>Liquid coating</li>
+  <li>Powder coating</li>
+  <li>Tape coating</li>
+  <li>Glass lining</li>
+  <li>Hot dip galvanizing</li>
+  <li>Insulating coating</li>
+  <li>High temperature coating</li>
+  <li>Chemical resistant coating</li>
+  <li>Sealer</li>
+  <li>Putty</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div id="comp_level2" class="comp-section">
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L2.01</span> Spesifikasi Pekerjaan</span>
+                                            </div>
+                                            <div class="comp-body">
+                                                <strong>Membuat dan melakukan spesifikasi pekerjaan sebagai berikut :</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                    <li>Spesifikasi pengerjaan coating.</li>
+  <li>Prosedur persiapan permukaan dan aplikasi coating.</li>
+  <li>Formula material coating.</li>
+  <li>Pengujian formula dan bahan baku material coating.</li>
+  <li>Technical Data Sheet (TDS).</li>
+  <li>Material Safety Data Sheet (MSDS).</li>
+  <li>Estimasi kebutuhan material, alat, dan sumber daya manusia (SDM).</li>
+  <li>Inspection Test Plan (ITP).</li>
+  <li>Kajian mutu coating.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L2.02</span> Pengujian Spesifikasi</span>
+                                            </div>
+                                            <div class="comp-body">
+                                                <strong>Melakukan pengujian dengan spesifikasi sebagai berikut :</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                   <li>Bahan baku coating.</li>
+  <li>Coating cair.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L2.03</span> Pembuatan Prosedur</span>
+                                            </div>
+                                            <div class="comp-body">
+                                                <strong>Membuat prosedur dengan spesifikasi sebagai berikut :</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                   <li>Pembuatan coating.</li>
+  <li>Pengujian coating.</li>
+  <li>Aplikasi coating.</li>
+  <li>Pengkajian coating.</li>
+  <li>Pelatihan SDM coating.</li>
+  <li>Persiapan sertifikasi SDM coating.</li>
+  <li>Kualifikasi pemasok coating.</li>
+  <li>Pengadaan material coating.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="comp-card">
+                                            <div class="comp-header">
+                                                <span><span class="comp-code">UK.CT-L2.04</span> Pelapisan Khusus &amp; Inspeksi Lanjut</span>
+                                            </div>
+                                            <div class="comp-body">
+                                                <strong>Melaksanakan pelapisan dan inspeksi dengan beberapa alat dan bahan khusus sebagai berikut :</strong>
+                                                <ul class="mb-0 mt-2 pl-3">
+                                                   <li>Powder coating</li>
+  <li>Polymeric sheet</li>
+  <li>Rubber lining</li>
+  <li>Fireproof coating</li>
+  <li>Thermal spray coating</li>
+  <li>Concrete coating</li>
+  <li>Ceramic coating</li>
+  <li>Floor coating</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <a href="/certification/apply?edit=1" class="btn btn-link text-muted pl-0 mt-3">
+                                            <i class="fa fa-arrow-left"></i> Kembali ke Data Diri
+                                        </a>
+                                    </div>
+
                                 </div>
+                            </div>
 
                                 <div class="col-lg-4">
                                     <div class="sidebar-summary p-4">

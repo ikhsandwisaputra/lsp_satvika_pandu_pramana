@@ -20,9 +20,11 @@ class CertificationApplication(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Kandidat', required=True)
     state = fields.Selection([
-        ('draft', 'Draft'),
-        ('submitted', 'Submitted'),
-        ('verified', 'Verified'),
+        ('draft', 'Draft (Pengisian)'),
+        ('submitted', 'Menunggu Verifikasi'),
+        ('revision', 'Perlu Revisi'),
+        ('verified', 'Terverifikasi'),
+        ('rejected', 'Ditolak'),
     ], default='draft', string='Status', tracking=True)
 
     # --- FIELD STEP 2 (SKEMA) ---
@@ -95,13 +97,48 @@ class CertificationApplication(models.Model):
     # karena Canvas JS butuh file asset terpisah, ini solusi paling stabil untuk XML only.
     digital_signature = fields.Char('Digital Signature Name')
     signature_date = fields.Date('Signature Date', default=fields.Date.today)
-    # --- TOMBOL AKSI ADMIN ---
+
+    # =========================================================
+    # TOMBOL AKSI ADMIN
+    # =========================================================
+    
     def action_verify_documents(self):
-        """Admin klik ini jika semua berkas OK"""
-        self.write({'state': 'verified'})
-        self.message_post(body="Selamat! Dokumen administrasi Anda telah terverifikasi. Silakan menunggu jadwal ujian.")
+        """Admin APPROVE: Dokumen valid, lanjut ke tahap berikutnya"""
+        self.write({
+            'state': 'verified',
+            'admin_note': False,  # Clear note karena sudah OK
+        })
+        self.message_post(body="<b style='color:green'>✅ TERVERIFIKASI</b><br/>Dokumen administrasi telah dinyatakan valid. Kandidat menunggu jadwal ujian.")
 
     def action_request_revision(self):
-        """Admin klik ini jika ada yang salah"""
-        self.write({'state': 'draft'}) 
-        self.message_post(body=f"PERBAIKAN DOKUMEN: {self.admin_note}")
+        """Admin MINTA REVISI: Ada dokumen yang perlu diperbaiki"""
+        if not self.admin_note:
+            # Jika admin belum isi catatan, tampilkan warning
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Catatan Wajib Diisi!',
+                    'message': 'Silakan isi field "Catatan Admin" terlebih dahulu untuk menjelaskan apa yang perlu diperbaiki.',
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        self.write({'state': 'revision'})
+        self.message_post(body=f"<b style='color:orange'>⚠️ PERLU REVISI</b><br/>{self.admin_note}")
+
+    def action_reject(self):
+        """Admin TOLAK: Aplikasi ditolak permanen"""
+        if not self.admin_note:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Alasan Wajib Diisi!',
+                    'message': 'Silakan isi field "Catatan Admin" dengan alasan penolakan.',
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        self.write({'state': 'rejected'})
+        self.message_post(body=f"<b style='color:red'>❌ DITOLAK</b><br/>{self.admin_note}")

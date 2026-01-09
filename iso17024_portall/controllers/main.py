@@ -70,14 +70,27 @@ class IsoPortalController(AuthSignupHome):
         
         return response
 
-  # ---------------------------------------------------------
-    # 4. HALAMAN APLIKASI / WIZARD
     # ---------------------------------------------------------
-   # ---------------------------------------------------------
-    # 4. HALAMAN APLIKASI (SMART REDIRECT)
+    # 5. HALAMAN STATUS DASHBOARD (SETELAH SUBMIT)
     # ---------------------------------------------------------
+    @http.route('/certification/status', type='http', auth='user', website=True)
+    def application_status(self, **kw):
+        """Halaman status untuk user yang sudah submit aplikasi"""
+        app = request.env['certification.application'].search([
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ], limit=1)
+        
+        # Jika belum punya aplikasi atau masih draft, redirect ke wizard
+        if not app or app.state == 'draft':
+            return request.redirect('/certification/apply')
+        
+        return request.render('iso17024_portall.application_status_page', {
+            'application': app,
+            'user': request.env.user,
+        })
+
     # ---------------------------------------------------------
-    # 4. HALAMAN APLIKASI (SMART REDIRECT + EDIT MODE)
+    # 6. HALAMAN APLIKASI / WIZARD
     # ---------------------------------------------------------
     @http.route('/certification/apply', type='http', auth='user', website=True)
     def certification_wizard(self, **kw):
@@ -85,16 +98,33 @@ class IsoPortalController(AuthSignupHome):
             ('partner_id', '=', request.env.user.partner_id.id)
         ], limit=1)
         
-        # Cek apakah user sedang ingin mengedit step sebelumnya?
-        edit_mode = kw.get('edit') # Menangkap ?edit=1 dari URL
+        # Cek apakah user sedang ingin mengedit (mode perbaikan)
+        edit_mode = kw.get('edit')
         
         # LOGIC SMART REDIRECT
-        # Hanya redirect jika user BUKAN dalam mode edit
-        if app and not edit_mode:
-            if app.current_step == 2:
-                return request.redirect('/certification/apply/step2')
-            elif app.current_step == 3:
-                return request.redirect('/certification/apply/step3')
+        if app:
+            # Jika dalam mode edit dan status = revision, izinkan edit
+            if edit_mode and app.state == 'revision':
+                # Reset ke draft agar bisa edit, arahkan ke step terakhir
+                app.sudo().write({'state': 'draft'})
+                if app.current_step >= 3:
+                    return request.redirect('/certification/apply/step3')
+                elif app.current_step == 2:
+                    return request.redirect('/certification/apply/step2')
+            
+            # Jika TIDAK dalam edit mode
+            if not edit_mode:
+                # Status selain draft -> ke halaman Status
+                if app.state not in ['draft']:
+                    return request.redirect('/certification/status')
+                
+                # Jika masih draft, arahkan ke step terakhir
+                if app.current_step == 2:
+                    return request.redirect('/certification/apply/step2')
+                elif app.current_step == 3:
+                    return request.redirect('/certification/apply/step3')
+                elif app.current_step >= 4:
+                    return request.redirect('/certification/apply/step4')
 
         return request.render('iso17024_portall.application_wizard_page', {
             'application': app,

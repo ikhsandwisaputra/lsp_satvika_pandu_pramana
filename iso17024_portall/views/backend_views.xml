@@ -15,15 +15,23 @@
         <field name="name">certification.application.list</field>
         <field name="model">certification.application</field>
         <field name="arch" type="xml">
-            <list string="Daftar Asesi" decoration-info="state == 'draft'" decoration-success="state == 'verified'">
+            <list string="Daftar Asesi" 
+                  decoration-info="state == 'draft'" 
+                  decoration-warning="state in ['submitted', 'revision']"
+                  decoration-success="state == 'verified'"
+                  decoration-danger="state == 'rejected'">
                 <field name="nik" string="NIK / ID"/>
                 <field name="partner_id" string="Nama Asesi"/>
                 
                 <field name="application_type" string="Tipe" widget="badge" decoration-info="application_type == 'new'" decoration-warning="application_type == 'recert'"/>
                 
                 <field name="scheme" string="Skema"/>
-                <field name="current_step" string="Posisi Step" widget="badge"/>
-                <field name="state" widget="badge" decoration-warning="state == 'submitted'" decoration-success="state == 'verified'"/>
+                <field name="current_step" string="Step" widget="badge"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state in ['submitted', 'revision']" 
+                       decoration-success="state == 'verified'"
+                       decoration-danger="state == 'rejected'"/>
             </list>
         </field>
     </record>
@@ -34,17 +42,32 @@
         <field name="arch" type="xml">
             <form string="Detail Aplikasi">
                 <header>
-                    <button name="action_verify_documents" string="Validasi Dokumen (OK)" 
-                            type="object" class="oe_highlight" 
-                            invisible="state != 'submitted'"/>
+                    <!-- TOMBOL APPROVE -->
+                    <button name="action_verify_documents" string="✅ Approve (Terverifikasi)" 
+                            type="object" class="btn-success" 
+                            invisible="state not in ['submitted', 'revision']"
+                            confirm="Yakin ingin menyetujui aplikasi ini? Status akan berubah menjadi TERVERIFIKASI."/>
                             
-                    <button name="action_request_revision" string="Minta Revisi" 
+                    <!-- TOMBOL MINTA REVISI -->
+                    <button name="action_request_revision" string="⚠️ Minta Revisi" 
+                            type="object" class="btn-warning" 
+                            invisible="state not in ['submitted']"/>
+                    
+                    <!-- TOMBOL TOLAK -->
+                    <button name="action_reject" string="❌ Tolak Permanen" 
                             type="object" class="btn-danger" 
-                            invisible="state != 'submitted'"/>
+                            invisible="state not in ['submitted', 'revision']"
+                            confirm="PERINGATAN: Aksi ini akan menolak aplikasi secara permanen. Yakin ingin melanjutkan?"/>
                             
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,verified"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,revision,verified,rejected"/>
                 </header>
                 <sheet>
+                    <!-- ALERT BOX UNTUK CATATAN ADMIN -->
+                    <div class="alert alert-warning" role="alert" invisible="not admin_note">
+                        <strong>📝 Catatan Admin:</strong>
+                        <field name="admin_note" nolabel="1" readonly="1"/>
+                    </div>
+                    
                     <div class="oe_title">
                         <label for="partner_id" string="Nama Kandidat"/>
                         <h1>
@@ -58,6 +81,10 @@
                         </h3>
                     </div>
 
+                    <!-- FIELD CATATAN ADMIN (EDITABLE) -->
+                    <group string="📝 Catatan Admin (Wajib diisi untuk Revisi/Tolak)">
+                        <field name="admin_note" placeholder="Tuliskan alasan revisi atau penolakan di sini..."/>
+                    </group>
                     <group>
                         <group string="Data Diri">
                             <field name="nik" readonly="1"/>
