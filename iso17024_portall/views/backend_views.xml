@@ -1,0 +1,158 @@
+<odoo>
+    
+    <record id="action_certification_app" model="ir.actions.act_window">
+        <field name="name">Aplikasi Masuk</field>
+        <field name="res_model">certification.application</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada aplikasi masuk.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_certification_app_list" model="ir.ui.view">
+        <field name="name">certification.application.list</field>
+        <field name="model">certification.application</field>
+        <field name="arch" type="xml">
+            <list string="Daftar Asesi" decoration-info="state == 'draft'" decoration-success="state == 'verified'">
+                <field name="nik" string="NIK / ID"/>
+                <field name="partner_id" string="Nama Asesi"/>
+                
+                <field name="application_type" string="Tipe" widget="badge" decoration-info="application_type == 'new'" decoration-warning="application_type == 'recert'"/>
+                
+                <field name="scheme" string="Skema"/>
+                <field name="current_step" string="Posisi Step" widget="badge"/>
+                <field name="state" widget="badge" decoration-warning="state == 'submitted'" decoration-success="state == 'verified'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_certification_app_form" model="ir.ui.view">
+        <field name="name">certification.application.form</field>
+        <field name="model">certification.application</field>
+        <field name="arch" type="xml">
+            <form string="Detail Aplikasi">
+                <header>
+                    <button name="action_verify_documents" string="Validasi Dokumen (OK)" 
+                            type="object" class="oe_highlight" 
+                            invisible="state != 'submitted'"/>
+                            
+                    <button name="action_request_revision" string="Minta Revisi" 
+                            type="object" class="btn-danger" 
+                            invisible="state != 'submitted'"/>
+                            
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,verified"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="partner_id" string="Nama Kandidat"/>
+                        <h1>
+                            <field name="partner_id" readonly="1"/>
+                        </h1>
+                        <label for="scheme" string="Skema Pilihan"/>
+                        <h3>
+                            <field name="scheme" readonly="1"/> 
+                            <span class="text-muted"> - </span>
+                            <field name="application_type" readonly="1"/>
+                        </h3>
+                    </div>
+
+                    <group>
+                        <group string="Data Diri">
+                            <field name="nik" readonly="1"/>
+                            <field name="birth_date" readonly="1"/>
+                            <field name="place_of_birth" readonly="1"/>
+                            <field name="last_education" readonly="1"/>
+                            <field name="phone" readonly="1"/>
+                        </group>
+                        <group string="Info Sertifikasi">
+                            <field name="scheme" readonly="1"/>
+                            <field name="application_type" readonly="1"/>
+                            <field name="previous_cert_number" readonly="1" invisible="application_type != 'recert'"/>
+                            
+                            <separator/>
+                            <field name="current_step" readonly="1"/>
+                            <field name="create_date" string="Tanggal Daftar" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Verifikasi Berkas">
+                            <div class="alert alert-info">
+                                Silakan download berkas, cek, lalu centang Valid jika sesuai.
+                            </div>
+                            
+                            <group string="📋 Dokumen Dasar (Wajib Semua Asesi)">
+                                <group>
+                                    <field name="cv_file" widget="binary" filename="cv_filename" string="Daftar Riwayat Hidup (CV)"/>
+                                    <field name="pas_foto" widget="binary" filename="pas_foto_filename"/>
+                                    <field name="ktp_file" widget="binary" filename="ktp_filename"/>
+                                    <field name="is_ktp_valid"/>
+                                </group>
+                                <group>
+                                    <field name="ijazah_file" widget="binary" filename="ijazah_filename"/>
+                                    <field name="is_ijazah_valid"/>
+                                    <field name="skck_file" widget="binary" filename="skck_filename"/>
+                                </group>
+                            </group>
+
+                            <group string="🏥 Dokumen Kesehatan">
+                                <group>
+                                    <field name="ishihara_test" widget="binary" filename="ishihara_filename" string="Surat Sehat &amp; Tes Buta Warna"/>
+                                    <field name="is_ishihara_valid"/>
+                                </group>
+                                <group>
+                                    <field name="training_cert" widget="binary" filename="training_filename" string="Sertifikat Pelatihan Coating"/>
+                                </group>
+                            </group>
+                            
+                            <group string="🏆 Dokumen Khusus Level 2" invisible="scheme != 'level2'">
+                                <group>
+                                    <field name="cert_level1_file" widget="binary" filename="cert_level1_filename" string="Sertifikat Level 1 (Prasyarat)"/>
+                                </group>
+                                <group/>
+                            </group>
+                            
+                            <group string="🔄 Dokumen Khusus Resertifikasi" invisible="application_type != 'recert'">
+                                <group>
+                                    <field name="previous_cert_file" widget="binary" filename="previous_cert_filename" string="Sertifikat Lama (Kadaluwarsa)"/>
+                                </group>
+                                <group>
+                                    <field name="logbook_file" widget="binary" filename="logbook_filename" string="Logbook Surveillance 3 Tahun"/>
+                                </group>
+                            </group>
+                            
+                            <group string="📎 Dokumen Tambahan (Opsional)">
+                                <group>
+                                    <field name="additional_file" widget="binary" filename="additional_filename" string="File Pendukung Lainnya"/>
+                                </group>
+                                <group/>
+                            </group>
+                            
+                            <separator string="Catatan untuk Asesi (Jika Revisi)"/>
+                            <field name="admin_note" placeholder="Contoh: Foto KTP buram, mohon upload ulang yang jelas."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_iso_root" 
+              name="Sertifikasi ISO" 
+              web_icon="iso17024_portal,static/description/icon.png" 
+              sequence="10"/>
+
+    <menuitem id="menu_iso_applications" 
+              name="Aplikasi Masuk" 
+              parent="menu_iso_root" 
+              action="action_certification_app" 
+              sequence="1"/>
+
+</odoo>

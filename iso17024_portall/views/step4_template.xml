@@ -1,0 +1,268 @@
+<odoo>
+    <template id="application_step4_page" name="Final Declaration">
+        <t t-call="website.layout">
+            
+            <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet"/>
+
+            <style>
+                :root {
+                    --iso-navy: #0f172a;
+                    --iso-gold: #d4af37;
+                    --iso-gold-hover: #b5952f;
+                }
+                
+                /* --- HEADER STYLE --- */
+                .iso-header-box {
+                    background-color: var(--iso-navy);
+                    color: white;
+                    padding: 3rem 2rem;
+                    border-radius: 16px 16px 0 0;
+                }
+                .iso-body-box {
+                    background-color: white;
+                    padding: 2rem;
+                    border-radius: 0 0 16px 16px;
+                    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                    min-height: 500px;
+                }
+
+                /* --- STEPPER --- */
+                .step-container { display: flex; justify-content: space-between; position: relative; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+                .step-container::before { content: ''; position: absolute; top: 20px; left: 0; right: 0; height: 2px; background: #e2e8f0; z-index: 0; }
+                .step-item { z-index: 1; text-align: center; background: white; padding: 0 10px; position: relative; }
+                .step-circle { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; color: #64748b; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; border: 3px solid white; box-shadow: 0 0 0 1px #e2e8f0; }
+                .step-label { font-size: 0.8rem; color: #94a3b8; font-weight: 600; }
+                
+                .step-item.active .step-circle { background: var(--iso-gold); color: white; box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2); }
+                .step-item.active .step-label { color: var(--iso-navy); }
+                .step-item.completed .step-circle { background: var(--iso-navy); color: white; }
+                .step-item.completed .step-label { color: var(--iso-navy); }
+
+                /* --- TERMS DOCUMENT STYLE (FULL VIEW) --- */
+                .terms-document {
+                    background-color: #ffffff;
+                    border: 1px solid #e2e8f0;
+                    border-left: 5px solid var(--iso-gold); /* Aksen Emas di Kiri */
+                    border-radius: 8px;
+                    padding: 2.5rem;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                    font-size: 0.95rem;
+                    color: #334155;
+                    line-height: 1.8;
+                }
+                .terms-header {
+                    font-size: 1.2rem;
+                    font-weight: 800;
+                    color: var(--iso-navy);
+                    margin-bottom: 1rem;
+                    border-bottom: 2px solid #f1f5f9;
+                    padding-bottom: 0.5rem;
+                }
+                .terms-list {
+                    list-style: none;
+                    padding-left: 0;
+                    margin-top: 1rem;
+                }
+                .terms-item {
+                    display: flex;
+                    align-items: flex-start;
+                    margin-bottom: 0.75rem;
+                }
+                .terms-bullet {
+                    font-weight: bold;
+                    color: var(--iso-navy);
+                    min-width: 25px;
+                    margin-right: 5px;
+                }
+                .terms-text {
+                    text-align: justify;
+                }
+
+                /* --- CHECKBOX STYLE --- */
+                .checkbox-card {
+                    display: flex;
+                    align-items: start;
+                    padding: 12px 15px;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .checkbox-card:hover {
+                    background: #fff;
+                    border-color: var(--iso-gold);
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                }
+                .checkbox-card input[type="checkbox"] {
+                    width: 20px;
+                    height: 20px;
+                    margin-top: 3px;
+                    accent-color: var(--iso-gold);
+                    cursor: pointer;
+                    margin-right: 15px;
+                }
+                .checkbox-content h6 { font-weight: 700; color: var(--iso-navy); margin-bottom: 2px; font-size: 0.95rem; }
+                .checkbox-content p { font-size: 0.85rem; color: #64748b; margin-bottom: 0; }
+
+                /* --- SIGNATURE BOX --- */
+                .signature-wrapper {
+                    border: 2px dashed #cbd5e1;
+                    background-color: #f8fafc;
+                    border-radius: 12px;
+                    padding: 2rem;
+                    text-align: center;
+                    position: relative;
+                    transition: all 0.3s;
+                }
+                .signature-wrapper:hover { border-color: var(--iso-gold); background: #fffdf5; }
+                
+                .signature-input {
+                    border: none;
+                    background: transparent;
+                    border-bottom: 1px solid #94a3b8;
+                    width: 80%;
+                    text-align: center;
+                    font-size: 1.8rem;
+                    font-family: 'Brush Script MT', cursive; /* Gaya Tanda Tangan */
+                    color: var(--iso-navy);
+                    padding: 10px;
+                }
+                .signature-input:focus { outline: none; border-bottom-color: var(--iso-gold); }
+                .signature-input::placeholder { font-family: sans-serif; font-size: 1rem; font-style: normal; opacity: 0.5; }
+
+                /* --- BUTTON --- */
+                .btn-iso-gold {
+                    background-color: var(--iso-gold); color: white; border-radius: 8px; 
+                    padding: 15px 40px; font-weight: bold; border: none; font-size: 1.1rem;
+                    box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.4);
+                    transition: all 0.2s; width: 100%;
+                }
+                .btn-iso-gold:hover { background-color: var(--iso-gold-hover); color: white; transform: translateY(-2px); }
+            </style>
+
+            <div class="py-5" style="background-color: #f1f5f9; min-height: 100vh;">
+                <div class="container" style="max-width: 1000px;">
+                    
+                    <div class="iso-header-box text-center">
+                        <h1 class="font-weight-bold mb-2">Finalisasi &amp; Deklarasi</h1>
+                        <p class="mb-0 text-white-50">Langkah Terakhir: Mohon baca dengan teliti sebelum menandatangani aplikasi ini.</p>
+                    </div>
+
+                    <div class="iso-body-box">
+                        
+                        <div class="step-container">
+                            <div class="step-item completed"><div class="step-circle"><i class="fa fa-check"></i></div><div class="step-label">Data Diri</div></div>
+                            <div class="step-item completed"><div class="step-circle"><i class="fa fa-check"></i></div><div class="step-label">Skema</div></div>
+                            <div class="step-item completed"><div class="step-circle"><i class="fa fa-check"></i></div><div class="step-label">Upload</div></div>
+                            <div class="step-item active"><div class="step-circle">4</div><div class="step-label">Review</div></div>
+                        </div>
+
+                        <form action="/certification/apply/submit_final" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <div class="mb-5">
+                                <label class="font-weight-bold text-dark mb-3 d-flex align-items-center" style="font-size: 1.1rem;">
+                                    <span class="material-symbols-outlined mr-2 text-primary">gavel</span> Pernyataan Asesi (Disclaimer)
+                                </label>
+                                
+                                <div class="terms-document">
+                                    <div class="terms-header">SURAT PERNYATAAN PESERTA SERTIFIKASI</div>
+                                    <p>Saya yang bertanda tangan di bawah ini menyatakan bahwa:</p>
+                                    
+                                    <ul class="terms-list">
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">a.</span>
+                                            <span class="terms-text">Data yang saya berikan dalam formulir ini adalah <strong>BENAR</strong> dan <strong>DAPAT DIPERTANGGUNGJAWABKAN</strong>.</span>
+                                        </li>
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">b.</span>
+                                            <span class="terms-text">Saya bersedia mengikuti seluruh proses asesmen sesuai dengan ketentuan yang berlaku di LSP.</span>
+                                        </li>
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">c.</span>
+                                            <span class="terms-text">Saya bersedia dan tidak takut bekerja di lingkungan panas, debu, ketinggian, serta kondisi lapangan sesuai lingkup pekerjaan <em>Coating Inspector</em>.</span>
+                                        </li>
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">d.</span>
+                                            <span class="terms-text">Saya memahami bahwa Sertifikat Kompetensi berlaku selama <strong>3 (tiga) tahun</strong>.</span>
+                                        </li>
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">e.</span>
+                                            <span class="terms-text">Apabila sudah disertifikasi, saya bersedia memberikan laporan tahunan (Surveillance) dengan melampirkan CV dan Logbook tanpa penundaan.</span>
+                                        </li>
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">f.</span>
+                                            <span class="terms-text">LSP berhak mencabut atau membekukan sertifikat apabila ditemukan penyalahgunaan kompetensi atau pelanggaran kode etik.</span>
+                                        </li>
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">g.</span>
+                                            <span class="terms-text">Saya menyetujui untuk memenuhi persyaratan sertifikasi dan memberikan informasi yang diperlukan oleh LSP tanpa penundaan.</span>
+                                        </li>
+                                        <li class="terms-item">
+                                            <span class="terms-bullet">h.</span>
+                                            <span class="terms-text">Saya memahami bahwa keputusan hasil asesmen (Kompeten / Belum Kompeten) bersifat <strong>MUTLAK</strong> dan tidak dapat diganggu gugat.</span>
+                                        </li>
+                                    </ul>
+                                    
+                                    <p class="mt-3 mb-0 text-muted" style="font-style: italic;">Demikian formulir dan pernyataan ini saya isi dengan data yang sebenarnya.</p>
+                                </div>
+                            </div>
+
+                            <div class="mb-5 pl-1">
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="declaration_truth" required="True"/>
+                                    <div class="checkbox-content">
+                                        <h6>Pernyataan Kebenaran Data</h6>
+                                        <p>Saya menyatakan bahwa semua data dan dokumen yang saya unggah adalah asli dan benar.</p>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="declaration_compliance" required="True"/>
+                                    <div class="checkbox-content">
+                                        <h6>Persetujuan Aturan LSP</h6>
+                                        <p>Saya setuju untuk mematuhi semua aturan, kode etik, dan prosedur asesmen yang berlaku.</p>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="declaration_liability" required="True"/>
+                                    <div class="checkbox-content">
+                                        <h6>Pelepasan Tanggung Jawab</h6>
+                                        <p>Saya memahami risiko pekerjaan dan tidak akan menuntut LSP atas keputusan hasil asesmen.</p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="font-weight-bold text-dark mb-2 d-flex align-items-center">
+                                    <span class="material-symbols-outlined mr-2 text-primary">draw</span> Tanda Tangan Digital Asesi
+                                </label>
+                                <div class="signature-wrapper">
+                                    <input type="text" name="digital_signature" class="signature-input" 
+                                           placeholder="Ketik Nama Lengkap Anda di Sini" required="True"/>
+                                    <p class="text-muted small mt-3">
+                                        <i class="fa fa-info-circle"></i> Dengan mengetik nama di atas, Anda mengakui bahwa tanda tangan digital ini sah dan mengikat secara hukum.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-4 border-top">
+                                <a href="/certification/apply/step3?edit=1" class="btn btn-outline-secondary px-4 py-3 font-weight-bold" style="border-radius: 8px;">
+                                    <i class="fa fa-arrow-left"></i> Kembali Cek Dokumen
+                                </a>
+                                
+                                <div style="width: 60%;">
+                                    <button type="submit" class="btn btn-iso-gold shadow">
+                                        KIRIM APLIKASI SAYA <i class="fa fa-paper-plane ml-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

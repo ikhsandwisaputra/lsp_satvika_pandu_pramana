@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="menu_iso_signup" model="website.menu">
+            <field name="name">Daftar Sertifikasi</field>
+            <field name="url">/certification/signup</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+            <field name="group_ids" eval="[(6, 0, [ref('base.group_public')])]"/>
+        </record>
+
+        <record id="menu_iso_apply" model="website.menu">
+            <field name="name">Aplikasi Saya</field>
+            <field name="url">/certification/apply</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">51</field>
+            <field name="group_ids" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,263 @@
+<odoo>
+    <template id="application_wizard_page" name="Formulir Sertifikasi">
+        <t t-call="website.layout">
+            
+            <style>
+                :root {
+                    --iso-navy: #0f172a;
+                    --iso-navy-light: #1e293b;
+                    --iso-gold: #d4af37;
+                    --iso-gold-hover: #b5952f;
+                }
+
+                .iso-bg-light { background-color: #f8fafc; }
+                
+                .iso-card {
+                    border: none;
+                    border-radius: 16px;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                    background: white;
+                    overflow: hidden;
+                }
+
+                .iso-header {
+                    background-color: var(--iso-navy);
+                    color: white;
+                    padding: 2rem;
+                    position: relative;
+                }
+                
+                /* Step Indicator Style */
+                .step-indicator {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 2rem;
+                    position: relative;
+                }
+                .step-indicator::before {
+                    content: '';
+                    position: absolute;
+                    top: 15px;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background: #e2e8f0;
+                    z-index: 0;
+                }
+                .step-item {
+                    z-index: 1;
+                    text-align: center;
+                    background: white;
+                    padding: 0 10px;
+                }
+                .step-circle {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    background: #e2e8f0;
+                    color: #64748b;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 8px;
+                    font-weight: bold;
+                    border: 2px solid white;
+                }
+                .step-item.active .step-circle {
+                    background: var(--iso-gold);
+                    color: white;
+                    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+                }
+                .step-label {
+                    font-size: 0.75rem;
+                    color: #64748b;
+                    font-weight: 600;
+                }
+                .step-item.active .step-label { color: var(--iso-navy); }
+
+                /* Form Inputs */
+                .form-label {
+                    font-weight: 600;
+                    color: var(--iso-navy);
+                    font-size: 0.9rem;
+                    margin-bottom: 0.5rem;
+                }
+                .iso-input {
+                    border: 1px solid #cbd5e1;
+                    border-radius: 8px;
+                    padding: 0.75rem 1rem;
+                    width: 100%;
+                    transition: all 0.2s;
+                }
+                .iso-input:focus {
+                    border-color: var(--iso-gold);
+                    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+                    outline: none;
+                }
+                .iso-input[readonly] {
+                    background-color: #f1f5f9;
+                    color: #64748b;
+                    cursor: not-allowed;
+                }
+
+                /* Buttons */
+                .btn-iso-gold {
+                    background-color: var(--iso-gold);
+                    color: white;
+                    font-weight: 700;
+                    padding: 10px 30px;
+                    border-radius: 8px;
+                    border: none;
+                    transition: all 0.3s;
+                }
+                .btn-iso-gold:hover {
+                    background-color: var(--iso-gold-hover);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+                    color: white;
+                }
+            </style>
+
+            <div class="iso-bg-light min-vh-100 py-5">
+                <div class="container" style="max-width: 900px;">
+                    
+                    <form action="/certification/apply/step1/submit" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div class="iso-card">
+                            
+                            <div class="iso-header">
+                                <h2 class="mb-1 font-weight-bold">Registrasi Kandidat</h2>
+                                <p class="mb-0 text-white-50" style="font-size: 0.9rem;">
+                                    Lengkapi data diri Anda sesuai identitas resmi (KTP/Paspor).
+                                </p>
+                            </div>
+
+                            <div class="card-body p-4 p-md-5">
+                                
+                                <div class="step-indicator">
+                                    <div class="step-item active">
+                                        <div class="step-circle">1</div>
+                                        <div class="step-label">Data Diri</div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-circle">2</div>
+                                        <div class="step-label">Skema</div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-circle">3</div>
+                                        <div class="step-label">Berkas</div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-circle">4</div>
+                                        <div class="step-label">Selesai</div>
+                                    </div>
+                                </div>
+
+                                <h4 class="mb-4 text-dark font-weight-bold">Informasi Personal</h4>
+                                
+                                <div class="row">
+                                    
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Nama Lengkap</label>
+                                        <input type="text" name="name" class="iso-input" required="True" 
+                                               t-att-value="user.name" placeholder="Sesuai KTP"/>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">NIK / Nomor Paspor</label>
+                                        <input type="text" name="nik" class="iso-input" required="True" 
+                                               t-att-value="application.nik if application else ''" placeholder="16 digit angka"/>
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Tempat Lahir</label>
+                                        <input type="text" name="place_of_birth" class="iso-input" required="True"
+                                               t-att-value="application.place_of_birth if application else ''" placeholder="Contoh: Jakarta"/>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Tanggal Lahir</label>
+                                        <input type="date" name="birth_date" class="iso-input" required="True"
+                                               t-att-value="application.birth_date if application else ''"/>
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Pendidikan Terakhir</label>
+                                        <input type="text" name="last_education" class="iso-input" required="True"
+                                               t-att-value="application.last_education if application else ''" placeholder="Contoh: S1 Teknik Informatika"/>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Alamat Email</label>
+                                        <input type="email" class="iso-input" readonly="readonly"
+                                               t-att-value="user.login"/>
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Kewarganegaraan</label>
+                                        <select name="nationality_id" class="iso-input" required="True">
+                                            <option value="">Pilih Negara...</option>
+                                            <t t-foreach="request.env['res.country'].search([])" t-as="c">
+                                                <option t-att-value="c.id" t-att-selected="application and application.nationality_id.id == c.id">
+                                                    <t t-esc="c.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Nomor Telepon / WA</label>
+                                        <input type="text" name="phone" class="iso-input" required="True"
+                                               t-att-value="application.phone or user.partner_id.phone" placeholder="+62..."/>
+                                    </div>
+
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label">Alamat Lengkap (Domisili)</label>
+                                        <textarea name="address" class="iso-input" rows="3" placeholder="Nama Jalan, RT/RW, Kota, Kode Pos" required="True"><t t-esc="application.address if application else ''"/></textarea>
+                                    </div>
+
+                                    <div class="col-12 mb-4 p-3 bg-light rounded border">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="checkSpecialNeeds" name="special_needs" 
+                                                   onclick="toggleSpecialNeeds()"
+                                                   t-att-checked="'checked' if application and application.special_needs else None"/>
+                                            <label class="custom-control-label font-weight-bold text-dark" for="checkSpecialNeeds">
+                                                Saya memiliki kebutuhan khusus / Disabilitas
+                                            </label>
+                                        </div>
+                                        <div id="specialNeedsBox" class="mt-3" style="display: none;">
+                                            <label class="form-label">Jelaskan kebutuhan Anda</label>
+                                            <textarea name="special_needs_desc" class="iso-input" rows="2"><t t-esc="application.special_needs_desc if application else ''"/></textarea>
+                                        </div>
+                                    </div>
+
+                                </div> <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                    <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="window.history.back()">
+                                        Batal
+                                    </button>
+                                    <button type="submit" class="btn btn-iso-gold px-5">
+                                        Simpan &amp; Lanjut <i class="fa fa-arrow-right ml-2"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function toggleSpecialNeeds() {
+                    var checkBox = document.getElementById("checkSpecialNeeds");
+                    var text = document.getElementById("specialNeedsBox");
+                    if (checkBox.checked == true){
+                        text.style.display = "block";
+                    } else {
+                        text.style.display = "none";
+                    }
+                }
+                window.onload = function() {
+                    toggleSpecialNeeds();
+                };
+            </script>
+
+        </t>
+    </template>
+</odoo>

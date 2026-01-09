@@ -1,0 +1,62 @@
+<odoo>
+    <template id="custom_signup_page" name="Candidate Sign Up">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_text_block pt80 pb80" style="background-color: #f8f9fa;">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body p-5">
+                                        <div class="text-center mb-4">
+                                            <h3 class="font-weight-bold text-primary">Portal Kandidat ISO 17024</h3>
+                                            <p class="text-muted">Daftar akun untuk memulai sertifikasi Coating Inspector</p>
+                                        </div>
+
+                                        <t t-if="error">
+                                            <div class="alert alert-danger" role="alert">
+                                                <t t-esc="error"/>
+                                            </div>
+                                        </t>
+
+                                        <form action="/certification/signup/submit" method="post">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            
+                                            <div class="form-group mb-3">
+                                                <label class="font-weight-bold">Nama Lengkap (Sesuai KTP)</label>
+                                                <input type="text" name="name" class="form-control" required="required" placeholder="e.g. Budi Santoso"/>
+                                            </div>
+                                            
+                                            <div class="form-group mb-3">
+                                                <label class="font-weight-bold">Email (Akan jadi Username)</label>
+                                                <input type="email" name="email" class="form-control" required="required" placeholder="email@contoh.com"/>
+                                            </div>
+                                            
+                                            <div class="form-group mb-3">
+                                                <label class="font-weight-bold">Password</label>
+                                                <input type="password" name="password" class="form-control" required="required"/>
+                                            </div>
+                                            
+                                            <div class="form-group mb-4">
+                                                <label class="font-weight-bold">Konfirmasi Password</label>
+                                                <input type="password" name="confirm_password" class="form-control" required="required"/>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary btn-block w-100 py-2">
+                                                <strong>DAFTAR SEKARANG</strong>
+                                            </button>
+                                        </form>
+
+                                        <div class="text-center mt-4">
+                                            <small class="text-muted">Sudah punya akun? <a href="/web/login">Login disini</a></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,335 @@
+<odoo>
+    <template id="application_step2_page" name="Pilih Skema">
+        <t t-call="website.layout">
+            
+            <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet"/>
+
+            <style>
+                :root {
+                    --iso-navy: #0f172a;
+                    --iso-gold: #d4af37;
+                    --iso-gold-hover: #b5952f;
+                }
+                
+                /* HEADER STYLE */
+                .iso-header-box {
+                    background-color: var(--iso-navy);
+                    color: white;
+                    padding: 3rem 2rem;
+                    border-radius: 16px 16px 0 0;
+                }
+                .iso-body-box {
+                    background-color: white;
+                    padding: 2rem;
+                    border-radius: 0 0 16px 16px;
+                    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                    min-height: 500px;
+                }
+
+                /* STEPPER STYLE */
+                .step-container { display: flex; justify-content: space-between; position: relative; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+                .step-container::before { content: ''; position: absolute; top: 20px; left: 0; right: 0; height: 2px; background: #e2e8f0; z-index: 0; }
+                .step-item { z-index: 1; text-align: center; background: white; padding: 0 10px; position: relative; }
+                .step-circle { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; color: #64748b; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; border: 3px solid white; box-shadow: 0 0 0 1px #e2e8f0; }
+                .step-label { font-size: 0.8rem; color: #94a3b8; font-weight: 600; }
+
+                /* Active and Completed States */
+                .step-item.active .step-circle { background: var(--iso-gold); color: white; box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2); }
+                .step-item.active .step-label { color: var(--iso-navy); }
+                .step-item.completed .step-circle { background: var(--iso-navy); color: white; }
+                .step-item.completed .step-label { color: var(--iso-navy); }
+
+                /* RADIO CARD STYLE */
+                .radio-card-label { cursor: pointer; display: block; height: 100%; }
+                .radio-card-input { display: none; }
+                
+                .radio-card {
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    background: white;
+                    transition: all 0.2s;
+                    height: 100%;
+                    position: relative;
+                }
+                .radio-card:hover { border-color: #cbd5e1; }
+                
+                .radio-card-input:checked + .radio-card {
+                    border-color: var(--iso-gold);
+                    background-color: #fffdf5;
+                    box-shadow: 0 0 0 2px var(--iso-gold);
+                }
+                .check-icon { display: none; color: var(--iso-gold); position: absolute; top: 15px; right: 15px; font-size: 1.5rem; }
+                .radio-card-input:checked + .radio-card .check-icon { display: block; }
+
+                /* COMPETENCY TABLE STYLE */
+                .comp-section { display: none; animation: fadeIn 0.5s; }
+                .comp-card { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; }
+                .comp-header { background-color: #f8fafc; padding: 10px 15px; font-weight: bold; color: var(--iso-navy); border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;}
+                .comp-body { padding: 15px; font-size: 0.9rem; color: #475569; }
+                .comp-code { background: var(--iso-navy); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 10px; }
+                
+                /* Sidebar Summary */
+                .sidebar-summary { position: sticky; top: 100px; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #f8fafc; }
+                
+                .btn-iso-gold { background-color: var(--iso-gold); color: white; border-radius: 8px; padding: 12px 30px; font-weight: bold; border: none; width: 100%; box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.4); }
+                .btn-iso-gold:hover { background-color: var(--iso-gold-hover); color: white; transform: translateY(-1px); }
+                
+                @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            </style>
+
+            <div class="py-5" style="background-color: #f8fafc; min-height: 100vh;">
+                <div class="container" style="max-width: 1100px;">
+                    
+                    <div class="iso-header-box text-center">
+                        <h1 class="font-weight-bold mb-2">Pilihan Skema &amp; Kompetensi</h1>
+                        <p class="mb-0 text-white-50">Pilih jenis sertifikasi dan pelajari unit kompetensi yang akan diujikan.</p>
+                    </div>
+
+                    <div class="iso-body-box">
+                        
+                        <div class="step-container">
+                            <div class="step-item completed"><div class="step-circle"><i class="fa fa-check"></i></div><div class="step-label">Data Diri</div></div>
+                            <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Skema</div></div>
+                            <div class="step-item"><div class="step-circle">3</div><div class="step-label">Upload</div></div>
+                            <div class="step-item"><div class="step-circle">4</div><div class="step-label">Review</div></div>
+                        </div>
+
+                        <form action="/certification/apply/step2/submit" method="post" id="formStep2">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    
+                                    <div class="mb-5">
+                                        <h5 class="font-weight-bold mb-3" style="color: var(--iso-navy);">
+                                            <span class="material-symbols-outlined align-middle mr-1 text-primary">assignment_ind</span> Jenis Permohonan
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="radio-card-label">
+                                                    <input type="radio" name="application_type" value="new" class="radio-card-input" 
+                                                           t-att-checked="'checked' if application.application_type == 'new' else None"
+                                                           onchange="toggleRecert(false)"/>
+                                                    <div class="radio-card">
+                                                        <i class="fa fa-check-circle check-icon"></i>
+                                                        <h6 class="font-weight-bold mb-1">Sertifikasi Baru</h6>
+                                                        <small class="text-muted">New Certification</small>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="radio-card-label">
+                                                    <input type="radio" name="application_type" value="recert" class="radio-card-input"
+                                                           t-att-checked="'checked' if application.application_type == 'recert' else None"
+                                                           onchange="toggleRecert(true)"/>
+                                                    <div class="radio-card">
+                                                        <i class="fa fa-check-circle check-icon"></i>
+                                                        <h6 class="font-weight-bold mb-1">Perpanjangan</h6>
+                                                        <small class="text-muted">Resertifikasi / Renewal</small>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div id="recert_input" class="mt-2 p-3 rounded border" style="display: none; background-color: #fff7ed; border-color: #ffedd5 !important;">
+                                            <label class="font-weight-bold small text-warning-dark">Nomor Sertifikat Lama <span class="text-danger">*</span></label>
+                                            <input type="text" name="previous_cert_number" class="form-control" 
+                                                   t-att-value="application.previous_cert_number"
+                                                   placeholder="Contoh: ISO-17024-CI-2022-001"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-5">
+                                        <h5 class="font-weight-bold mb-3" style="color: var(--iso-navy);">
+                                            <span class="material-symbols-outlined align-middle mr-1 text-primary">workspace_premium</span> Pilih Skema Okupasi
+                                        </h5>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="radio-card-label">
+                                                    <input type="radio" name="scheme" value="level1" class="radio-card-input"
+                                                           t-att-checked="'checked' if application.scheme == 'level1' else None"
+                                                           onchange="updateScheme('level1')"/>
+                                                    <div class="radio-card">
+                                                        <i class="fa fa-check-circle check-icon"></i>
+                                                        <span class="badge badge-light border mb-2">Basic Level</span>
+                                                        <h5 class="font-weight-bold" style="color: var(--iso-navy);">Coating Inspector L1</h5>
+                                                        <p class="small text-muted mt-1">Inspeksi Visual &amp; Pendataan</p>
+                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">$450.00</h5>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="radio-card-label">
+                                                    <input type="radio" name="scheme" value="level2" class="radio-card-input"
+                                                           t-att-checked="'checked' if application.scheme == 'level2' else None"
+                                                           onchange="updateScheme('level2')"/>
+                                                    <div class="radio-card">
+                                                        <i class="fa fa-check-circle check-icon"></i>
+                                                        <span class="badge badge-warning text-white mb-2">Advanced</span>
+                                                        <h5 class="font-weight-bold" style="color: var(--iso-navy);">Coating Inspector L2</h5>
+                                                        <p class="small text-muted mt-1">Prosedur &amp; Analisis Kegagalan</p>
+                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">$850.00</h5>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <h5 class="font-weight-bold mb-3" style="color: var(--iso-navy);">
+                                            <span class="material-symbols-outlined align-middle mr-1 text-primary">fact_check</span> Rincian Unit Kompetensi
+                                        </h5>
+                                        
+                                        <div id="comp_level1" class="comp-section">
+                                            <div class="comp-card">
+                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.01</span> Surface Prep</span> <i class="fa fa-chevron-down text-muted"></i></div>
+                                                <div class="comp-body">
+                                                    <strong>Metode Pembersihan:</strong>
+                                                    <ul class="pl-3 mb-0 mt-1">
+                                                        <li>Solvent Cleaning &amp; Chemical Stripping</li>
+                                                        <li>Hand-tools &amp; Power-tools Cleaning</li>
+                                                        <li>Dry &amp; Wet Abrasive Blasting</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="comp-card">
+                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.02</span> Pra-Kualifikasi</span> <i class="fa fa-chevron-down text-muted"></i></div>
+                                                <div class="comp-body">Pengujian di Lab, Pre-job conference, Cek Angin (PIMCC).</div>
+                                            </div>
+                                            <div class="comp-card">
+                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.03</span> Aplikasi Coating</span> <i class="fa fa-chevron-down text-muted"></i></div>
+                                                <div class="comp-body">Kuas, Spray, Liquid, Galvanizing, Insulation.</div>
+                                            </div>
+                                            <div class="comp-card">
+                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L1.04</span> Inspeksi</span> <i class="fa fa-chevron-down text-muted"></i></div>
+                                                <div class="comp-body">Cek Lingkungan, WFT/DFT, Holiday Test.</div>
+                                            </div>
+                                        </div>
+
+                                        <div id="comp_level2" class="comp-section">
+                                            <div class="comp-card">
+                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L2.01</span> Spesifikasi</span> <i class="fa fa-chevron-down text-muted"></i></div>
+                                                <div class="comp-body">Membuat Prosedur, MSDS, ITP, Kajian Mutu.</div>
+                                            </div>
+                                            <div class="comp-card">
+                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L2.02</span> Pengujian</span> <i class="fa fa-chevron-down text-muted"></i></div>
+                                                <div class="comp-body">Uji Bahan Baku &amp; Coating Cair.</div>
+                                            </div>
+                                            <div class="comp-card">
+                                                <div class="comp-header"><span><span class="comp-code">UK.CT-L2.03</span> Prosedur &amp; SDM</span> <i class="fa fa-chevron-down text-muted"></i></div>
+                                                <div class="comp-body">Pembuatan Prosedur Aplikasi, Kualifikasi SDM.</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-4 pt-3">
+                                            <a href="/certification/apply?edit=1" class="btn btn-outline-secondary px-4 py-2 font-weight-bold" style="border-radius: 8px;">
+                                                <i class="fa fa-arrow-left"></i> Kembali
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="sidebar-summary p-4">
+                                        <h6 class="font-weight-bold text-uppercase text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 1px;">Ringkasan Pilihan</h6>
+                                        
+                                        <div class="mb-4">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div style="width: 40px; height: 40px; background: #fffbeb; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                                    <span class="material-symbols-outlined text-warning">workspace_premium</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="font-weight-bold m-0" id="summary-scheme" style="color: var(--iso-navy);">Pilih Skema</h6>
+                                                    <small class="text-muted" id="summary-level">-</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="border-top pt-3 mb-3">
+                                            <div class="d-flex justify-content-between mb-2 small text-muted">
+                                                <span>Biaya Ujian</span>
+                                                <span id="summary-exam">$0</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-2 small text-muted">
+                                                <span>Biaya Admin</span>
+                                                <span>$100</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                                <span class="font-weight-bold text-dark">Total</span>
+                                                <span class="h4 font-weight-bold m-0" style="color: var(--iso-gold);" id="summary-total">$0</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="alert alert-warning small p-2 mt-3 mb-3 border-0" style="background-color: #fffbeb; color: #92400e;">
+                                            <div class="d-flex">
+                                                <span class="material-symbols-outlined mr-2" style="font-size: 16px;">warning</span>
+                                                <span id="summary-req">Pilih skema untuk melihat syarat.</span>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-iso-gold shadow">
+                                            Lanjut ke Bukti <i class="fa fa-arrow-right ml-2"></i>
+                                        </button>
+                                        <div class="text-center mt-3">
+                                            <small class="text-muted" style="font-size: 0.7rem;">Langkah Selanjutnya: Upload Dokumen</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function toggleRecert(isRecert) {
+                    var input = document.getElementById('recert_input');
+                    if(isRecert) {
+                        input.style.display = 'block';
+                    } else {
+                        input.style.display = 'none';
+                    }
+                }
+
+                function updateScheme(scheme) {
+                    var label = scheme === 'level1' ? 'Coating Inspector L1' : 'Coating Inspector L2';
+                    var level = scheme === 'level1' ? 'Basic Level' : 'Advanced Level';
+                    var priceExam = scheme === 'level1' ? 450 : 850;
+                    var total = priceExam + 100;
+                    
+                    var req = scheme === 'level1' 
+                        ? 'Tidak ada syarat pengalaman khusus.' 
+                        : 'Wajib memiliki bukti pengalaman kerja minimal 24 Bulan.';
+                    
+                    document.getElementById('summary-scheme').innerText = label;
+                    document.getElementById('summary-level').innerText = level;
+                    document.getElementById('summary-exam').innerText = "$" + priceExam;
+                    document.getElementById('summary-total').innerText = "$" + total + ".00";
+                    document.getElementById('summary-req').innerText = req;
+
+                    document.getElementById('comp_level1').style.display = scheme === 'level1' ? 'block' : 'none';
+                    document.getElementById('comp_level2').style.display = scheme === 'level2' ? 'block' : 'none';
+                }
+
+                window.onload = function() {
+                    // Cek radio terpilih saat reload
+                    var radios = document.getElementsByName('scheme');
+                    var selected = false;
+                    for(var i=0; i&lt;radios.length; i++) {
+                        if(radios[i].checked) { updateScheme(radios[i].value); selected = true; }
+                    }
+                    if(!selected) {
+                        document.getElementById('comp_level1').style.display = 'none';
+                        document.getElementById('comp_level2').style.display = 'none';
+                    }
+                    
+                    var types = document.getElementsByName('application_type');
+                    for(var i=0; i&lt;types.length; i++) {
+                        if(types[i].checked) toggleRecert(types[i].value === 'recert');
+                    }
+                };
+            </script>
+        </t>
+    </template>
+</odoo>
