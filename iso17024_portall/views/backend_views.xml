@@ -26,6 +26,11 @@
                 <field name="application_type" string="Tipe" widget="badge" decoration-info="application_type == 'new'" decoration-warning="application_type == 'recert'"/>
                 
                 <field name="scheme" string="Skema"/>
+                <field name="payment_amount" string="Tagihan" widget="monetary"/>
+                <field name="payment_status" string="Pembayaran" widget="badge" 
+                       decoration-danger="payment_status == 'unpaid'" 
+                       decoration-warning="payment_status == 'pending'" 
+                       decoration-success="payment_status == 'paid'"/>
                 <field name="current_step" string="Step" widget="badge"/>
                 <field name="state" widget="badge" 
                        decoration-info="state == 'draft'"
@@ -58,8 +63,14 @@
                             type="object" class="btn-danger" 
                             invisible="state not in ['submitted', 'revision']"
                             confirm="PERINGATAN: Aksi ini akan menolak aplikasi secara permanen. Yakin ingin melanjutkan?"/>
+                    
+                    <!-- TOMBOL KONFIRMASI PEMBAYARAN -->
+                    <button name="action_confirm_payment" string="💰 Konfirmasi Pembayaran" 
+                            type="object" class="btn-primary" 
+                            invisible="state != 'payment'"
+                            confirm="Konfirmasi bahwa pembayaran sudah diterima?"/>
                             
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,revision,verified,rejected"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,revision,payment,verified,rejected"/>
                 </header>
                 <sheet>
                     <!-- ALERT BOX UNTUK CATATAN ADMIN -->
@@ -159,6 +170,27 @@
                             
                             <separator string="Catatan untuk Asesi (Jika Revisi)"/>
                             <field name="admin_note" placeholder="Contoh: Foto KTP buram, mohon upload ulang yang jelas."/>
+                        </page>
+                        
+                        <page string="💰 Info Pembayaran" invisible="state not in ['payment', 'verified']">
+                            <group>
+                                <group string="Detail Tagihan">
+                                    <field name="payment_amount" widget="monetary"/>
+                                    <field name="payment_status" widget="badge" 
+                                           decoration-danger="payment_status == 'unpaid'" 
+                                           decoration-warning="payment_status == 'pending'" 
+                                           decoration-success="payment_status == 'paid'"/>
+                                </group>
+                                <group string="Info Transaksi">
+                                    <field name="payment_method"/>
+                                    <field name="payment_date"/>
+                                    <field name="confirmed_by"/>
+                                </group>
+                            </group>
+                            <group string="Bukti Pembayaran">
+                                <field name="payment_proof" widget="binary" filename="payment_proof_filename"/>
+                                <field name="payment_note" placeholder="Catatan tambahan terkait pembayaran..."/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

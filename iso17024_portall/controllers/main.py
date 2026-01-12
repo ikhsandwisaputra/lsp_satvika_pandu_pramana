@@ -83,6 +83,10 @@ class IsoPortalController(AuthSignupHome):
         # Jika belum punya aplikasi atau masih draft, redirect ke wizard
         if not app or app.state == 'draft':
             return request.redirect('/certification/apply')
+
+        # Jika status 'payment', redirect ke halaman bayar
+        if app.state == 'payment':
+            return request.redirect('/certification/payment')
         
         return request.render('iso17024_portall.application_status_page', {
             'application': app,
@@ -116,6 +120,9 @@ class IsoPortalController(AuthSignupHome):
             if not edit_mode:
                 # Status selain draft -> ke halaman Status
                 if app.state not in ['draft']:
+                    # Special check: kalau state 'payment', ke payment page
+                    if app.state == 'payment':
+                        return request.redirect('/certification/payment')
                     return request.redirect('/certification/status')
                 
                 # Jika masih draft, arahkan ke step terakhir
@@ -334,3 +341,51 @@ class IsoPortalController(AuthSignupHome):
             
         # Redirect ke Halaman Dashboard/Sukses
         return request.redirect('/certification/apply')
+
+    # ---------------------------------------------------------
+    # 7. HALAMAN PEMBAYARAN (XENDIT UI)
+    # ---------------------------------------------------------
+    @http.route('/certification/payment', type='http', auth='user', website=True)
+    def payment_page(self, **kw):
+        app = request.env['certification.application'].search([
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ], limit=1)
+
+        # Hanya boleh masuk jika status 'payment'
+        if not app or app.state != 'payment':
+            return request.redirect('/certification/status')
+
+        # Hitung harga berdasarkan skema (Rupiah = USD x 16.000)
+        # Level 1: $450 = Rp 7.200.000, Level 2: $850 = Rp 13.600.000
+        # Admin Fee: $100 = Rp 1.600.000
+        prices = {
+            'level1': {'base': 7200000, 'admin': 1600000, 'name': 'Coating Inspector Level 1'},
+            'level2': {'base': 13600000, 'admin': 1600000, 'name': 'Coating Inspector Level 2'},
+        }
+        scheme_data = prices.get(app.scheme, {'base': 7200000, 'admin': 1600000, 'name': 'Sertifikasi'})
+        
+        return request.render('iso17024_portall.payment_page', {
+            'application': app,
+            'user': request.env.user,
+            'scheme_name': scheme_data['name'],
+            'base_price': scheme_data['base'],
+            'admin_fee': scheme_data['admin'],
+            'total_price': scheme_data['base'] + scheme_data['admin'],
+        })
+
+    @http.route('/certification/payment/confirm', type='http', auth='user', website=True)
+    def payment_confirm(self, **kw):
+        """User submit pembayaran - status jadi pending, menunggu konfirmasi admin"""
+        app = request.env['certification.application'].search([
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ], limit=1)
+
+        if app and app.state == 'payment':
+            # Hanya set payment_status ke pending, TIDAK langsung verified
+            # Admin yang akan konfirmasi pembayaran
+            app.sudo().write({
+                'payment_status': 'pending',
+            })
+            app.sudo().message_post(body="<b style='color:blue'>💰 PEMBAYARAN DIKIRIM</b><br/>User telah submit pembayaran. Menunggu konfirmasi admin.")
+        
+        return request.redirect('/certification/status')

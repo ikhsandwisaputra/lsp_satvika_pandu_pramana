@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="payment_page" name="Pembayaran Sertifikasi">
+        <t t-call="website.layout">
+            <t t-set="title">Pembayaran Sertifikasi</t>
+            <t t-set="head">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" />
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+            </t>
+            
+            <style>
+                :root {
+                    --xnd-navy: #0f172a;
+                    --xnd-blue: #1d4ed8;
+                    --xnd-gold: #d4af37;
+                    --xnd-bg: #f8fafc;
+                    --xnd-card: #ffffff;
+                    --xnd-border: #e2e8f0;
+                }
+                * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+                
+                .checkout-page {
+                    background: var(--xnd-bg);
+                    min-height: 100vh;
+                }
+                
+                /* Header */
+                .checkout-header {
+                    background: var(--xnd-navy);
+                    padding: 16px 30px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .checkout-logo { color: white; font-weight: 800; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+                .checkout-logo .logo-gold { color: var(--xnd-gold); }
+                .secure-badge-header { 
+                    background: rgba(255,255,255,0.1); 
+                    padding: 8px 16px; 
+                    border-radius: 99px; 
+                    color: white; 
+                    font-size: 0.85rem;
+                    display: flex; align-items: center; gap: 6px;
+                }
+                
+                /* Main Layout */
+                .checkout-main {
+                    max-width: 1100px;
+                    margin: 0 auto;
+                    padding: 40px 20px;
+                    display: grid;
+                    grid-template-columns: 380px 1fr;
+                    gap: 40px;
+                }
+                @media (max-width: 900px) {
+                    .checkout-main { grid-template-columns: 1fr; }
+                }
+                
+                /* Left: Order Summary */
+                .order-card {
+                    background: var(--xnd-navy);
+                    border-radius: 16px;
+                    padding: 30px;
+                    color: white;
+                    height: fit-content;
+                }
+                .order-label { 
+                    text-transform: uppercase; 
+                    font-size: 0.7rem; 
+                    letter-spacing: 1.5px; 
+                    color: #94a3b8; 
+                    margin-bottom: 20px;
+                    font-weight: 600;
+                }
+                .cert-badge {
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 12px;
+                    padding: 20px;
+                    display: flex;
+                    gap: 15px;
+                    align-items: flex-start;
+                    margin-bottom: 25px;
+                }
+                .cert-icon {
+                    width: 50px; height: 50px;
+                    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+                    border-radius: 10px;
+                    display: flex; align-items: center; justify-content: center;
+                }
+                .cert-icon .material-symbols-outlined { font-size: 28px; color: white; }
+                .cert-info h3 { margin: 0 0 5px; font-size: 1.1rem; font-weight: 700; }
+                .cert-info p { margin: 0; color: #94a3b8; font-size: 0.85rem; }
+                .cert-validity {
+                    display: inline-block;
+                    background: var(--xnd-blue);
+                    color: white;
+                    padding: 4px 12px;
+                    border-radius: 99px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    margin-top: 8px;
+                }
+                
+                .price-row { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    padding: 12px 0;
+                    border-bottom: 1px solid rgba(255,255,255,0.1);
+                    font-size: 0.95rem;
+                }
+                .price-row.total {
+                    border-bottom: none;
+                    padding-top: 20px;
+                    margin-top: 10px;
+                }
+                .price-row.total .price-label { font-size: 0.9rem; color: #94a3b8; }
+                .price-row.total .price-value { font-size: 1.8rem; font-weight: 800; }
+                
+                .secure-box {
+                    background: rgba(255,255,255,0.05);
+                    border-radius: 12px;
+                    padding: 16px;
+                    margin-top: 25px;
+                    display: flex;
+                    gap: 12px;
+                }
+                .secure-box .material-symbols-outlined { color: var(--xnd-gold); font-size: 24px; }
+                .secure-box h4 { margin: 0 0 4px; font-size: 0.9rem; font-weight: 600; }
+                .secure-box p { margin: 0; color: #94a3b8; font-size: 0.8rem; line-height: 1.4; }
+                
+                /* Right: Payment Methods */
+                .payment-card {
+                    background: white;
+                    border-radius: 16px;
+                    padding: 30px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+                }
+                
+                .section-title { font-size: 1rem; font-weight: 700; color: var(--xnd-navy); margin-bottom: 20px; }
+                
+                .contact-info {
+                    background: #f8fafc;
+                    border: 1px solid var(--xnd-border);
+                    border-radius: 12px;
+                    padding: 16px 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 30px;
+                }
+                .contact-left { display: flex; align-items: center; gap: 15px; }
+                .contact-avatar {
+                    width: 45px; height: 45px;
+                    background: var(--xnd-navy);
+                    border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    color: white; font-weight: 700; font-size: 0.9rem;
+                }
+                .contact-detail h4 { margin: 0 0 2px; font-size: 0.95rem; font-weight: 600; }
+                .contact-detail p { margin: 0; color: #64748b; font-size: 0.85rem; }
+                .contact-edit { color: var(--xnd-blue); font-weight: 600; font-size: 0.9rem; text-decoration: none; }
+                
+                /* Payment Methods */
+                .method-group { margin-bottom: 15px; }
+                .method-item {
+                    border: 2px solid var(--xnd-border);
+                    border-radius: 12px;
+                    padding: 18px 20px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    margin-bottom: 12px;
+                }
+                .method-item:hover { border-color: #cbd5e1; }
+                .method-item.active { border-color: var(--xnd-blue); background: #eff6ff; }
+                
+                .method-header { display: flex; align-items: center; justify-content: space-between; }
+                .method-left { display: flex; align-items: center; gap: 15px; }
+                .method-radio {
+                    width: 20px; height: 20px;
+                    border: 2px solid #cbd5e1;
+                    border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                }
+                .method-item.active .method-radio { border-color: var(--xnd-blue); }
+                .method-item.active .method-radio::after {
+                    content: '';
+                    width: 10px; height: 10px;
+                    background: var(--xnd-blue);
+                    border-radius: 50%;
+                }
+                .method-icon {
+                    width: 40px; height: 40px;
+                    background: #f1f5f9;
+                    border-radius: 10px;
+                    display: flex; align-items: center; justify-content: center;
+                }
+                .method-icon .material-symbols-outlined { font-size: 22px; color: var(--xnd-navy); }
+                .method-icon.va { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+                .method-icon.va .material-symbols-outlined { color: var(--xnd-blue); }
+                .method-icon.cc { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
+                .method-icon.ew { background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); }
+                .method-icon.ew .material-symbols-outlined { color: #16a34a; }
+                .method-icon.qr { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); }
+                .method-icon.qr .material-symbols-outlined { color: #d97706; }
+                
+                .method-info h4 { margin: 0 0 2px; font-size: 0.95rem; font-weight: 600; }
+                .method-info p { margin: 0; color: #64748b; font-size: 0.8rem; }
+                
+                .method-logos { display: flex; gap: 8px; }
+                .method-logos img { height: 24px; opacity: 0.8; }
+                .bank-logo {
+                    width: 50px; height: 32px;
+                    border: 1px solid var(--xnd-border);
+                    border-radius: 6px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 0.7rem; font-weight: 700; color: var(--xnd-navy);
+                    cursor: pointer;
+                    transition: all 0.15s;
+                }
+                .bank-logo:hover { border-color: var(--xnd-blue); background: #f8fafc; }
+                .bank-logo.active { border-color: var(--xnd-blue); background: #eff6ff; }
+                
+                .method-expand {
+                    margin-top: 15px;
+                    padding-top: 15px;
+                    border-top: 1px dashed var(--xnd-border);
+                }
+                .bank-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+                .method-note { color: #64748b; font-size: 0.8rem; margin-top: 12px; }
+                
+                /* Pay Button */
+                .btn-pay {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    width: 100%;
+                    padding: 18px;
+                    background: var(--xnd-navy);
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    margin-top: 30px;
+                    transition: all 0.2s;
+                }
+                .btn-pay:hover { background: #1e293b; box-shadow: 0 10px 25px rgba(15,23,42,0.3); }
+                .btn-pay .material-symbols-outlined { font-size: 20px; }
+                
+                .secure-footer {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 6px;
+                    margin-top: 20px;
+                    color: #94a3b8;
+                    font-size: 0.8rem;
+                }
+                .secure-footer .material-symbols-outlined { font-size: 16px; }
+            </style>
+
+            <div class="checkout-page">
+                <!-- Main Content -->
+                <div class="checkout-main">
+                    <!-- Left: Order Summary -->
+                    <div class="order-card">
+                        <div class="order-label">Order Summary</div>
+                        
+                        <div class="cert-badge">
+                            <div class="cert-icon">
+                                <span class="material-symbols-outlined">workspace_premium</span>
+                            </div>
+                            <div class="cert-info">
+                                <h3><t t-esc="scheme_name"/></h3>
+                                <p>Professional Accreditation</p>
+                                <span class="cert-validity">Valid for 3 years</span>
+                            </div>
+                        </div>
+                        
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span>Rp <t t-esc="'{:,.0f}'.format(base_price).replace(',', '.')"/></span>
+                        </div>
+                        <div class="price-row">
+                            <span>Processing Fee</span>
+                            <span>Rp <t t-esc="'{:,.0f}'.format(admin_fee).replace(',', '.')"/></span>
+                        </div>
+                        
+                        <div class="price-row total">
+                            <span class="price-label">Total Amount</span>
+                            <span class="price-value">Rp <t t-esc="'{:,.0f}'.format(total_price).replace(',', '.')"/></span>
+                        </div>
+                        
+                        <div class="secure-box">
+                            <span class="material-symbols-outlined">verified_user</span>
+                            <div>
+                                <h4>100% Secure Payment</h4>
+                                <p>Your payment information is encrypted and processed securely by Xendit. We do not store your credit card details.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Payment Methods -->
+                    <div class="payment-card">
+                        <div class="section-title">Contact Information</div>
+                        <div class="contact-info">
+                            <div class="contact-left">
+                                <div class="contact-avatar">
+                                    <t t-esc="application.partner_id.name[:2].upper() if application.partner_id.name else 'U'"/>
+                                </div>
+                                <div class="contact-detail">
+                                    <h4><t t-esc="application.partner_id.name"/></h4>
+                                    <p><t t-esc="application.partner_id.email or 'No email'"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-title">Select Payment Method</div>
+                        
+                        <!-- Virtual Account -->
+                        <div class="method-group">
+                            <div class="method-item active" onclick="selectMethod(this, 'va')">
+                                <div class="method-header">
+                                    <div class="method-left">
+                                        <div class="method-radio"></div>
+                                        <div class="method-icon va">
+                                            <span class="material-symbols-outlined">account_balance</span>
+                                        </div>
+                                        <div class="method-info">
+                                            <h4>Virtual Account</h4>
+                                            <p>Pay via BCA, Mandiri, BNI, BRI</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="method-expand">
+                                    <div class="bank-grid">
+                                        <div class="bank-logo active" onclick="event.stopPropagation()">BCA</div>
+                                        <div class="bank-logo" onclick="event.stopPropagation()">Mandiri</div>
+                                        <div class="bank-logo" onclick="event.stopPropagation()">BNI</div>
+                                        <div class="bank-logo" onclick="event.stopPropagation()">BRI</div>
+                                    </div>
+                                    <p class="method-note">Transfers are verified automatically. No need to upload payment proof.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Credit Card -->
+                        <div class="method-item" onclick="selectMethod(this, 'cc')">
+                            <div class="method-header">
+                                <div class="method-left">
+                                    <div class="method-radio"></div>
+                                    <div class="method-icon cc">
+                                        <span class="material-symbols-outlined">credit_card</span>
+                                    </div>
+                                    <div class="method-info">
+                                        <h4>Credit / Debit Card</h4>
+                                        <p>Visa, Mastercard, JCB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- E-Wallet -->
+                        <div class="method-item" onclick="selectMethod(this, 'ew')">
+                            <div class="method-header">
+                                <div class="method-left">
+                                    <div class="method-radio"></div>
+                                    <div class="method-icon ew">
+                                        <span class="material-symbols-outlined">account_balance_wallet</span>
+                                    </div>
+                                    <div class="method-info">
+                                        <h4>E-Wallet</h4>
+                                        <p>OVO, DANA, ShopeePay, LinkAja</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- QRIS -->
+                        <div class="method-item" onclick="selectMethod(this, 'qr')">
+                            <div class="method-header">
+                                <div class="method-left">
+                                    <div class="method-radio"></div>
+                                    <div class="method-icon qr">
+                                        <span class="material-symbols-outlined">qr_code_2</span>
+                                    </div>
+                                    <div class="method-info">
+                                        <h4>QRIS</h4>
+                                        <p>Scan QR with any payment app</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pay Button -->
+                        <a href="/certification/payment/confirm" class="btn-pay" style="text-decoration: none;">
+                            Pay Rp <t t-esc="'{:,.0f}'.format(total_price).replace(',', '.')"/> Now
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
+                        
+                        <div class="secure-footer">
+                            <span class="material-symbols-outlined">lock</span>
+                            Payments are processed securely by Xendit
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function selectMethod(el, type) {
+                    document.querySelectorAll('.method-item').forEach(m => m.classList.remove('active'));
+                    el.classList.add('active');
+                }
+                document.querySelectorAll('.bank-logo').forEach(b => {
+                    b.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        document.querySelectorAll('.bank-logo').forEach(x => x.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            </script>
+        </t>
+    </template>
+</odoo>

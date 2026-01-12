@@ -12,6 +12,7 @@
         'views/step2_template.xml',
         'views/step3_template.xml',
         'views/step4_template.xml',
+        'views/payment_template.xml',
         'views/status_template.xml',  # <--- Status Dashboard
         'views/backend_views.xml',
         'views/menus.xml',

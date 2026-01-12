@@ -154,7 +154,7 @@
                                                         <span class="badge badge-light border mb-2">Basic Level</span>
                                                         <h5 class="font-weight-bold" style="color: var(--iso-navy);">Coating Inspector L1</h5>
                                                         <p class="small text-muted mt-1">Inspeksi Visual &amp; Pendataan</p>
-                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">$450.00</h5>
+                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">Rp 7.200.000</h5>
                                                     </div>
                                                 </label>
                                             </div>
@@ -168,7 +168,7 @@
                                                         <span class="badge badge-warning text-white mb-2">Advanced</span>
                                                         <h5 class="font-weight-bold" style="color: var(--iso-navy);">Coating Inspector L2</h5>
                                                         <p class="small text-muted mt-1">Prosedur &amp; Analisis Kegagalan</p>
-                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">$850.00</h5>
+                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">Rp 13.600.000</h5>
                                                     </div>
                                                 </label>
                                             </div>
@@ -358,15 +358,15 @@
                                         <div class="border-top pt-3 mb-3">
                                             <div class="d-flex justify-content-between mb-2 small text-muted">
                                                 <span>Biaya Ujian</span>
-                                                <span id="summary-exam">$0</span>
+                                                <span id="summary-exam">Rp 0</span>
                                             </div>
                                             <div class="d-flex justify-content-between mb-2 small text-muted">
                                                 <span>Biaya Admin</span>
-                                                <span>$100</span>
+                                                <span>Rp 1.600.000</span>
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center mt-2">
                                                 <span class="font-weight-bold text-dark">Total</span>
-                                                <span class="h4 font-weight-bold m-0" style="color: var(--iso-gold);" id="summary-total">$0</span>
+                                                <span class="h4 font-weight-bold m-0" style="color: var(--iso-gold);" id="summary-total">Rp 0</span>
                                             </div>
                                         </div>
                                         
@@ -405,17 +405,23 @@
                 function updateScheme(scheme) {
                     var label = scheme === 'level1' ? 'Coating Inspector L1' : 'Coating Inspector L2';
                     var level = scheme === 'level1' ? 'Basic Level' : 'Advanced Level';
-                    var priceExam = scheme === 'level1' ? 450 : 850;
-                    var total = priceExam + 100;
+                    var priceExam = scheme === 'level1' ? 7200000 : 13600000;
+                    var adminFee = 1600000;
+                    var total = priceExam + adminFee;
                     
                     var req = scheme === 'level1' 
                         ? 'Tidak ada syarat pengalaman khusus.' 
                         : 'Wajib memiliki bukti pengalaman kerja minimal 24 Bulan.';
                     
+                    // Format angka ke Rupiah
+                    function formatRupiah(num) {
+                        return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    }
+                    
                     document.getElementById('summary-scheme').innerText = label;
                     document.getElementById('summary-level').innerText = level;
-                    document.getElementById('summary-exam').innerText = "$" + priceExam;
-                    document.getElementById('summary-total').innerText = "$" + total + ".00";
+                    document.getElementById('summary-exam').innerText = formatRupiah(priceExam);
+                    document.getElementById('summary-total').innerText = formatRupiah(total);
                     document.getElementById('summary-req').innerText = req;
 
                     document.getElementById('comp_level1').style.display = scheme === 'level1' ? 'block' : 'none';

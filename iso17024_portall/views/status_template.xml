@@ -14,6 +14,7 @@
                     --status-draft: #94a3b8;
                     --status-submitted: #f59e0b;
                     --status-verified: #22c55e;
+                    --status-payment: #3b82f6;
                     --status-rejected: #ef4444;
                 }
                 
@@ -52,6 +53,8 @@
                 .status-draft { background: #f1f5f9; color: #64748b; }
                 .status-submitted { background: #fef3c7; color: #d97706; }
                 .status-revision { background: #ffedd5; color: #ea580c; }
+                .status-revision { background: #ffedd5; color: #ea580c; }
+                .status-payment { background: #dbeafe; color: #2563eb; }
                 .status-verified { background: #dcfce7; color: #16a34a; }
                 .status-rejected { background: #fee2e2; color: #dc2626; }
                 
@@ -168,6 +171,7 @@
                                         <t t-if="application.state == 'draft'">edit_note</t>
                                         <t t-elif="application.state == 'submitted'">hourglass_top</t>
                                         <t t-elif="application.state == 'revision'">sync_problem</t>
+                                        <t t-elif="application.state == 'payment'">payments</t>
                                         <t t-elif="application.state == 'verified'">verified</t>
                                         <t t-elif="application.state == 'rejected'">cancel</t>
                                         <t t-else="">info</t>
@@ -175,6 +179,7 @@
                                     <t t-if="application.state == 'draft'">Draft</t>
                                     <t t-elif="application.state == 'submitted'">Menunggu Verifikasi</t>
                                     <t t-elif="application.state == 'revision'">Perlu Revisi</t>
+                                    <t t-elif="application.state == 'payment'">Menunggu Pembayaran</t>
                                     <t t-elif="application.state == 'verified'">Terverifikasi</t>
                                     <t t-elif="application.state == 'rejected'">Ditolak</t>
                                     <t t-else=""><t t-esc="application.state"/></t>
@@ -237,12 +242,21 @@
                             </div>
                             
                             <!-- Step 3: Verifikasi -->
-                            <div t-attf-class="timeline-step #{application.state == 'verified' and 'active' or ''}">
+                            <div t-attf-class="timeline-step #{application.state in ['payment', 'verified'] and 'completed' or (application.state == 'submitted' and 'active' or '')}">
                                 <div class="timeline-dot">
                                     <span class="material-symbols-outlined">fact_check</span>
                                 </div>
                                 <div class="timeline-label">Verifikasi Admin</div>
                             </div>
+
+                            <!-- Step 4: Pembayaran (NEW) -->
+                            <div t-attf-class="timeline-step #{application.state == 'verified' and 'completed' or (application.state == 'payment' and 'active' or '')}">
+                                <div class="timeline-dot">
+                                    <span class="material-symbols-outlined">payments</span>
+                                </div>
+                                <div class="timeline-label">Pembayaran</div>
+                            </div>
+
                             
                             <!-- Step 4: Selesai -->
                             <div class="timeline-step">
@@ -259,6 +273,20 @@
                                 <h5>⏳ Menunggu Verifikasi Admin</h5>
                                 <p>Dokumen Anda sedang dalam proses verifikasi oleh tim kami. Kami akan menghubungi Anda jika ada dokumen yang perlu diperbaiki.</p>
                             </div>
+                        </t>
+                        <t t-elif="application.state == 'payment'">
+                            <t t-if="application.payment_status == 'pending'">
+                                <div class="status-message" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left-color: #f59e0b;">
+                                    <h5>⏳ Pembayaran Sedang Diverifikasi</h5>
+                                    <p>Pembayaran Anda sedang dalam proses verifikasi oleh tim kami. Mohon tunggu konfirmasi dalam 1x24 jam kerja.</p>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="status-message" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-left-color: #2563eb;">
+                                    <h5>💳 Menunggu Pembayaran</h5>
+                                    <p>Dokumen telah diverifikasi. Silakan lakukan pembayaran untuk menyelesaikan pendaftaran.</p>
+                                </div>
+                            </t>
                         </t>
                         <t t-elif="application.state == 'revision'">
                             <div class="status-message" style="background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); border-left-color: #ea580c;">
@@ -300,6 +328,12 @@
                                 <a href="/certification/apply?edit=1" class="btn btn-iso-gold">
                                     <span class="material-symbols-outlined align-middle mr-1" style="font-size: 18px;">edit_document</span>
                                     Perbaiki Dokumen
+                                </a>
+                            </t>
+                            <t t-if="application.state == 'payment' and application.payment_status != 'pending'">
+                                <a href="/certification/payment" class="btn btn-iso-gold">
+                                    <span class="material-symbols-outlined align-middle mr-1" style="font-size: 18px;">credit_card</span>
+                                    Bayar Sekarang
                                 </a>
                             </t>
                             <a href="/my" class="btn btn-outline-secondary">

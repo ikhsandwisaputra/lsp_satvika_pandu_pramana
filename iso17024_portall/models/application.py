@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class CertificationApplication(models.Model):
     _name = 'certification.application'
@@ -23,6 +23,7 @@ class CertificationApplication(models.Model):
         ('draft', 'Draft (Pengisian)'),
         ('submitted', 'Menunggu Verifikasi'),
         ('revision', 'Perlu Revisi'),
+        ('payment', 'Menunggu Pembayaran'),
         ('verified', 'Terverifikasi'),
         ('rejected', 'Ditolak'),
     ], default='draft', string='Status', tracking=True)
@@ -98,17 +99,63 @@ class CertificationApplication(models.Model):
     digital_signature = fields.Char('Digital Signature Name')
     signature_date = fields.Date('Signature Date', default=fields.Date.today)
 
+    # --- FIELD PEMBAYARAN ---
+    payment_amount = fields.Float(string='Jumlah Tagihan', compute='_compute_payment_amount', store=True)
+    payment_status = fields.Selection([
+        ('unpaid', 'Belum Bayar'),
+        ('pending', 'Menunggu Konfirmasi'),
+        ('paid', 'Lunas'),
+    ], string='Status Pembayaran', default='unpaid', tracking=True)
+    payment_date = fields.Datetime(string='Tanggal Pembayaran')
+    payment_method = fields.Selection([
+        ('va_bca', 'Virtual Account BCA'),
+        ('va_mandiri', 'Virtual Account Mandiri'),
+        ('va_bni', 'Virtual Account BNI'),
+        ('va_bri', 'Virtual Account BRI'),
+        ('ewallet', 'E-Wallet'),
+        ('qris', 'QRIS'),
+        ('manual', 'Transfer Manual'),
+    ], string='Metode Pembayaran')
+    payment_proof = fields.Binary(string='Bukti Pembayaran')
+    payment_proof_filename = fields.Char(string='Filename Bukti')
+    payment_note = fields.Text(string='Catatan Pembayaran')
+    confirmed_by = fields.Many2one('res.users', string='Dikonfirmasi Oleh')
+
+    # =========================================================
+    # COMPUTE METHODS
+    # =========================================================
+    
+    @api.depends('scheme')
+    def _compute_payment_amount(self):
+        """Auto-calculate payment amount based on selected scheme"""
+        prices = {
+            'level1': 8800000,   # Rp 7.200.000 + Rp 1.600.000 (admin)
+            'level2': 15200000,  # Rp 13.600.000 + Rp 1.600.000 (admin)
+        }
+        for rec in self:
+            rec.payment_amount = prices.get(rec.scheme, 0)
+
     # =========================================================
     # TOMBOL AKSI ADMIN
     # =========================================================
     
     def action_verify_documents(self):
-        """Admin APPROVE: Dokumen valid, lanjut ke tahap berikutnya"""
+        """Admin APPROVE: Dokumen valid, lanjut ke tahap pembayaran"""
+        self.write({
+            'state': 'payment',
+            'admin_note': False,
+        })
+        self.message_post(body="<b style='color:blue'>waiting for payment</b><br/>Dokumen administrasi valid. Menunggu pembayaran.")
+
+    def action_confirm_payment(self):
+        """Admin/System CONFIRM PAYMENT: Sudah bayar, verified"""
         self.write({
             'state': 'verified',
-            'admin_note': False,  # Clear note karena sudah OK
+            'payment_status': 'paid',
+            'payment_date': fields.Datetime.now(),
+            'confirmed_by': self.env.user.id,
         })
-        self.message_post(body="<b style='color:green'>✅ TERVERIFIKASI</b><br/>Dokumen administrasi telah dinyatakan valid. Kandidat menunggu jadwal ujian.")
+        self.message_post(body="<b style='color:green'>✅ PEMBAYARAN DITERIMA</b><br/>Status aplikasi kini Terverifikasi.")
 
     def action_request_revision(self):
         """Admin MINTA REVISI: Ada dokumen yang perlu diperbaiki"""
