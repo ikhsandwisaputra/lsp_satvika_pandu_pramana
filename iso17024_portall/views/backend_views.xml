@@ -18,7 +18,7 @@
             <list string="Daftar Asesi" 
                   decoration-info="state == 'draft'" 
                   decoration-warning="state in ['submitted', 'revision']"
-                  decoration-success="state == 'verified'"
+                  decoration-success="state in ['verified', 'scheduled']"
                   decoration-danger="state == 'rejected'">
                 <field name="nik" string="NIK / ID"/>
                 <field name="partner_id" string="Nama Asesi"/>
@@ -35,7 +35,7 @@
                 <field name="state" widget="badge" 
                        decoration-info="state == 'draft'"
                        decoration-warning="state in ['submitted', 'revision']" 
-                       decoration-success="state == 'verified'"
+                       decoration-success="state in ['verified', 'scheduled']"
                        decoration-danger="state == 'rejected'"/>
             </list>
         </field>
@@ -69,8 +69,13 @@
                             type="object" class="btn-primary" 
                             invisible="state != 'payment'"
                             confirm="Konfirmasi bahwa pembayaran sudah diterima?"/>
+                    
+                    <!-- TOMBOL JADWALKAN UJIAN -->
+                    <button name="action_set_schedule" string="📅 Jadwalkan Ujian" 
+                            type="object" class="btn-info" 
+                            invisible="state != 'verified'"/>
                             
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,revision,payment,verified,rejected"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,revision,payment,verified,scheduled,rejected"/>
                 </header>
                 <sheet>
                     <!-- ALERT BOX UNTUK CATATAN ADMIN -->
@@ -190,6 +195,32 @@
                             <group string="Bukti Pembayaran">
                                 <field name="payment_proof" widget="binary" filename="payment_proof_filename"/>
                                 <field name="payment_note" placeholder="Catatan tambahan terkait pembayaran..."/>
+                            </group>
+                        </page>
+                        
+                        <page string="📅 Jadwal Asesmen" invisible="state not in ['verified', 'scheduled']">
+                            <div class="alert alert-info" invisible="state == 'scheduled'">
+                                Isi jadwal di bawah ini, lalu klik tombol "📅 Jadwalkan Ujian" di atas.
+                            </div>
+                            <div class="alert alert-success" invisible="state != 'scheduled'">
+                                <strong>✅ Ujian sudah dijadwalkan!</strong> Info jadwal sudah terkirim ke asesi.
+                            </div>
+                            <group>
+                                <group string="Waktu Ujian">
+                                    <field name="exam_date"/>
+                                    <field name="exam_time" placeholder="Contoh: 09:00 - 12:00 WIB"/>
+                                </group>
+                                <group string="Lokasi Ujian">
+                                    <field name="exam_location" placeholder="Nama gedung/tempat"/>
+                                    <field name="exam_room" placeholder="Ruangan/lantai"/>
+                                </group>
+                            </group>
+                            <group string="Catatan untuk Asesi">
+                                <field name="exam_notes" placeholder="Informasi tambahan seperti: bawa alat tulis, dresscode, dll..." nolabel="1"/>
+                            </group>
+                            <group string="Info Penjadwalan" invisible="state != 'scheduled'">
+                                <field name="scheduled_by" readonly="1"/>
+                                <field name="schedule_date" readonly="1"/>
                             </group>
                         </page>
                     </notebook>

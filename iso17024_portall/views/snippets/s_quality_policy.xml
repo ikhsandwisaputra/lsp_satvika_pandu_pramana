@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== SNIPPET TEMPLATE: Quality Policy ========== -->
+    <template id="s_quality_policy" name="Quality Policy">
+        <section class="s_quality_policy pt-5 pb-5" style="background-color: #f8fafc;">
+            <div class="container">
+                
+                <!-- Header Badge -->
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#d4af37" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+                    <span class="fw-bold text-uppercase" style="color: #d4af37; font-size: 0.75rem; letter-spacing: 2px;">Kebijakan Mutu</span>
+                </div>
+                
+                <!-- Title & Subtitle -->
+                <h2 class="fw-bold mb-3" style="color: #0f172a; font-size: 2rem;">Komitmen Manajemen &amp; Standar Integritas</h2>
+                <p class="text-muted mb-5" style="max-width: 700px; font-size: 0.95rem;">
+                    Prinsip dasar yang kami pegang teguh dalam setiap proses sertifikasi untuk menjamin kualitas dan kepercayaan industri.
+                </p>
+                
+                <!-- Value Cards -->
+                <div class="row g-4">
+                    
+                    <!-- Card 1: Independen -->
+                    <div class="col-12 col-md-4">
+                        <div class="bg-white rounded-4 p-4 h-100 shadow-sm" style="border: 1px solid #e2e8f0;">
+                            <div class="d-flex align-items-center justify-content-center rounded-3 mb-4" style="width: 56px; height: 56px; background: rgba(212, 175, 55, 0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#d4af37" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M12.93 4.379a.5.5 0 0 1 .09.682l-5.5 7.5a.5.5 0 0 1-.758.065l-3-2.5a.5.5 0 0 1 .636-.768l2.593 2.16 5.13-6.99a.5.5 0 0 1 .81-.15z"/>
+                                </svg>
+                            </div>
+                            <h4 class="fw-bold mb-3" style="color: #0f172a; font-size: 1.15rem;">Independen</h4>
+                            <p class="mb-0 text-muted" style="font-size: 0.9rem; line-height: 1.6;">
+                                Menjaga ketidakberpihakan dalam setiap keputusan sertifikasi tanpa intervensi pihak manapun.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2: Objektif -->
+                    <div class="col-12 col-md-4">
+                        <div class="bg-white rounded-4 p-4 h-100 shadow-sm" style="border: 1px solid #e2e8f0;">
+                            <div class="d-flex align-items-center justify-content-center rounded-3 mb-4" style="width: 56px; height: 56px; background: rgba(15, 23, 42, 0.08);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#0f172a" viewBox="0 0 16 16">
+                                    <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                                    <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                                    <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                                </svg>
+                            </div>
+                            <h4 class="fw-bold mb-3" style="color: #0f172a; font-size: 1.15rem;">Objektif</h4>
+                            <p class="mb-0 text-muted" style="font-size: 0.9rem; line-height: 1.6;">
+                                Penilaian berbasis bukti nyata, terukur, dan mengacu pada standar kompetensi yang valid.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3: Berintegritas -->
+                    <div class="col-12 col-md-4">
+                        <div class="bg-white rounded-4 p-4 h-100 shadow-sm" style="border: 1px solid #e2e8f0;">
+                            <div class="d-flex align-items-center justify-content-center rounded-3 mb-4" style="width: 56px; height: 56px; background: rgba(212, 175, 55, 0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#d4af37" viewBox="0 0 16 16">
+                                    <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+                                    <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                </svg>
+                            </div>
+                            <h4 class="fw-bold mb-3" style="color: #0f172a; font-size: 1.15rem;">Berintegritas</h4>
+                            <p class="mb-0 text-muted" style="font-size: 0.9rem; line-height: 1.6;">
+                                Menjunjung tinggi etika profesi, kejujuran, dan menjamin kerahasiaan data seluruh peserta.
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </section>
+    </template>
+    
+    <!-- ========== REGISTER SNIPPET TO WEBSITE BUILDER ========== -->
+    <template id="quality_policy_snippet" inherit_id="website.snippets" name="Quality Policy Snippet">
+        <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+            <t t-snippet="iso17024_portall.s_quality_policy" 
+               t-thumbnail="/iso17024_portall/static/src/img/snippets/s_quality_policy.png"/>
+        </xpath>
+    </template>
+    
+</odoo>

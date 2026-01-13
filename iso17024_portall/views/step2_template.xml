@@ -1,5 +1,5 @@
 <odoo>
-    <template id="application_step2_page" name="Pilih Skema">
+    <template id="application_step2_page" name="Upload Dokumen">
         <t t-call="website.layout">
             
             <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1" rel="stylesheet"/>
@@ -26,426 +26,483 @@
                     min-height: 500px;
                 }
 
-                /* STEPPER STYLE */
+                /* STEPPER */
                 .step-container { display: flex; justify-content: space-between; position: relative; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; }
                 .step-container::before { content: ''; position: absolute; top: 20px; left: 0; right: 0; height: 2px; background: #e2e8f0; z-index: 0; }
                 .step-item { z-index: 1; text-align: center; background: white; padding: 0 10px; position: relative; }
                 .step-circle { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; color: #64748b; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; border: 3px solid white; box-shadow: 0 0 0 1px #e2e8f0; }
                 .step-label { font-size: 0.8rem; color: #94a3b8; font-weight: 600; }
-
-                /* Active and Completed States */
+                
+                /* Active and Completed */
                 .step-item.active .step-circle { background: var(--iso-gold); color: white; box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2); }
                 .step-item.active .step-label { color: var(--iso-navy); }
                 .step-item.completed .step-circle { background: var(--iso-navy); color: white; }
                 .step-item.completed .step-label { color: var(--iso-navy); }
 
-                /* RADIO CARD STYLE */
-                .radio-card-label { cursor: pointer; display: block; height: 100%; }
-                .radio-card-input { display: none; }
+                /* UPLOAD BOX STYLE */
+                .upload-group { margin-bottom: 1.5rem; }
+                .upload-label { font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; margin-bottom: 0.5rem; }
                 
-                .radio-card {
-                    border: 1px solid #e2e8f0;
+                .upload-box {
+                    border: 2px dashed #cbd5e1;
                     border-radius: 12px;
-                    padding: 1.5rem;
-                    background: white;
-                    transition: all 0.2s;
-                    height: 100%;
+                    background-color: #f8fafc;
+                    height: 160px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s;
                     position: relative;
                 }
-                .radio-card:hover { border-color: #cbd5e1; }
-                
-                .radio-card-input:checked + .radio-card {
+                .upload-box:hover {
                     border-color: var(--iso-gold);
                     background-color: #fffdf5;
-                    box-shadow: 0 0 0 2px var(--iso-gold);
                 }
-                .check-icon { display: none; color: var(--iso-gold); position: absolute; top: 15px; right: 15px; font-size: 1.5rem; }
-                .radio-card-input:checked + .radio-card .check-icon { display: block; }
+                .upload-box.has-file {
+                    border-style: solid;
+                    border-color: #10b981;
+                    background-color: #ecfdf5;
+                }
+                .upload-icon { font-size: 40px; color: #94a3b8; margin-bottom: 0.5rem; }
+                .upload-box.has-file .upload-icon { color: #10b981; }
+                
+                .upload-text { font-size: 0.9rem; font-weight: 600; color: #334155; }
+                .upload-sub { font-size: 0.75rem; color: #64748b; }
+                
+                /* Hide Input */
+                .file-input-hidden { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; top:0; left:0; }
 
-                /* COMPETENCY TABLE STYLE */
-                .comp-section { display: none; animation: fadeIn 0.5s; }
-                .comp-card { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; }
-                .comp-header { background-color: #f8fafc; padding: 10px 15px; font-weight: bold; color: var(--iso-navy); border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;}
-                .comp-body { padding: 15px; font-size: 0.9rem; color: #475569; }
-                .comp-code { background: var(--iso-navy); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 10px; }
-                
-                /* Sidebar Summary */
-                .sidebar-summary { position: sticky; top: 100px; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #f8fafc; }
-                
-                .btn-iso-gold { background-color: var(--iso-gold); color: white; border-radius: 8px; padding: 12px 30px; font-weight: bold; border: none; width: 100%; box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.4); }
+                /* Tags */
+                .badge-required { background-color: #fee2e2; color: #dc2626; font-size: 0.65rem; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid #fecaca; }
+                .badge-conditional-l2 { background-color: #dcfce7; color: #166534; font-size: 0.65rem; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid #bbf7d0; }
+                .badge-conditional-recert { background-color: #ffedd5; color: #ea580c; font-size: 0.65rem; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid #fed7aa; }
+
+                /* Button */
+                .btn-iso-gold { background-color: var(--iso-gold); color: white; border-radius: 8px; padding: 12px 30px; font-weight: bold; border: none; box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.4); }
                 .btn-iso-gold:hover { background-color: var(--iso-gold-hover); color: white; transform: translateY(-1px); }
                 
-                @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+                /* CUSTOM MODAL STYLE */
+                .custom-modal-overlay {
+                    position: fixed;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(15, 23, 42, 0.6);
+                    backdrop-filter: blur(4px);
+                    z-index: 9999;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    animation: fadeIn 0.2s ease;
+                }
+                .custom-modal-overlay.show { display: flex; }
+                
+                .custom-modal {
+                    background: white;
+                    border-radius: 16px;
+                    max-width: 480px;
+                    width: 90%;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                    animation: slideUp 0.3s ease;
+                    overflow: hidden;
+                }
+                .custom-modal-header {
+                    background: linear-gradient(135deg, #dc2626, #b91c1c);
+                    color: white;
+                    padding: 1.5rem;
+                    text-align: center;
+                }
+                .custom-modal-header .icon {
+                    width: 60px; height: 60px;
+                    background: rgba(255,255,255,0.2);
+                    border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    margin: 0 auto 12px;
+                    font-size: 32px;
+                }
+                .custom-modal-header h4 { margin: 0; font-weight: 700; }
+                
+                .custom-modal-body {
+                    padding: 1.5rem;
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+                .custom-modal-body p { color: #64748b; margin-bottom: 1rem; }
+                .missing-doc-list { list-style: none; padding: 0; margin: 0; }
+                .missing-doc-list li {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 12px;
+                    background: #fef2f2;
+                    border-left: 3px solid #dc2626;
+                    margin-bottom: 8px;
+                    border-radius: 0 8px 8px 0;
+                    color: #991b1b;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                }
+                .missing-doc-list li .material-symbols-outlined {
+                    font-size: 18px;
+                    color: #dc2626;
+                }
+                
+                .custom-modal-footer {
+                    padding: 1rem 1.5rem 1.5rem;
+                    text-align: center;
+                }
+                .btn-close-modal {
+                    background: var(--iso-navy);
+                    color: white;
+                    border: none;
+                    padding: 12px 40px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .btn-close-modal:hover {
+                    background: #1e293b;
+                    transform: translateY(-1px);
+                }
+                
+                @keyframes slideUp {
+                    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+                    to { opacity: 1; transform: translateY(0) scale(1); }
+                }
             </style>
 
             <div class="py-5" style="background-color: #f8fafc; min-height: 100vh;">
                 <div class="container" style="max-width: 1100px;">
                     
                     <div class="iso-header-box text-center">
-                        <h1 class="font-weight-bold mb-2">Pilihan Skema &amp; Kompetensi</h1>
-                        <p class="mb-0 text-white-50">Pilih jenis sertifikasi dan pelajari unit kompetensi yang akan diujikan.</p>
+                        <h1 class="font-weight-bold mb-2">Unggah Bukti Persyaratan</h1>
+                        <p class="mb-0 text-white-50">Silakan lengkapi dokumen persyaratan untuk sertifikasi Coating Inspector (ISO 17024).</p>
                     </div>
 
                     <div class="iso-body-box">
                         
+                        <!-- STEPPER: Step 2 = Upload (active), Step 3 = Skema -->
                         <div class="step-container">
                             <div class="step-item completed"><div class="step-circle"><i class="fa fa-check"></i></div><div class="step-label">Data Diri</div></div>
-                            <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Skema</div></div>
-                            <div class="step-item"><div class="step-circle">3</div><div class="step-label">Upload</div></div>
+                            <div class="step-item active"><div class="step-circle">2</div><div class="step-label">Upload</div></div>
+                            <div class="step-item"><div class="step-circle">3</div><div class="step-label">Skema</div></div>
                             <div class="step-item"><div class="step-circle">4</div><div class="step-label">Review</div></div>
                         </div>
 
-                        <form action="/certification/apply/step2/submit" method="post" id="formStep2">
+                        <div class="alert alert-info border-0 shadow-sm mb-4" style="background-color: #f0f9ff; color: #0c4a6e;">
+                            <div class="d-flex">
+                                <span class="material-symbols-outlined mr-3">info</span>
+                                <div>
+                                    <strong>Catatan Dokumen:</strong><br/>
+                                    Format PDF/JPG. Maksimal 5MB per file. Pastikan dokumen terbaca dengan jelas.<br/>
+                                    <small class="text-muted">* Dokumen khusus Level 2 dan Resertifikasi bersifat opsional di tahap ini, tetapi wajib jika Anda memilihnya di step berikutnya.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="/certification/apply/step2/submit" method="post" enctype="multipart/form-data" id="formStep2" onsubmit="return validateStep2()">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
+                            <h5 class="font-weight-bold mb-4 mt-2" style="color: var(--iso-navy);">
+                                <span class="material-symbols-outlined align-middle mr-1 text-primary">folder_shared</span> Dokumen Umum (Wajib)
+                            </h5>
+
                             <div class="row">
-                                <div class="col-lg-8">
-                                    
-                                    <div class="mb-5">
-                                        <h5 class="font-weight-bold mb-3" style="color: var(--iso-navy);">
-                                            <span class="material-symbols-outlined align-middle mr-1 text-primary">assignment_ind</span> Jenis Permohonan
-                                        </h5>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="radio-card-label">
-                                                    <input type="radio" name="application_type" value="new" class="radio-card-input" 
-                                                           t-att-checked="'checked' if application.application_type == 'new' else None"
-                                                           onchange="toggleRecert(false)"/>
-                                                    <div class="radio-card">
-                                                        <i class="fa fa-check-circle check-icon"></i>
-                                                        <h6 class="font-weight-bold mb-1">Sertifikasi Baru</h6>
-                                                        <small class="text-muted">New Certification</small>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label class="radio-card-label">
-                                                    <input type="radio" name="application_type" value="recert" class="radio-card-input"
-                                                           t-att-checked="'checked' if application.application_type == 'recert' else None"
-                                                           onchange="toggleRecert(true)"/>
-                                                    <div class="radio-card">
-                                                        <i class="fa fa-check-circle check-icon"></i>
-                                                        <h6 class="font-weight-bold mb-1">Perpanjangan</h6>
-                                                        <small class="text-muted">Resertifikasi / Renewal</small>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div id="recert_input" class="mt-2 p-3 rounded border" style="display: none; background-color: #fff7ed; border-color: #ffedd5 !important;">
-                                            <label class="font-weight-bold small text-warning-dark">Nomor Sertifikat Lama <span class="text-danger">*</span></label>
-                                            <input type="text" name="previous_cert_number" class="form-control" 
-                                                   t-att-value="application.previous_cert_number"
-                                                   placeholder="Contoh: ISO-17024-CI-2022-001"/>
-                                        </div>
+                                <div class="col-md-6 upload-group">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="upload-label"><span class="material-symbols-outlined" style="color:#64748b; font-size:18px;">description</span> Daftar Riwayat Hidup (CV)</label>
+                                        <span class="badge-required">Wajib</span>
                                     </div>
-
-                                    <div class="mb-5">
-                                        <h5 class="font-weight-bold mb-3" style="color: var(--iso-navy);">
-                                            <span class="material-symbols-outlined align-middle mr-1 text-primary">workspace_premium</span> Pilih Skema Okupasi
-                                        </h5>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="radio-card-label">
-                                                    <input type="radio" name="scheme" value="level1" class="radio-card-input"
-                                                           t-att-checked="'checked' if application.scheme == 'level1' else None"
-                                                           onchange="updateScheme('level1')"/>
-                                                    <div class="radio-card">
-                                                        <i class="fa fa-check-circle check-icon"></i>
-                                                        <span class="badge badge-light border mb-2">Basic Level</span>
-                                                        <h5 class="font-weight-bold" style="color: var(--iso-navy);">Coating Inspector L1</h5>
-                                                        <p class="small text-muted mt-1">Inspeksi Visual &amp; Pendataan</p>
-                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">Rp 7.200.000</h5>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label class="radio-card-label">
-                                                    <input type="radio" name="scheme" value="level2" class="radio-card-input"
-                                                           t-att-checked="'checked' if application.scheme == 'level2' else None"
-                                                           onchange="updateScheme('level2')"/>
-                                                    <div class="radio-card">
-                                                        <i class="fa fa-check-circle check-icon"></i>
-                                                        <span class="badge badge-warning text-white mb-2">Advanced</span>
-                                                        <h5 class="font-weight-bold" style="color: var(--iso-navy);">Coating Inspector L2</h5>
-                                                        <p class="small text-muted mt-1">Prosedur &amp; Analisis Kegagalan</p>
-                                                        <h5 class="mt-3 font-weight-bold" style="color: var(--iso-gold);">Rp 13.600.000</h5>
-                                                    </div>
-                                                </label>
-                                            </div>
+                                    <div class="upload-box" id="box-cv">
+                                        <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+                                        <div class="text-center">
+                                            <div class="upload-text">Klik untuk upload CV</div>
+                                            <div class="upload-sub">PDF (Max 5MB)</div>
                                         </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <h5 class="font-weight-bold mb-3" style="color: var(--iso-navy);">
-                                            <span class="material-symbols-outlined align-middle mr-1 text-primary">fact_check</span> Rincian Unit Kompetensi
-                                        </h5>
-                                        
-                                         <div id="comp_level1" class="comp-section">
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L1.01</span> Pembersihan Permukaan (Surface Prep)</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Memeriksa dan melakukan pembersihan permukaan dengan alat dan bahan khusus sebagai berikut:</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                   <li>Solvent</li>
-  <li>Chemical stripping</li>
-  <li>Hand-tools</li>
-  <li>Dry abrasive blasting</li>
-  <li>Wet abrasive blasting</li>
-  <li>Water jetting</li>
-  <li>Electrochemical stripping</li>
-
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L1.02</span> Pra-Kualifikasi &amp; Pengujian</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Melakukan pra-kualifikasi dengan mempertimbangkan parameter sebagai berikut :</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                     <li>Pra-kualifikasi terhadap pemasok.</li>
-  <li>Melakukan pengujian liquid coating di laboratorium.</li>
-  <li>Menyelenggarakan pre-job conference.</li>
-  <li>Mengidentifikasi kecepatan angin guna mencegah kehilangan material coating. <em>(*Mengacu pada dokumen PIMCC*)</em></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L1.03</span> Pelaksanaan Pelapisan (Coating Application)</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Melaksanakan pelapisan dengan beberapa alat dan bahan khusus sebagai berikut:</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                   <li>Kuas</li>
-  <li>Conventional air spray</li>
-  <li>Airless spray</li>
-  <li>Liquid coating</li>
-  <li>Decorative coating</li>
-  <li>Tape coating</li>
-  <li>Glass lining</li>
-  <li>Hot dip galvanizing</li>
-  <li>Insulation coating</li>
-  <li>High temperature coating</li>
-  <li>Chemical resistant coating</li>
-  <li>Sealer</li>
-  <li>Putty</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L1.04</span> Inspeksi Aplikasi Coating</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Melakukan inspeksi terhadap beberapa aspek aplikasi coating sebagai berikut:</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                   <li>Lingkungan</li>
-  <li>Persiapan permukaan</li>
-  <li>Liquid coating</li>
-  <li>Powder coating</li>
-  <li>Tape coating</li>
-  <li>Glass lining</li>
-  <li>Hot dip galvanizing</li>
-  <li>Insulating coating</li>
-  <li>High temperature coating</li>
-  <li>Chemical resistant coating</li>
-  <li>Sealer</li>
-  <li>Putty</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div id="comp_level2" class="comp-section">
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L2.01</span> Spesifikasi Pekerjaan</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Membuat dan melakukan spesifikasi pekerjaan sebagai berikut :</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                    <li>Spesifikasi pengerjaan coating.</li>
-  <li>Prosedur persiapan permukaan dan aplikasi coating.</li>
-  <li>Formula material coating.</li>
-  <li>Pengujian formula dan bahan baku material coating.</li>
-  <li>Technical Data Sheet (TDS).</li>
-  <li>Material Safety Data Sheet (MSDS).</li>
-  <li>Estimasi kebutuhan material, alat, dan sumber daya manusia (SDM).</li>
-  <li>Inspection Test Plan (ITP).</li>
-  <li>Kajian mutu coating.</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L2.02</span> Pengujian Spesifikasi</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Melakukan pengujian dengan spesifikasi sebagai berikut :</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                   <li>Bahan baku coating.</li>
-  <li>Coating cair.</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L2.03</span> Pembuatan Prosedur</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Membuat prosedur dengan spesifikasi sebagai berikut :</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                   <li>Pembuatan coating.</li>
-  <li>Pengujian coating.</li>
-  <li>Aplikasi coating.</li>
-  <li>Pengkajian coating.</li>
-  <li>Pelatihan SDM coating.</li>
-  <li>Persiapan sertifikasi SDM coating.</li>
-  <li>Kualifikasi pemasok coating.</li>
-  <li>Pengadaan material coating.</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="comp-card">
-                                            <div class="comp-header">
-                                                <span><span class="comp-code">UK.CT-L2.04</span> Pelapisan Khusus &amp; Inspeksi Lanjut</span>
-                                            </div>
-                                            <div class="comp-body">
-                                                <strong>Melaksanakan pelapisan dan inspeksi dengan beberapa alat dan bahan khusus sebagai berikut :</strong>
-                                                <ul class="mb-0 mt-2 pl-3">
-                                                   <li>Powder coating</li>
-  <li>Polymeric sheet</li>
-  <li>Rubber lining</li>
-  <li>Fireproof coating</li>
-  <li>Thermal spray coating</li>
-  <li>Concrete coating</li>
-  <li>Ceramic coating</li>
-  <li>Floor coating</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mt-4">
-                                        <a href="/certification/apply?edit=1" class="btn btn-link text-muted pl-0 mt-3">
-                                            <i class="fa fa-arrow-left"></i> Kembali ke Data Diri
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                                <div class="col-lg-4">
-                                    <div class="sidebar-summary p-4">
-                                        <h6 class="font-weight-bold text-uppercase text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 1px;">Ringkasan Pilihan</h6>
-                                        
-                                        <div class="mb-4">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <div style="width: 40px; height: 40px; background: #fffbeb; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-                                                    <span class="material-symbols-outlined text-warning">workspace_premium</span>
-                                                </div>
-                                                <div>
-                                                    <h6 class="font-weight-bold m-0" id="summary-scheme" style="color: var(--iso-navy);">Pilih Skema</h6>
-                                                    <small class="text-muted" id="summary-level">-</small>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="border-top pt-3 mb-3">
-                                            <div class="d-flex justify-content-between mb-2 small text-muted">
-                                                <span>Biaya Ujian</span>
-                                                <span id="summary-exam">Rp 0</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between mb-2 small text-muted">
-                                                <span>Biaya Admin</span>
-                                                <span>Rp 1.600.000</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                                <span class="font-weight-bold text-dark">Total</span>
-                                                <span class="h4 font-weight-bold m-0" style="color: var(--iso-gold);" id="summary-total">Rp 0</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="alert alert-warning small p-2 mt-3 mb-3 border-0" style="background-color: #fffbeb; color: #92400e;">
-                                            <div class="d-flex">
-                                                <span class="material-symbols-outlined mr-2" style="font-size: 16px;">warning</span>
-                                                <span id="summary-req">Pilih skema untuk melihat syarat.</span>
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-iso-gold shadow">
-                                            Lanjut ke Bukti <i class="fa fa-arrow-right ml-2"></i>
-                                        </button>
-                                        <div class="text-center mt-3">
-                                            <small class="text-muted" style="font-size: 0.7rem;">Langkah Selanjutnya: Upload Dokumen</small>
-                                        </div>
+                                        <input type="file" name="cv_file" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-cv')"/>
                                     </div>
                                 </div>
 
+                                <div class="col-md-6 upload-group">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="upload-label"><span class="material-symbols-outlined" style="color:#64748b; font-size:18px;">account_box</span> Pas Foto Background Merah</label>
+                                        <span class="badge-required">Wajib</span>
+                                    </div>
+                                    <div class="upload-box" id="box-foto">
+                                        <span class="material-symbols-outlined upload-icon">image</span>
+                                        <div class="text-center">
+                                            <div class="upload-text">Klik untuk upload Foto</div>
+                                            <div class="upload-sub">JPG (Max 5MB)</div>
+                                        </div>
+                                        <input type="file" name="pas_foto" class="file-input-hidden" accept="image/*" onchange="updateBox(this, 'box-foto')"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 upload-group">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="upload-label"><span class="material-symbols-outlined" style="color:#64748b; font-size:18px;">school</span> Ijazah Pendidikan Terakhir</label>
+                                        <span class="badge-required">Wajib</span>
+                                    </div>
+                                    <div class="upload-box" id="box-ijazah">
+                                        <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+                                        <div class="text-center">
+                                            <div class="upload-text">Klik untuk upload Ijazah</div>
+                                            <div class="upload-sub">PDF (Max 5MB)</div>
+                                        </div>
+                                        <input type="file" name="ijazah_file" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-ijazah')"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 upload-group">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="upload-label"><span class="material-symbols-outlined" style="color:#64748b; font-size:18px;">medical_services</span> Surat Sehat &amp; Tidak Buta Warna</label>
+                                        <span class="badge-required">Wajib</span>
+                                    </div>
+                                    <div class="upload-box" id="box-sehat">
+                                        <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+                                        <div class="text-center">
+                                            <div class="upload-text">Klik untuk upload Surat</div>
+                                            <div class="upload-sub">PDF (Max 5MB)</div>
+                                        </div>
+                                        <input type="file" name="ishihara_test" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-sehat')"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 upload-group">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="upload-label"><span class="material-symbols-outlined" style="color:#64748b; font-size:18px;">local_police</span> SKCK (Aktif)</label>
+                                        <span class="badge-required">Wajib</span>
+                                    </div>
+                                    <div class="upload-box" id="box-skck">
+                                        <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+                                        <div class="text-center">
+                                            <div class="upload-text">Klik untuk upload SKCK</div>
+                                            <div class="upload-sub">PDF (Max 5MB)</div>
+                                        </div>
+                                        <input type="file" name="skck_file" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-skck')"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 upload-group">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="upload-label"><span class="material-symbols-outlined" style="color:#64748b; font-size:18px;">workspace_premium</span> Sertifikat Pelatihan Coating</label>
+                                        <span class="badge-required">Wajib</span>
+                                    </div>
+                                    <div class="upload-box" id="box-pelatihan">
+                                        <span class="material-symbols-outlined upload-icon">cloud_upload</span>
+                                        <div class="text-center">
+                                            <div class="upload-text">Klik untuk upload Sertifikat</div>
+                                            <div class="upload-sub">PDF (Max 5MB)</div>
+                                        </div>
+                                        <input type="file" name="training_cert" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-pelatihan')"/>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- DOKUMEN KHUSUS LEVEL 2 (SELALU TAMPIL, OPSIONAL) -->
+                            <div class="p-4 rounded-lg mt-4 mb-4" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
+                                <h5 class="font-weight-bold mb-3" style="color: #166534;">
+                                    <span class="material-symbols-outlined align-middle mr-1">military_tech</span> Dokumen Khusus Level 2
+                                    <small class="text-muted font-weight-normal ml-2">(Upload jika ingin mendaftar Level 2)</small>
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 upload-group">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <label class="upload-label" style="color: #166534;">
+                                                <span class="material-symbols-outlined" style="color:#166534; font-size:18px;">workspace_premium</span> Sertifikat Level 1 (Prasyarat)
+                                            </label>
+                                            <span class="badge-conditional-l2">Wajib jika Level 2</span>
+                                        </div>
+                                        <div class="upload-box" id="box-cert-l1" style="border-color: #86efac; background-color: white;">
+                                            <span class="material-symbols-outlined upload-icon" style="color: #22c55e;">cloud_upload</span>
+                                            <div class="text-center">
+                                                <div class="upload-text">Upload Sertifikat Level 1</div>
+                                                <div class="upload-sub">PDF (Max 5MB)</div>
+                                            </div>
+                                            <input type="file" name="cert_level1_file" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-cert-l1')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DOKUMEN KHUSUS RESERTIFIKASI (SELALU TAMPIL, OPSIONAL) -->
+                            <div class="p-4 rounded-lg mt-4 mb-4" style="background-color: #fff7ed; border: 1px solid #ffedd5;">
+                                <h5 class="font-weight-bold mb-3" style="color: #c2410c;">
+                                    <span class="material-symbols-outlined align-middle mr-1">history_edu</span> Dokumen Khusus Resertifikasi
+                                    <small class="text-muted font-weight-normal ml-2">(Upload jika ingin perpanjangan sertifikat)</small>
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 upload-group">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <label class="upload-label" style="color: #c2410c;">
+                                                <span class="material-symbols-outlined" style="color:#c2410c; font-size:18px;">verified</span> Sertifikat Lama (Kadaluwarsa)
+                                            </label>
+                                            <span class="badge-conditional-recert">Wajib jika Resertifikasi</span>
+                                        </div>
+                                        <div class="upload-box" id="box-cert-lama" style="border-color: #fdba74; background-color: white;">
+                                            <span class="material-symbols-outlined upload-icon" style="color: #fb923c;">cloud_upload</span>
+                                            <div class="text-center">
+                                                <div class="upload-text">Upload Sertifikat Lama</div>
+                                                <div class="upload-sub">PDF (Max 5MB)</div>
+                                            </div>
+                                            <input type="file" name="previous_cert_file" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-cert-lama')"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 upload-group">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <label class="upload-label" style="color: #c2410c;">
+                                                <span class="material-symbols-outlined" style="color:#c2410c; font-size:18px;">book</span> Logbook Surveillance (3 Thn)
+                                            </label>
+                                            <span class="badge-conditional-recert">Wajib jika Resertifikasi</span>
+                                        </div>
+                                        <div class="upload-box" id="box-logbook" style="border-color: #fdba74; background-color: white;">
+                                            <span class="material-symbols-outlined upload-icon" style="color: #fb923c;">cloud_upload</span>
+                                            <div class="text-center">
+                                                <div class="upload-text">Upload Logbook</div>
+                                                <div class="upload-sub">PDF (Max 5MB)</div>
+                                            </div>
+                                            <input type="file" name="logbook_file" class="file-input-hidden" accept=".pdf" onchange="updateBox(this, 'box-logbook')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4"/>
+                            <h5 class="font-weight-bold mb-4" style="color: var(--iso-navy);">
+                                <span class="material-symbols-outlined align-middle mr-1 text-primary">folder_open</span> Dokumen Tambahan
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12 upload-group">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <label class="upload-label"><span class="material-symbols-outlined" style="color:#64748b; font-size:18px;">attach_file</span> Dokumen Lainnya</label>
+                                        <span class="badge badge-secondary px-2">Opsional</span>
+                                    </div>
+                                    <div class="upload-box" id="box-optional" style="height: 100px;">
+                                        <div class="d-flex align-items-center">
+                                            <span class="material-symbols-outlined upload-icon mr-3 mb-0">upload_file</span>
+                                            <div>
+                                                <div class="upload-text">Klik untuk upload file pendukung</div>
+                                                <div class="upload-sub">PDF/JPG (Jika ada)</div>
+                                            </div>
+                                        </div>
+                                        <input type="file" name="additional_file" class="file-input-hidden" accept=".pdf,.jpg,.png" onchange="updateBox(this, 'box-optional')"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                                <a href="/certification/apply?edit=1" class="btn btn-outline-secondary px-4 py-2 font-weight-bold" style="border-radius: 8px;">
+                                    <i class="fa fa-arrow-left"></i> Kembali ke Data Diri
+                                </a>
+                                
+                                <button type="submit" class="btn btn-iso-gold px-5 shadow">
+                                    Lanjut Pilih Skema <i class="fa fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+
                         </form>
                     </div>
                 </div>
             </div>
 
+            <!-- CUSTOM MODAL FOR VALIDATION -->
+            <div class="custom-modal-overlay" id="validationModal">
+                <div class="custom-modal">
+                    <div class="custom-modal-header">
+                        <div class="icon">
+                            <span class="material-symbols-outlined">error</span>
+                        </div>
+                        <h4>Dokumen Belum Lengkap</h4>
+                    </div>
+                    <div class="custom-modal-body">
+                        <p>Mohon lengkapi dokumen wajib berikut sebelum melanjutkan:</p>
+                        <ul class="missing-doc-list" id="missingDocsList">
+                            <!-- Filled by JavaScript -->
+                        </ul>
+                    </div>
+                    <div class="custom-modal-footer">
+                        <button type="button" class="btn-close-modal" onclick="closeValidationModal()">
+                            <span class="material-symbols-outlined align-middle mr-1" style="font-size: 18px;">check_circle</span>
+                            Mengerti, Saya Akan Lengkapi
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <script type="text/javascript">
-                function toggleRecert(isRecert) {
-                    var input = document.getElementById('recert_input');
-                    if(isRecert) {
-                        input.style.display = 'block';
-                    } else {
-                        input.style.display = 'none';
+                function updateBox(input, boxId) {
+                    if (input.files &amp;&amp; input.files[0]) {
+                        var box = document.getElementById(boxId);
+                        var fileName = input.files[0].name;
+                        
+                        box.classList.add('has-file');
+                        
+                        var textElem = box.querySelector('.upload-text');
+                        var subElem = box.querySelector('.upload-sub');
+                        
+                        textElem.innerText = fileName;
+                        subElem.innerText = "File Terpilih - Klik untuk ganti";
+                        subElem.classList.add('font-weight-bold', 'text-success');
                     }
                 }
-
-                function updateScheme(scheme) {
-                    var label = scheme === 'level1' ? 'Coating Inspector L1' : 'Coating Inspector L2';
-                    var level = scheme === 'level1' ? 'Basic Level' : 'Advanced Level';
-                    var priceExam = scheme === 'level1' ? 7200000 : 13600000;
-                    var adminFee = 1600000;
-                    var total = priceExam + adminFee;
+                
+                function showValidationModal(missingDocs) {
+                    var listEl = document.getElementById('missingDocsList');
+                    listEl.innerHTML = '';
                     
-                    var req = scheme === 'level1' 
-                        ? 'Tidak ada syarat pengalaman khusus.' 
-                        : 'Wajib memiliki bukti pengalaman kerja minimal 24 Bulan.';
+                    missingDocs.forEach(function(doc) {
+                        var li = document.createElement('li');
+                        li.innerHTML = '<span class="material-symbols-outlined">cancel</span>' + doc;
+                        listEl.appendChild(li);
+                    });
                     
-                    // Format angka ke Rupiah
-                    function formatRupiah(num) {
-                        return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                    }
-                    
-                    document.getElementById('summary-scheme').innerText = label;
-                    document.getElementById('summary-level').innerText = level;
-                    document.getElementById('summary-exam').innerText = formatRupiah(priceExam);
-                    document.getElementById('summary-total').innerText = formatRupiah(total);
-                    document.getElementById('summary-req').innerText = req;
-
-                    document.getElementById('comp_level1').style.display = scheme === 'level1' ? 'block' : 'none';
-                    document.getElementById('comp_level2').style.display = scheme === 'level2' ? 'block' : 'none';
+                    document.getElementById('validationModal').classList.add('show');
+                    document.body.style.overflow = 'hidden';
                 }
-
-                window.onload = function() {
-                    // Cek radio terpilih saat reload
-                    var radios = document.getElementsByName('scheme');
-                    var selected = false;
-                    for(var i=0; i&lt;radios.length; i++) {
-                        if(radios[i].checked) { updateScheme(radios[i].value); selected = true; }
+                
+                function closeValidationModal() {
+                    document.getElementById('validationModal').classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+                
+                document.getElementById('validationModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeValidationModal();
                     }
-                    if(!selected) {
-                        document.getElementById('comp_level1').style.display = 'none';
-                        document.getElementById('comp_level2').style.display = 'none';
+                });
+                
+                function validateStep2() {
+                    var missingDocs = [];
+                    
+                    var requiredFields = [
+                        { name: 'cv_file', label: 'Daftar Riwayat Hidup (CV)' },
+                        { name: 'pas_foto', label: 'Pas Foto Background Merah' },
+                        { name: 'ijazah_file', label: 'Ijazah Pendidikan Terakhir' },
+                        { name: 'ishihara_test', label: 'Surat Sehat dan Tes Buta Warna' },
+                        { name: 'skck_file', label: 'SKCK (Aktif)' },
+                        { name: 'training_cert', label: 'Sertifikat Pelatihan Coating' }
+                    ];
+                    
+                    requiredFields.forEach(function(field) {
+                        var input = document.querySelector('input[name="' + field.name + '"]');
+                        if (!input || !input.files || input.files.length === 0) {
+                            missingDocs.push(field.label);
+                        }
+                    });
+                    
+                    if (missingDocs.length > 0) {
+                        showValidationModal(missingDocs);
+                        return false;
                     }
                     
-                    var types = document.getElementsByName('application_type');
-                    for(var i=0; i&lt;types.length; i++) {
-                        if(types[i].checked) toggleRecert(types[i].value === 'recert');
-                    }
-                };
+                    return true;
+                }
             </script>
+
         </t>
     </template>
 </odoo>

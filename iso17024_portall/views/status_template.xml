@@ -53,9 +53,9 @@
                 .status-draft { background: #f1f5f9; color: #64748b; }
                 .status-submitted { background: #fef3c7; color: #d97706; }
                 .status-revision { background: #ffedd5; color: #ea580c; }
-                .status-revision { background: #ffedd5; color: #ea580c; }
                 .status-payment { background: #dbeafe; color: #2563eb; }
                 .status-verified { background: #dcfce7; color: #16a34a; }
+                .status-scheduled { background: #e9d5ff; color: #9333ea; }
                 .status-rejected { background: #fee2e2; color: #dc2626; }
                 
                 /* Timeline */
@@ -181,6 +181,7 @@
                                     <t t-elif="application.state == 'revision'">Perlu Revisi</t>
                                     <t t-elif="application.state == 'payment'">Menunggu Pembayaran</t>
                                     <t t-elif="application.state == 'verified'">Terverifikasi</t>
+                                    <t t-elif="application.state == 'scheduled'">Terjadwal</t>
                                     <t t-elif="application.state == 'rejected'">Ditolak</t>
                                     <t t-else=""><t t-esc="application.state"/></t>
                                 </div>
@@ -217,6 +218,94 @@
                         </div>
                     </div>
                     
+                    <!-- Info Detail Card (Muncul jika sudah verified/scheduled) -->
+                    <t t-if="application.state in ['verified', 'scheduled']">
+                        <div class="summary-card mt-4">
+                            <div class="summary-header" style="background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%); padding: 20px;">
+                                <h4 style="margin: 0; font-weight: 600;">
+                                    <span class="material-symbols-outlined align-middle mr-2" style="font-size: 22px;">info</span>
+                                    Informasi Sertifikasi Anda
+                                </h4>
+                            </div>
+                            <div class="summary-body">
+                                <div class="info-grid">
+                                    <!-- Info Skema -->
+                                    <div class="info-item">
+                                        <label>🎓 Level Sertifikasi</label>
+                                        <div class="value">
+                                            <t t-if="application.scheme == 'level1'">Coating Inspector Level 1</t>
+                                            <t t-elif="application.scheme == 'level2'">Coating Inspector Level 2</t>
+                                            <t t-else="">-</t>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>📝 Jenis Permohonan</label>
+                                        <div class="value">
+                                            <t t-if="application.application_type == 'new'">Sertifikasi Baru</t>
+                                            <t t-elif="application.application_type == 'recert'">Resertifikasi</t>
+                                            <t t-else="">-</t>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>💰 Total Pembayaran</label>
+                                        <div class="value">
+                                            Rp <t t-esc="'{:,.0f}'.format(application.payment_amount).replace(',', '.')"/>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>✅ Status Pembayaran</label>
+                                        <div class="value" style="color: #16a34a;">Lunas</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Info Jadwal (hanya tampil jika sudah scheduled) -->
+                                <t t-if="application.state == 'scheduled'">
+                                    <hr style="margin: 24px 0; border-color: #e2e8f0;"/>
+                                    <h5 style="color: #7c3aed; font-weight: 600; margin-bottom: 16px;">
+                                        <span class="material-symbols-outlined align-middle mr-1" style="font-size: 20px;">calendar_month</span>
+                                        Jadwal Ujian Anda
+                                    </h5>
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label>📅 Tanggal Ujian</label>
+                                            <div class="value">
+                                                <t t-esc="application.exam_date" t-options="{'widget': 'date', 'format': 'dd MMMM yyyy'}"/>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>⏰ Waktu</label>
+                                            <div class="value"><t t-esc="application.exam_time or '-'"/></div>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>📍 Lokasi</label>
+                                            <div class="value"><t t-esc="application.exam_location or '-'"/></div>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>🏢 Ruangan</label>
+                                            <div class="value"><t t-esc="application.exam_room or '-'"/></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Catatan dari Admin -->
+                                    <t t-if="application.exam_notes">
+                                        <div class="alert alert-info mt-3" style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px;">
+                                            <strong>📝 Catatan dari Admin:</strong>
+                                            <p class="mb-0 mt-1" t-esc="application.exam_notes"/>
+                                        </div>
+                                    </t>
+                                </t>
+                                
+                                <!-- Pesan menunggu jadwal (jika verified tapi belum scheduled) -->
+                                <t t-if="application.state == 'verified'">
+                                    <div class="alert alert-warning mt-3" style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px;">
+                                        <strong>⏳ Menunggu Penjadwalan</strong>
+                                        <p class="mb-0 mt-1">Admin sedang menyusun jadwal ujian Anda. Informasi jadwal akan ditampilkan di halaman ini setelah ditetapkan.</p>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                    
                     <!-- Timeline Card -->
                     <div class="timeline-card">
                         <h4>
@@ -226,7 +315,7 @@
                         
                         <div class="timeline">
                             <!-- Step 1: Terdaftar -->
-                            <div t-attf-class="timeline-step #{application.state in ['submitted', 'verified'] and 'completed' or (application.state == 'draft' and 'active' or '')}">
+                            <div t-attf-class="timeline-step #{application.state in ['submitted', 'verified', 'scheduled'] and 'completed' or (application.state == 'draft' and 'active' or '')}">
                                 <div class="timeline-dot">
                                     <span class="material-symbols-outlined">edit_document</span>
                                 </div>
@@ -234,7 +323,7 @@
                             </div>
                             
                             <!-- Step 2: Submitted -->
-                            <div t-attf-class="timeline-step #{application.state == 'verified' and 'completed' or (application.state == 'submitted' and 'active' or '')}">
+                            <div t-attf-class="timeline-step #{application.state in ['verified', 'scheduled'] and 'completed' or (application.state == 'submitted' and 'active' or '')}">
                                 <div class="timeline-dot">
                                     <span class="material-symbols-outlined">upload_file</span>
                                 </div>
@@ -242,15 +331,15 @@
                             </div>
                             
                             <!-- Step 3: Verifikasi -->
-                            <div t-attf-class="timeline-step #{application.state in ['payment', 'verified'] and 'completed' or (application.state == 'submitted' and 'active' or '')}">
+                            <div t-attf-class="timeline-step #{application.state in ['payment', 'verified', 'scheduled'] and 'completed' or (application.state == 'submitted' and 'active' or '')}">
                                 <div class="timeline-dot">
                                     <span class="material-symbols-outlined">fact_check</span>
                                 </div>
                                 <div class="timeline-label">Verifikasi Admin</div>
                             </div>
 
-                            <!-- Step 4: Pembayaran (NEW) -->
-                            <div t-attf-class="timeline-step #{application.state == 'verified' and 'completed' or (application.state == 'payment' and 'active' or '')}">
+                            <!-- Step 4: Pembayaran -->
+                            <div t-attf-class="timeline-step #{application.state in ['verified', 'scheduled'] and 'completed' or (application.state == 'payment' and 'active' or '')}">
                                 <div class="timeline-dot">
                                     <span class="material-symbols-outlined">payments</span>
                                 </div>
@@ -258,8 +347,8 @@
                             </div>
 
                             
-                            <!-- Step 4: Selesai -->
-                            <div class="timeline-step">
+                            <!-- Step 5: Dijadwalkan -->
+                            <div t-attf-class="timeline-step #{application.state == 'scheduled' and 'completed' or (application.state == 'verified' and 'active' or '')}">
                                 <div class="timeline-dot">
                                     <span class="material-symbols-outlined">workspace_premium</span>
                                 </div>
@@ -298,8 +387,14 @@
                         </t>
                         <t t-elif="application.state == 'verified'">
                             <div class="status-message verified">
-                                <h5>✅ Dokumen Terverifikasi!</h5>
-                                <p>Selamat! Dokumen administrasi Anda telah valid. Silakan tunggu informasi jadwal ujian yang akan dikirim melalui email.</p>
+                                <h5>✅ Pembayaran Diterima</h5>
+                                <p>Pembayaran Anda sudah dikonfirmasi. Silakan tunggu informasi jadwal ujian yang akan dikirim oleh admin.</p>
+                            </div>
+                        </t>
+                        <t t-elif="application.state == 'scheduled'">
+                            <div class="status-message" style="background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%); border-left-color: #9333ea;">
+                                <h5>📅 Ujian Sudah Dijadwalkan!</h5>
+                                <p>Selamat! Jadwal ujian Anda sudah ditetapkan. Pastikan hadir tepat waktu sesuai jadwal di bawah.</p>
                             </div>
                         </t>
                         <t t-elif="application.state == 'rejected'">

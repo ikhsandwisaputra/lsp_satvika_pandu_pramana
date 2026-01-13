@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== SNIPPET TEMPLATE: Certification Process Flow ========== -->
+    <template id="s_certification_flow" name="Certification Process Flow">
+        <section class="s_certification_flow pt-5 pb-5" style="background-color: #f8fafc;">
+            <div class="container">
+                <!-- Section Header -->
+                <div class="text-center mb-5">
+                    <span class="text-uppercase fw-bold" style="color: #d4af37; letter-spacing: 2px; font-size: 0.75rem;">Skema Sertifikasi</span>
+                    <h2 class="mt-2 mb-3 fw-bold" style="font-size: 2rem; color: #0f172a;">Alur Proses Sertifikasi</h2>
+                    <p class="text-muted mx-auto" style="max-width: 600px;">
+                        Ikuti langkah-langkah berikut untuk menjadi Inspektur Coating tersertifikasi.
+                    </p>
+                </div>
+                
+                <!-- Timeline Container -->
+                <div class="bg-white rounded-4 shadow-sm p-4 p-md-5" style="border: 1px solid #e2e8f0;">
+                    
+                    <!-- Timeline Steps -->
+                    <div class="row g-4 justify-content-center text-center">
+                        
+                        <!-- Step 1: Pendaftaran -->
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <div class="step-item">
+                                <div class="step-circle mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; background: linear-gradient(135deg, #d4af37, #b5952f); color: white; box-shadow: 0 8px 20px -5px rgba(212, 175, 55, 0.4);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2V4zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145z"/>
+                                    </svg>
+                                </div>
+                                <div class="step-number mx-auto mb-2 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 26px; height: 26px; background: rgba(212, 175, 55, 0.15); color: #d4af37; font-size: 0.8rem;">1</div>
+                                <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 0.9rem;">Pendaftaran<br/>Website</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.75rem;">Isi formulir online</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Verifikasi -->
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <div class="step-item">
+                                <div class="step-circle mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle bg-white" style="width: 64px; height: 64px; border: 3px solid #cbd5e1; color: #64748b; box-shadow: 0 4px 10px -3px rgba(0,0,0,0.1);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
+                                    </svg>
+                                </div>
+                                <div class="step-number mx-auto mb-2 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 26px; height: 26px; background: #f1f5f9; color: #64748b; font-size: 0.8rem;">2</div>
+                                <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 0.9rem;">Verifikasi<br/>Admin</h6>
+                                <span class="badge" style="background: rgba(212, 175, 55, 0.15); color: #b5952f; font-size: 0.65rem; padding: 4px 10px;">5 Hari</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Pembayaran -->
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <div class="step-item">
+                                <div class="step-circle mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle bg-white" style="width: 64px; height: 64px; border: 3px solid #cbd5e1; color: #64748b; box-shadow: 0 4px 10px -3px rgba(0,0,0,0.1);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/>
+                                        <path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/>
+                                    </svg>
+                                </div>
+                                <div class="step-number mx-auto mb-2 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 26px; height: 26px; background: #f1f5f9; color: #64748b; font-size: 0.8rem;">3</div>
+                                <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 0.9rem;">Pembayaran</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.75rem;">Transfer biaya uji</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Asesmen -->
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <div class="step-item">
+                                <div class="step-circle mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle bg-white" style="width: 64px; height: 64px; border: 3px solid #cbd5e1; color: #64748b; box-shadow: 0 4px 10px -3px rgba(0,0,0,0.1);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                                        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                                        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                                    </svg>
+                                </div>
+                                <div class="step-number mx-auto mb-2 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 26px; height: 26px; background: #f1f5f9; color: #64748b; font-size: 0.8rem;">4</div>
+                                <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 0.9rem;">Asesmen</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.7rem;">Teori, Praktik, Wawancara</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 5: Keputusan -->
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <div class="step-item">
+                                <div class="step-circle mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle bg-white" style="width: 64px; height: 64px; border: 3px solid #cbd5e1; color: #64748b; box-shadow: 0 4px 10px -3px rgba(0,0,0,0.1);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M14 4.5V9h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v7H2V2a2 2 0 0 1 2-2h5.5L14 4.5Zm-4.78 8.12-1.91 1.62v-1.62H6V14h1.31v1.62l1.91-1.62.69.52-2.5 2.12a.5.5 0 0 1-.65 0l-2.5-2.12.69-.52Z"/>
+                                        <path d="M2.5 10a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3Zm.5 1h2v2H3v-2Z"/>
+                                    </svg>
+                                </div>
+                                <div class="step-number mx-auto mb-2 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 26px; height: 26px; background: #f1f5f9; color: #64748b; font-size: 0.8rem;">5</div>
+                                <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 0.9rem;">Keputusan</h6>
+                                <span class="badge" style="background: rgba(212, 175, 55, 0.15); color: #b5952f; font-size: 0.65rem; padding: 4px 10px;">10 Hari</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 6: Sertifikat -->
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <div class="step-item">
+                                <div class="step-circle mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #d4af37; box-shadow: 0 8px 20px -5px rgba(15, 23, 42, 0.4);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.613 6l-.248-1.506 1.086-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z"/>
+                                        <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
+                                    </svg>
+                                </div>
+                                <div class="step-number mx-auto mb-2 d-inline-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 26px; height: 26px; background: rgba(15, 23, 42, 0.1); color: #0f172a; font-size: 0.8rem;">6</div>
+                                <h6 class="fw-bold mb-1" style="color: #0f172a; font-size: 0.9rem;">Penerbitan<br/>Sertifikat</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.75rem;">Unduh sertifikat</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Info Alert -->
+                    <div class="mt-5 d-flex justify-content-center">
+                        <div class="d-flex align-items-start gap-3 rounded-3 p-3 px-4" style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.2); max-width: 520px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#d4af37" viewBox="0 0 16 16" class="flex-shrink-0 mt-1">
+                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                            </svg>
+                            <p class="mb-0" style="font-size: 0.85rem; color: #475569; line-height: 1.5;">
+                                <span class="fw-bold" style="color: #b5952f;">Catatan:</span> Remedial asesmen hanya diberikan <strong>1x kesempatan</strong> jika peserta belum kompeten pada percobaan pertama.
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- CTA Button -->
+                <div class="text-center mt-5">
+                    <a href="/certification/apply" class="btn btn-lg fw-bold px-5 py-3" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #d4af37; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);">
+                        Daftar Sekarang 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" class="ms-2">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                        </svg>
+                    </a>
+                </div>
+                
+            </div>
+        </section>
+    </template>
+    
+    <!-- ========== REGISTER SNIPPET TO WEBSITE BUILDER ========== -->
+    <template id="certification_flow_snippet" inherit_id="website.snippets" name="Certification Flow Snippet">
+        <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+            <t t-snippet="iso17024_portall.s_certification_flow" 
+               t-thumbnail="/iso17024_portall/static/src/img/snippets/s_certification_flow.png"/>
+        </xpath>
+    </template>
+    
+</odoo>

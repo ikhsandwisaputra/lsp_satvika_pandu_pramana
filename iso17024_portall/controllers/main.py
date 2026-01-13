@@ -177,12 +177,11 @@ class IsoPortalController(AuthSignupHome):
         else:
             request.env['certification.application'].sudo().create(vals)
             
-        # Redirect (Nanti ke Step 2, sementara balik sini dulu dengan pesan sukses)
-        # return request.redirect('/certification/apply?saved=1')
+        # Redirect ke Step 2 (Upload Berkas)
         return request.redirect('/certification/apply/step2')
     
     # ---------------------------------------------------------
-    # HALAMAN STEP 2: PILIH SKEMA
+    # HALAMAN STEP 2: UPLOAD DOKUMEN (SEKARANG LEBIH DULU)
     # ---------------------------------------------------------
     @http.route('/certification/apply/step2', type='http', auth='user', website=True)
     def step2_page(self, **kw):
@@ -205,7 +204,7 @@ class IsoPortalController(AuthSignupHome):
         })
 
     # ---------------------------------------------------------
-    # SUBMIT STEP 2
+    # SUBMIT STEP 2: UPLOAD FILE (SEKARANG DI STEP 2)
     # ---------------------------------------------------------
     @http.route('/certification/apply/step2/submit', type='http', auth='user', methods=['POST'], website=True)
     def submit_step_2(self, **kw):
@@ -214,21 +213,48 @@ class IsoPortalController(AuthSignupHome):
         ], limit=1)
 
         if app:
-            vals = {
-                'application_type': kw.get('application_type'),
-                'previous_cert_number': kw.get('previous_cert_number'),
-                'scheme': kw.get('scheme'),
-                'current_step': 2, # Update progress tracking
+            def get_file_data(field_name):
+                file = kw.get(field_name)
+                if file and hasattr(file, 'read'):
+                    return base64.b64encode(file.read())
+                return False
+
+            vals = {'current_step': 2}
+
+            # Mapping Input Name (HTML) -> Database Field (Python)
+            files_map = {
+                # Dokumen Wajib
+                'cv_file': 'cv_file',
+                'pas_foto': 'pas_foto',
+                'ktp_file': 'ktp_file',
+                'ijazah_file': 'ijazah_file',
+                'ishihara_test': 'ishihara_test',
+                'skck_file': 'skck_file',
+                'training_cert': 'training_cert',
+                
+                # Dokumen Resertifikasi (opsional di step ini, dicek di step 3)
+                'previous_cert_file': 'previous_cert_file',
+                'logbook_file': 'logbook_file',
+                
+                # Dokumen Level 2 (opsional di step ini, dicek di step 3)
+                'cert_level1_file': 'cert_level1_file',
+                
+                # Dokumen Tambahan
+                'additional_file': 'additional_file',
             }
+
+            for input_name, db_field in files_map.items():
+                file_data = get_file_data(input_name)
+                if file_data:
+                    vals[db_field] = file_data
+
             app.sudo().write(vals)
 
-        # Lanjut ke Step 3 (Nanti kita buat)
-        # Sementara kita redirect ke halaman yang sama dengan pesan sukses
-        # return request.redirect('/certification/apply/step2?saved=1')
+        # Lanjut ke Step 3 (Pilih Skema)
         return request.redirect('/certification/apply/step3')
     
     # ---------------------------------------------------------
-    # HALAMAN STEP 3: UPLOAD DOKUMEN (INI YANG HILANG)
+    # HALAMAN STEP 3: PILIH SKEMA (SEKARANG DI STEP 3)
     # ---------------------------------------------------------
     @http.route('/certification/apply/step3', type='http', auth='user', website=True)
     def step3_page(self, **kw):
@@ -250,8 +276,9 @@ class IsoPortalController(AuthSignupHome):
         return request.render('iso17024_portall.application_step3_page', {
             'application': app
         })
+    
     # ---------------------------------------------------------
-    # SUBMIT STEP 3 (UPLOAD FILE - UPDATE LENGKAP)
+    # SUBMIT STEP 3: PILIH SKEMA + VALIDASI DOKUMEN KHUSUS
     # ---------------------------------------------------------
     @http.route('/certification/apply/step3/submit', type='http', auth='user', methods=['POST'], website=True)
     def submit_step_3(self, **kw):
@@ -260,41 +287,35 @@ class IsoPortalController(AuthSignupHome):
         ], limit=1)
 
         if app:
-            def get_file_data(field_name):
-                file = kw.get(field_name)
-                if file and hasattr(file, 'read'):
-                    return base64.b64encode(file.read())
-                return False
-
-            vals = {'current_step': 3}
-
-            # Mapping Input Name (HTML) -> Database Field (Python)
-            files_map = {
-                # Dokumen Wajib
-                'cv_file': 'cv_file',
-                'pas_foto': 'pas_foto',
-                'ktp_file': 'ktp_file', # KTP mungkin ada di desain lama, kita simpan saja kalau ada
-                'ijazah_file': 'ijazah_file',
-                'ishihara_test': 'ishihara_test',
-                'skck_file': 'skck_file',
-                'training_cert': 'training_cert',
-                
-                # Dokumen Resertifikasi
-                'previous_cert_file': 'previous_cert_file',
-                'logbook_file': 'logbook_file',
-                
-                # Dokumen Level 2 (Sertifikat Level 1 sebagai prasyarat)
-                'cert_level1_file': 'cert_level1_file',
-                
-                # Dokumen Tambahan
-                'additional_file': 'additional_file',
+            application_type = kw.get('application_type')
+            scheme = kw.get('scheme')
+            
+            # ======== VALIDASI DOKUMEN KHUSUS ========
+            missing_docs = []
+            
+            # Cek dokumen Level 2
+            if scheme == 'level2' and not app.cert_level1_file:
+                missing_docs.append('Sertifikat Level 1 (Prasyarat Level 2)')
+            
+            # Cek dokumen Resertifikasi
+            if application_type == 'recert':
+                if not app.previous_cert_file:
+                    missing_docs.append('Sertifikat Lama (Kadaluwarsa)')
+                if not app.logbook_file:
+                    missing_docs.append('Logbook Surveillance 3 Tahun')
+            
+            # Jika ada dokumen yang kurang, redirect kembali dengan error
+            if missing_docs:
+                error_msg = 'Dokumen berikut wajib diupload: ' + ', '.join(missing_docs)
+                return request.redirect('/certification/apply/step3?error=' + error_msg)
+            
+            # Simpan data skema
+            vals = {
+                'application_type': application_type,
+                'previous_cert_number': kw.get('previous_cert_number'),
+                'scheme': scheme,
+                'current_step': 3,
             }
-
-            for input_name, db_field in files_map.items():
-                file_data = get_file_data(input_name)
-                if file_data:
-                    vals[db_field] = file_data
-
             app.sudo().write(vals)
 
         return request.redirect('/certification/apply/step4')

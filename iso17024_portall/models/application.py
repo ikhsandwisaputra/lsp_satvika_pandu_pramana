@@ -25,6 +25,7 @@ class CertificationApplication(models.Model):
         ('revision', 'Perlu Revisi'),
         ('payment', 'Menunggu Pembayaran'),
         ('verified', 'Terverifikasi'),
+        ('scheduled', 'Terjadwal'),
         ('rejected', 'Ditolak'),
     ], default='draft', string='Status', tracking=True)
 
@@ -121,6 +122,15 @@ class CertificationApplication(models.Model):
     payment_note = fields.Text(string='Catatan Pembayaran')
     confirmed_by = fields.Many2one('res.users', string='Dikonfirmasi Oleh')
 
+    # --- FIELD JADWAL ASESMEN ---
+    exam_date = fields.Date(string='Tanggal Ujian')
+    exam_time = fields.Char(string='Jam Ujian', help='Contoh: 09:00 - 12:00 WIB')
+    exam_location = fields.Char(string='Lokasi Ujian')
+    exam_room = fields.Char(string='Ruangan')
+    exam_notes = fields.Text(string='Catatan Tambahan untuk Asesi')
+    scheduled_by = fields.Many2one('res.users', string='Dijadwalkan Oleh')
+    schedule_date = fields.Datetime(string='Tanggal Penjadwalan')
+
     # =========================================================
     # COMPUTE METHODS
     # =========================================================
@@ -156,6 +166,26 @@ class CertificationApplication(models.Model):
             'confirmed_by': self.env.user.id,
         })
         self.message_post(body="<b style='color:green'>✅ PEMBAYARAN DITERIMA</b><br/>Status aplikasi kini Terverifikasi.")
+
+    def action_set_schedule(self):
+        """Admin SET SCHEDULE: Menjadwalkan ujian asesi setelah pembayaran dikonfirmasi"""
+        if not self.exam_date or not self.exam_location:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Data Jadwal Wajib Diisi!',
+                    'message': 'Silakan isi Tanggal Ujian dan Lokasi Ujian terlebih dahulu.',
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        self.write({
+            'state': 'scheduled',
+            'scheduled_by': self.env.user.id,
+            'schedule_date': fields.Datetime.now(),
+        })
+        self.message_post(body=f"<b style='color:purple'>📅 UJIAN DIJADWALKAN</b><br/>Tanggal: {self.exam_date}<br/>Lokasi: {self.exam_location}")
 
     def action_request_revision(self):
         """Admin MINTA REVISI: Ada dokumen yang perlu diperbaiki"""

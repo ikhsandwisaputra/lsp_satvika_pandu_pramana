@@ -1,0 +1,135 @@
+/* ========================================
+   Organization Structure Snippet Styles
+   ======================================== */
+
+.s_org_structure {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Org Chart Connector Lines */
+.s_org_structure .org-connector-down {
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 2rem;
+    background-color: #cbd5e1;
+}
+
+.s_org_structure .org-connector-up {
+    position: absolute;
+    top: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 2rem;
+    background-color: #cbd5e1;
+}
+
+/* Card Hover Effects */
+.s_org_structure .org-card-director {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.s_org_structure .org-card-director:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.s_org_structure .org-card-manager {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.s_org_structure .org-card-manager:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.s_org_structure .org-card-manager:hover .fa-arrow-right {
+    color: #1152d4 !important;
+}
+
+/* Image Container Styles */
+.s_org_structure .org-card-director img,
+.s_org_structure .org-card-manager img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+    .s_org_structure .org-horizontal-line {
+        display: none !important;
+    }
+
+    .s_org_structure .org-connector-down,
+    .s_org_structure .org-connector-up {
+        display: none !important;
+    }
+
+    .s_org_structure .org-card-director {
+        max-width: 100% !important;
+    }
+}
+
+/* Primary Color Override (matching design) */
+.s_org_structure .text-primary {
+    color: #1152d4 !important;
+}
+
+.s_org_structure .border-primary {
+    border-color: #1152d4 !important;
+}
+
+/* ========================================
+   Certification Flow Snippet Styles
+   ======================================== */
+
+.s_certification_flow {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.s_certification_flow .step-circle {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.s_certification_flow .step-circle:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+    border-color: #d4af37 !important;
+}
+
+.s_certification_flow .step-circle:hover i,
+.s_certification_flow .step-circle:hover .fa {
+    color: #d4af37 !important;
+}
+
+/* Timeline line animation */
+.s_certification_flow .timeline-line {
+    background: linear-gradient(90deg, #d4af37 0%, #0f172a 100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .s_certification_flow .timeline-line {
+        display: none !important;
+    }
+}
+
+/* Badge hover */
+.s_certification_flow .badge {
+    transition: all 0.2s ease;
+}
+
+.s_certification_flow .col-lg-2:hover .badge {
+    background: #d4af37 !important;
+    color: white !important;
+}
+
+/* CTA Button hover */
+.s_certification_flow .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3) !important;
+}

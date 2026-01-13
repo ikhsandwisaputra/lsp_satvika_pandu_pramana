@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== SNIPPET TEMPLATE: Registration Info ========== -->
+    <template id="s_registration_info" name="Registration Info">
+        <section class="s_registration_info pt-5 pb-5" style="background-color: #f8fafc;">
+            <div class="container">
+                
+                <!-- Main Card -->
+                <div class="bg-white rounded-4 shadow-sm overflow-hidden" style="border: 1px solid #e2e8f0;">
+                    
+                    <!-- Header -->
+                    <div class="p-4 p-md-5 border-bottom d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3" style="border-color: #e2e8f0 !important;">
+                        <div>
+                            <h2 class="fw-bold mb-2" style="color: #0f172a; font-size: 1.6rem;">Informasi &amp; Syarat Pendaftaran</h2>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Pelajari persyaratan dan dokumen yang dibutuhkan sebelum mendaftar sertifikasi Coating Inspector LSP Satvika.</p>
+                        </div>
+                        <div class="d-none d-md-flex align-items-center gap-2 rounded-pill px-3 py-2" style="background: rgba(212, 175, 55, 0.1);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#d4af37" viewBox="0 0 16 16">
+                                <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864z"/>
+                            </svg>
+                            <span class="fw-bold text-uppercase" style="color: #d4af37; font-size: 0.7rem; letter-spacing: 1px;">LSP Terlisensi BNSP</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Grid -->
+                    <div class="row g-0">
+                        
+                        <!-- Left Column: Data & Skema -->
+                        <div class="col-12 col-lg-7 p-4 p-md-5 border-end" style="border-color: #e2e8f0 !important;">
+                            
+                            <!-- Section 1: Data yang Dibutuhkan -->
+                            <div class="mb-5">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <div class="d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px; background: rgba(212, 175, 55, 0.1);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#d4af37" viewBox="0 0 16 16">
+                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="fw-bold mb-0" style="color: #0f172a;">1. Data yang Dibutuhkan</h4>
+                                </div>
+                                <p class="text-muted mb-3" style="font-size: 0.85rem;">Berikut adalah data pribadi yang perlu Anda persiapkan untuk pengisian formulir pendaftaran:</p>
+                                
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex align-items-start gap-3 p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#64748b" viewBox="0 0 16 16" class="flex-shrink-0 mt-1">
+                                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/>
+                                                <path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/>
+                                            </svg>
+                                            <div>
+                                                <h6 class="fw-semibold mb-1" style="color: #1e293b; font-size: 0.85rem;">Nama Lengkap &amp; NIK</h6>
+                                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Sesuai KTP untuk sertifikat</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex align-items-start gap-3 p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#64748b" viewBox="0 0 16 16" class="flex-shrink-0 mt-1">
+                                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.708 2.825L15 11.105V5.383zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741zM1 11.105l4.708-2.897L1 5.383v5.722z"/>
+                                            </svg>
+                                            <div>
+                                                <h6 class="fw-semibold mb-1" style="color: #1e293b; font-size: 0.85rem;">Kontak Aktif</h6>
+                                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Email &amp; Nomor WhatsApp</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-start gap-3 p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#64748b" viewBox="0 0 16 16" class="flex-shrink-0 mt-1">
+                                                <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                            </svg>
+                                            <div>
+                                                <h6 class="fw-semibold mb-1" style="color: #1e293b; font-size: 0.85rem;">Alamat Domisili</h6>
+                                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Alamat lengkap untuk pengiriman dokumen fisik sertifikat kompetensi.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Section 2: Skema Sertifikasi -->
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <div class="d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px; background: rgba(212, 175, 55, 0.1);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#d4af37" viewBox="0 0 16 16">
+                                            <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.613 6l-.248-1.506 1.086-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z"/>
+                                            <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="fw-bold mb-0" style="color: #0f172a;">2. Skema Sertifikasi Tersedia</h4>
+                                </div>
+                                <p class="text-muted mb-3" style="font-size: 0.85rem;">Pilih skema yang sesuai dengan tingkat pengalaman dan kualifikasi Anda:</p>
+                                
+                                <!-- Level 1 -->
+                                <div class="d-flex align-items-center justify-content-between p-3 mb-3 rounded-3 bg-white" style="border: 1px solid #e2e8f0;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 44px; height: 44px; background: rgba(212, 175, 55, 0.1); color: #d4af37; font-size: 0.85rem;">L1</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0" style="color: #0f172a; font-size: 0.95rem;">Coating Inspector Level 1</h6>
+                                            <p class="mb-0 text-muted" style="font-size: 0.75rem;">Untuk pemula/dasar inspeksi coating</p>
+                                        </div>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#cbd5e1" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                    </svg>
+                                </div>
+                                
+                                <!-- Level 2 -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-white" style="border: 1px solid #e2e8f0;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle fw-bold" style="width: 44px; height: 44px; background: rgba(15, 23, 42, 0.1); color: #0f172a; font-size: 0.85rem;">L2</div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0" style="color: #0f172a; font-size: 0.95rem;">Coating Inspector Level 2</h6>
+                                            <p class="mb-0 text-muted" style="font-size: 0.75rem;">Untuk tingkat lanjut &amp; supervisi</p>
+                                        </div>
+                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#cbd5e1" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Info Alert -->
+                            <div class="d-flex align-items-start gap-3 p-3 rounded-3" style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.2);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#d4af37" viewBox="0 0 16 16" class="flex-shrink-0 mt-1">
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                </svg>
+                                <p class="mb-0" style="font-size: 0.8rem; color: #64748b; line-height: 1.5;">
+                                    Pastikan seluruh data yang akan diinput valid. Kesalahan data dapat menghambat proses verifikasi sertifikasi BNSP.
+                                </p>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- Right Column: Checklist Dokumen -->
+                        <div class="col-12 col-lg-5 p-4 p-md-5" style="background: #f8fafc;">
+                            
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <div class="d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px; background: rgba(212, 175, 55, 0.1);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#d4af37" viewBox="0 0 16 16">
+                                        <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14V3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5V6zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7H1.633z"/>
+                                    </svg>
+                                </div>
+                                <h4 class="fw-bold mb-0" style="color: #0f172a;">3. Checklist Dokumen</h4>
+                            </div>
+                            <p class="text-muted mb-4" style="font-size: 0.85rem;">Siapkan dokumen-dokumen berikut dalam format digital (PDF/JPG) sebelum mengisi formulir:</p>
+                            
+                            <!-- Document List -->
+                            <div class="d-flex flex-column gap-3">
+                                
+                                <!-- Doc 1: CV -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-white" style="border: 1px solid #e2e8f0;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: #f1f5f9;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                                                <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-medium mb-0" style="color: #1e293b; font-size: 0.85rem;">Curriculum Vitae</h6>
+                                            <span class="text-muted" style="font-size: 0.7rem;">Format PDF, Max 2MB</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge fw-semibold" style="background: rgba(212, 175, 55, 0.15); color: #b5952f; font-size: 0.65rem;">Wajib</span>
+                                </div>
+                                
+                                <!-- Doc 2: Foto -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-white" style="border: 1px solid #e2e8f0;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: #f1f5f9;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-medium mb-0" style="color: #1e293b; font-size: 0.85rem;">Pas Foto (3x4)</h6>
+                                            <span class="text-muted" style="font-size: 0.7rem;">JPG/PNG, Latar Merah/Biru</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge fw-semibold" style="background: rgba(212, 175, 55, 0.15); color: #b5952f; font-size: 0.65rem;">Wajib</span>
+                                </div>
+                                
+                                <!-- Doc 3: Ijazah -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-white" style="border: 1px solid #e2e8f0;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: #f1f5f9;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                                                <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
+                                                <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466 4.176 9.032Z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-medium mb-0" style="color: #1e293b; font-size: 0.85rem;">Ijazah Terakhir</h6>
+                                            <span class="text-muted" style="font-size: 0.7rem;">Scan Asli/Legalisir</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge fw-semibold" style="background: rgba(212, 175, 55, 0.15); color: #b5952f; font-size: 0.65rem;">Wajib</span>
+                                </div>
+                                
+                                <!-- Doc 4: Surat Sehat -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-white" style="border: 1px solid #e2e8f0;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: #f1f5f9;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-medium mb-0" style="color: #1e293b; font-size: 0.85rem;">Surat Keterangan Sehat</h6>
+                                            <span class="text-muted" style="font-size: 0.7rem;">Tidak Buta Warna</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge fw-semibold" style="background: rgba(212, 175, 55, 0.15); color: #b5952f; font-size: 0.65rem;">Wajib</span>
+                                </div>
+                                
+                                <!-- Doc 5: Logbook -->
+                                <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-white" style="border: 1px solid #e2e8f0;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; background: #f1f5f9;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#64748b" viewBox="0 0 16 16">
+                                                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-medium mb-0" style="color: #1e293b; font-size: 0.85rem;">Logbook Pengalaman</h6>
+                                            <span class="text-muted" style="font-size: 0.7rem;">Min. 6 bulan pengalaman</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge fw-semibold" style="background: rgba(15, 23, 42, 0.1); color: #64748b; font-size: 0.65rem;">Opsional*</span>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Footer CTA -->
+                    <div class="p-4 p-md-5 border-top text-center" style="border-color: #e2e8f0 !important; background: white;">
+                        <h4 class="fw-bold mb-2" style="color: #0f172a;">Sudah Melengkapi Semua Persyaratan?</h4>
+                        <p class="text-muted mb-4 mx-auto" style="font-size: 0.9rem; max-width: 600px;">
+                            Jika Anda telah memahami skema sertifikasi dan menyiapkan seluruh dokumen yang dibutuhkan, silakan lanjutkan ke formulir pendaftaran online.
+                        </p>
+                        <a href="/certification/apply" class="btn btn-lg fw-bold px-5 py-3" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #d4af37; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);">
+                            Daftar Sekarang 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" class="ms-2">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                </div>
+                
+            </div>
+        </section>
+    </template>
+    
+    <!-- ========== REGISTER SNIPPET TO WEBSITE BUILDER ========== -->
+    <template id="registration_info_snippet" inherit_id="website.snippets" name="Registration Info Snippet">
+        <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+            <t t-snippet="iso17024_portall.s_registration_info" 
+               t-thumbnail="/iso17024_portall/static/src/img/snippets/s_registration_info.png"/>
+        </xpath>
+    </template>
+    
+</odoo>
