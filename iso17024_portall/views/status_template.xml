@@ -191,8 +191,8 @@
                         <div class="summary-body">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <label>NIK / Passport</label>
-                                    <div class="value"><t t-esc="application.nik or '-'"/></div>
+                                    <label>Nomor Registrasi</label>
+                                    <div class="value"><t t-esc="user.partner_id.registration_code or '-'"/></div>
                                 </div>
                                 <div class="info-item">
                                     <label>Skema Sertifikasi</label>
@@ -217,6 +217,63 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Card Status Sertifikat (Tampil jika sudah scheduled atau certified) -->
+                    <t t-if="application.state in ['scheduled', 'certified']">
+                        <div class="summary-card mt-4">
+                            <div class="summary-header" style="background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%); padding: 20px;">
+                                <h4 style="margin: 0; font-weight: 600;">
+                                    <span class="material-symbols-outlined align-middle mr-2" style="font-size: 22px;">workspace_premium</span>
+                                    Status Sertifikat
+                                </h4>
+                            </div>
+                            <div class="summary-body">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label>🏆 Hasil Asesmen</label>
+                                        <div class="value">
+                                            <t t-if="application.exam_result == 'passed'">
+                                                <span class="badge" style="background-color: #22c55e; color: white; padding: 6px 12px; border-radius: 6px;">LULUS</span>
+                                            </t>
+                                            <t t-elif="application.exam_result == 'failed'">
+                                                <span class="badge" style="background-color: #ef4444; color: white; padding: 6px 12px; border-radius: 6px;">TIDAK LULUS</span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #94a3b8;">-</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>📄 Nomor Sertifikat</label>
+                                        <div class="value" style="font-family: monospace;">
+                                            <t t-if="application.cert_number">
+                                                <t t-esc="application.cert_number"/>
+                                            </t>
+                                            <t t-else=""><span style="color: #94a3b8;">-</span></t>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>📅 Tanggal Terbit</label>
+                                        <div class="value">
+                                            <t t-if="application.cert_issue_date">
+                                                <t t-esc="application.cert_issue_date" t-options="{'widget': 'date', 'format': 'dd MMMM yyyy'}"/>
+                                            </t>
+                                            <t t-else=""><span style="color: #94a3b8;">-</span></t>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>⏳ Berlaku Sampai</label>
+                                        <div class="value">
+                                            <t t-if="application.cert_valid_until">
+                                                <t t-esc="application.cert_valid_until" t-options="{'widget': 'date', 'format': 'dd MMMM yyyy'}"/>
+                                            </t>
+                                            <t t-else=""><span style="color: #94a3b8;">-</span></t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     
                     <!-- Info Detail Card (Muncul jika sudah verified/scheduled) -->
                     <t t-if="application.state in ['verified', 'scheduled']">
@@ -267,14 +324,13 @@
                                     </h5>
                                     <div class="info-grid">
                                         <div class="info-item">
-                                            <label>📅 Tanggal Ujian</label>
+                                            <label>📅 Tanggal &amp; Jam Ujian</label>
                                             <div class="value">
-                                                <t t-esc="application.exam_date" t-options="{'widget': 'date', 'format': 'dd MMMM yyyy'}"/>
+                                                <t t-if="application.exam_date">
+                                                    <span t-esc="application.exam_date" t-options="{'widget': 'date', 'format': 'dd MMMM yyyy'}"/> - 
+                                                    <span t-esc="'%02d:%02d' % (int(application.exam_time), int((application.exam_time*60) % 60))"/> WIB
+                                                </t>
                                             </div>
-                                        </div>
-                                        <div class="info-item">
-                                            <label>⏰ Waktu</label>
-                                            <div class="value"><t t-esc="application.exam_time or '-'"/></div>
                                         </div>
                                         <div class="info-item">
                                             <label>📍 Lokasi</label>
@@ -293,6 +349,43 @@
                                             <p class="mb-0 mt-1" t-esc="application.exam_notes"/>
                                         </div>
                                     </t>
+                                    
+                                    <!-- BUTTON: Ikuti Quiz Sekarang -->
+                                    <t t-set="can_take_quiz" t-value="application.is_exam_available"/>
+                                    
+                                    <div class="mt-4 text-center">
+                                        <t t-if="application.exam_result == 'pending' and can_take_quiz">
+                                            <!-- Tombol aktif: tanggal sudah tiba -->
+                                            <a t-attf-href="/certification/quiz/intro/#{application.id}" 
+                                               style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border-radius: 12px; font-weight: 700; font-size: 1.1rem; text-decoration: none; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">
+                                                🎯 Ikuti Quiz Sekarang
+                                            </a>
+                                            <p class="mt-2 text-muted" style="font-size: 0.85rem;">Klik tombol di atas untuk memulai ujian sertifikasi</p>
+                                        </t>
+                                        <t t-elif="application.exam_result == 'pending' and not can_take_quiz">
+                                            <!-- Tombol nonaktif: tanggal belum tiba -->
+                                            <div style="display: inline-block; padding: 16px 40px; background: #e2e8f0; color: #94a3b8; border-radius: 12px; font-weight: 700; font-size: 1.1rem;">
+                                                🔒 Quiz Belum Tersedia
+                                            </div>
+                                            <p class="mt-2 text-muted" style="font-size: 0.85rem;">
+                                                Tunggu hingga tanggal <strong><span t-esc="application.exam_date" t-options="{'widget': 'date', 'format': 'dd MMMM yyyy'}"/> - <span t-esc="'%02d:%02d' % (int(application.exam_time), int((application.exam_time*60) % 60))"/> WIB</strong> untuk memulai ujian
+                                            </p>
+                                        </t>
+                                        <t t-elif="application.exam_result == 'passed'">
+                                            <!-- Sudah lulus -->
+                                            <div class="alert alert-success" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #22c55e; border-radius: 12px;">
+                                                <h5 style="color: #16a34a; margin-bottom: 8px;">🎉 Selamat! Anda LULUS Ujian</h5>
+                                                <p class="mb-0">Sertifikat Anda sedang dalam proses penerbitan oleh admin.</p>
+                                            </div>
+                                        </t>
+                                        <t t-elif="application.exam_result == 'failed'">
+                                            <!-- Tidak lulus -->
+                                            <div class="alert alert-warning" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px;">
+                                                <h5 style="color: #d97706; margin-bottom: 8px;">😔 Maaf, Anda Belum Lulus</h5>
+                                                <p class="mb-0">Hubungi admin untuk informasi mengenai kesempatan ujian ulang.</p>
+                                            </div>
+                                        </t>
+                                    </div>
                                 </t>
                                 
                                 <!-- Pesan menunggu jadwal (jika verified tapi belum scheduled) -->
@@ -374,15 +467,68 @@
                                 <div class="status-message" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-left-color: #2563eb;">
                                     <h5>💳 Menunggu Pembayaran</h5>
                                     <p>Dokumen telah diverifikasi. Silakan lakukan pembayaran untuk menyelesaikan pendaftaran.</p>
+                                    
+                                    <!-- Payment Info Box -->
+                                    <div style="background: white; border-radius: 8px; padding: 16px; margin-top: 16px;">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span style="color: #64748b;">Skema:</span>
+                                            <strong style="color: #0f172a;">
+                                                <t t-if="application.scheme == 'level1'">Coating Inspector Level 1</t>
+                                                <t t-else="">Coating Inspector Level 2</t>
+                                            </strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span style="color: #64748b;">No. Invoice:</span>
+                                            <strong style="color: #0f172a;"><t t-esc="application.invoice_id.name or '-'"/></strong>
+                                        </div>
+                                        <hr style="margin: 12px 0; border-color: #e2e8f0;"/>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span style="color: #0f172a; font-weight: 600;">Total Pembayaran:</span>
+                                            <span style="color: #d4af37; font-size: 1.25rem; font-weight: 700;">
+                                                Rp <t t-esc="'{:,.0f}'.format(application.payment_amount).replace(',', '.')"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Xendit Pay Button -->
+                                    <t t-if="application.xendit_payment_url">
+                                        <div class="text-center mt-3">
+                                            <a t-att-href="application.xendit_payment_url" target="_blank" 
+                                               style="display: inline-block; background: linear-gradient(135deg, #d4af37 0%, #b5952f 100%); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; box-shadow: 0 4px 6px rgba(212, 175, 55, 0.3);">
+                                                💳 BAYAR SEKARANG
+                                            </a>
+                                        </div>
+                                        <p style="font-size: 0.8rem; color: #64748b; margin-top: 12px; text-align: center;">
+                                            Klik tombol di atas untuk melanjutkan ke halaman pembayaran Xendit
+                                        </p>
+                                    </t>
                                 </div>
                             </t>
                         </t>
                         <t t-elif="application.state == 'revision'">
                             <div class="status-message" style="background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%); border-left-color: #ea580c;">
                                 <h5>⚠️ Dokumen Perlu Diperbaiki</h5>
-                                <p><strong>Catatan Admin:</strong></p>
-                                <p t-esc="application.admin_note or 'Silakan periksa kembali dokumen Anda.'"/>
-                                <p class="mt-2 mb-0"><small>Silakan perbaiki dokumen sesuai catatan di atas, lalu submit ulang.</small></p>
+                                
+                                <!-- Daftar Dokumen yang Perlu Direvisi -->
+                                <div style="background: white; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                                    <p style="color: #92400e; font-weight: 600; margin-bottom: 12px;">📄 Dokumen yang Perlu Diupload Ulang:</p>
+                                    <ul style="margin: 0; padding-left: 20px; color: #78350f;">
+                                        <t t-if="application.revision_pas_foto"><li>❌ Pas Foto (4x6 Background Merah)</li></t>
+                                        <t t-if="application.revision_ktp"><li>❌ KTP</li></t>
+                                        <t t-if="application.revision_cv"><li>❌ CV / Daftar Riwayat Hidup</li></t>
+                                        <t t-if="application.revision_ijazah"><li>❌ Ijazah Terakhir</li></t>
+                                        <t t-if="application.revision_training"><li>❌ Sertifikat Pelatihan Coating</li></t>
+                                        <t t-if="application.revision_cert_level1"><li>❌ Sertifikat Level 1</li></t>
+                                        <t t-if="application.revision_previous_cert"><li>❌ Sertifikat Lama (Resertifikasi)</li></t>
+                                        <t t-if="application.revision_logbook"><li>❌ Logbook Surveillance 3 Tahun (Resertifikasi)</li></t>
+                                    </ul>
+                                </div>
+                                
+                                <t t-if="application.admin_note">
+                                    <p style="color: #92400e;"><strong>📝 Catatan Admin:</strong></p>
+                                    <p style="color: #78350f; white-space: pre-wrap;" t-esc="application.admin_note"/>
+                                </t>
+                                <p class="mt-2 mb-0"><small>Dokumen yang sudah OK tidak perlu diupload ulang. Klik tombol di bawah untuk memperbaiki.</small></p>
                             </div>
                         </t>
                         <t t-elif="application.state == 'verified'">
@@ -426,10 +572,18 @@
                                 </a>
                             </t>
                             <t t-if="application.state == 'payment' and application.payment_status != 'pending'">
-                                <a href="/certification/payment" class="btn btn-iso-gold">
-                                    <span class="material-symbols-outlined align-middle mr-1" style="font-size: 18px;">credit_card</span>
-                                    Bayar Sekarang
-                                </a>
+                                <t t-if="application.xendit_payment_url">
+                                    <a t-att-href="application.xendit_payment_url" target="_blank" class="btn btn-iso-gold" style="background: linear-gradient(135deg, #d4af37 0%, #b5952f 100%);">
+                                        <span class="material-symbols-outlined align-middle mr-1" style="font-size: 18px;">credit_card</span>
+                                        💳 Bayar via Xendit
+                                    </a>
+                                </t>
+                                <t t-else="">
+                                    <a href="/certification/payment" class="btn btn-iso-gold">
+                                        <span class="material-symbols-outlined align-middle mr-1" style="font-size: 18px;">credit_card</span>
+                                        Bayar Sekarang
+                                    </a>
+                                </t>
                             </t>
                             <a href="/my" class="btn btn-outline-secondary">
                                 <span class="material-symbols-outlined align-middle mr-1" style="font-size: 18px;">home</span>

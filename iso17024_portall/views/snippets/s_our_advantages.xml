@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== SNIPPET TEMPLATE: Our Advantages (Keunggulan Kami) ========== -->
+    <template id="s_our_advantages" name="Our Advantages">
+        <section class="s_our_advantages pt-5 pb-5" style="background: linear-gradient(180deg, #f0f7ff 0%, #f8fafc 100%);">
+            <div class="container">
+                
+                <!-- Header -->
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold mb-3" style="color: #1e3a5f; font-size: 2.25rem;">Keunggulan Kami</h2>
+                    <p class="text-muted mx-auto" style="max-width: 600px; font-size: 1rem;">
+                        Mengapa memilih LSP Satvika Indonesia untuk sertifikasi Anda?
+                    </p>
+                </div>
+                
+                <!-- Advantages Cards -->
+                <div class="row g-4 justify-content-center">
+                    
+                    <!-- Card 1: Terakreditasi ISO/IEC 17024 -->
+                    <div class="col-12 col-sm-6 col-lg">
+                        <div class="bg-white rounded-4 p-4 h-100 text-center shadow-sm" style="border: 1px solid #e2e8f0; min-height: 200px;">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4" style="width: 64px; height: 64px; background: rgba(30, 58, 95, 0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#1e3a5f" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #1e3a5f; font-size: 1rem;">Terakreditasi<br/>ISO/IEC 17024</h5>
+                            <p class="mb-0 text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                                Sertifikasi diakui secara nasional dan internasional.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2: Proses Transparan -->
+                    <div class="col-12 col-sm-6 col-lg">
+                        <div class="bg-white rounded-4 p-4 h-100 text-center shadow-sm" style="border: 1px solid #e2e8f0; min-height: 200px;">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4" style="width: 64px; height: 64px; background: rgba(30, 58, 95, 0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#1e3a5f" viewBox="0 0 16 16">
+                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                </svg>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #1e3a5f; font-size: 1rem;">Proses Transparan</h5>
+                            <p class="mb-0 text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                                Pantau setiap tahapan asesmen secara real-time.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3: Sistem Digital -->
+                    <div class="col-12 col-sm-6 col-lg">
+                        <div class="bg-white rounded-4 p-4 h-100 text-center shadow-sm" style="border: 1px solid #e2e8f0; min-height: 200px;">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4" style="width: 64px; height: 64px; background: rgba(30, 58, 95, 0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#1e3a5f" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm1.5 0a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-13zm0 7a.5.5 0 0 0-.5.5v.5c0 .28.22.5.5.5h3a.5.5 0 0 0 0-1H2a.5.5 0 0 0-.5.5z"/>
+                                    <path d="M2 13.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #1e3a5f; font-size: 1rem;">Sistem Digital</h5>
+                            <p class="mb-0 text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                                Pendaftaran hingga terbit sertifikat full online.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 4: Asesor Kompeten -->
+                    <div class="col-12 col-sm-6 col-lg">
+                        <div class="bg-white rounded-4 p-4 h-100 text-center shadow-sm" style="border: 1px solid #e2e8f0; min-height: 200px;">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4" style="width: 64px; height: 64px; background: rgba(30, 58, 95, 0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#1e3a5f" viewBox="0 0 16 16">
+                                    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+                                </svg>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #1e3a5f; font-size: 1rem;">Asesor Kompeten</h5>
+                            <p class="mb-0 text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                                Didukung oleh para ahli coating berpengalaman.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 5: Penerbitan Cepat -->
+                    <div class="col-12 col-sm-6 col-lg">
+                        <div class="bg-white rounded-4 p-4 h-100 text-center shadow-sm" style="border: 1px solid #e2e8f0; min-height: 200px;">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-4" style="width: 64px; height: 64px; background: rgba(30, 58, 95, 0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#1e3a5f" viewBox="0 0 16 16">
+                                    <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641l2.5-8.5z"/>
+                                </svg>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: #1e3a5f; font-size: 1rem;">Penerbitan Cepat</h5>
+                            <p class="mb-0 text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                                Validasi dan penerbitan sertifikat yang efisien.
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </section>
+    </template>
+    
+    <!-- ========== REGISTER SNIPPET TO WEBSITE BUILDER ========== -->
+    <template id="our_advantages_snippet" inherit_id="website.snippets" name="Our Advantages Snippet">
+        <xpath expr="//snippets[@id='snippet_structure']" position="inside">
+            <t t-snippet="iso17024_portall.s_our_advantages" 
+               t-thumbnail="/iso17024_portall/static/src/img/snippets/s_our_advantages.png"/>
+        </xpath>
+    </template>
+    
+</odoo>

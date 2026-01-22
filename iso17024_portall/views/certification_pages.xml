@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========== HALAMAN PENGAJUAN SERTIFIKASI ========== -->
+    <template id="pengajuan_sertifikasi_page" name="Pengajuan Sertifikasi">
+        <t t-call="website.layout">
+            <t t-set="title">Pengajuan Sertifikasi</t>
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Editable area sebelum snippet -->
+                <div class="oe_structure"/>
+                <!-- Call snippet template directly -->
+                <t t-call="iso17024_portall.s_certification_path"/>
+                <!-- Editable area setelah snippet -->
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ========== HALAMAN PILIH LEVEL ========== -->
+    <template id="pilih_level_page" name="Pilih Level Sertifikasi">
+        <t t-call="website.layout">
+            <t t-set="title">Pilih Level Sertifikasi</t>
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Editable area sebelum snippet -->
+                <div class="oe_structure"/>
+                <!-- Call snippet template directly -->
+                <t t-call="iso17024_portall.s_certification_level"/>
+                <!-- Editable area setelah snippet -->
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+</odoo>

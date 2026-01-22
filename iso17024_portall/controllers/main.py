@@ -1,27 +1,119 @@
-from odoo import http, _
+from odoo import http, _, fields
 from odoo.http import request
-# PERBAIKAN 1: Import dari AuthSignupHome, bukan Home biasa
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome
 import base64
-# PERBAIKAN 2: Warisi AuthSignupHome
+
 class IsoPortalController(AuthSignupHome):
 
     # ---------------------------------------------------------
-    # 1. HALAMAN SIGN UP CUSTOM (Proteksi: User Login DILARANG Masuk)
+    # HELPER: Smart redirect untuk user yang sudah login
+    # ---------------------------------------------------------
+    def _get_smart_redirect_url(self, partner):
+        """Determine the correct URL for a logged-in user based on their application state"""
+        # Cek status registrasi
+        if partner.registration_state == 'pending':
+            return '/certification/pending'
+        
+        # Cari application yang ada
+        app = request.env['certification.application'].search([
+            ('partner_id', '=', partner.id)
+        ], limit=1)
+        
+        if not app:
+            # Belum punya application → ke apply (step 1)
+            return '/certification/apply'
+        
+        # Kalau state bukan draft → ke status page
+        if app.state not in ['draft']:
+            return '/certification/status'
+        
+        # Kalau draft, cek step
+        if app.current_step >= 2:
+            return '/certification/apply/step2'
+        
+        # Default: step 1
+        return '/certification/apply'
+
+    # ---------------------------------------------------------
+    # ROUTE: Pengajuan Sertifikasi - Smart Redirect
+    # ---------------------------------------------------------
+    @http.route('/pengajuan-sertifikasi', type='http', auth='public', website=True)
+    def pengajuan_sertifikasi(self, **kw):
+        """
+        Halaman pilih jenis sertifikasi.
+        - Internal user (admin): tampilkan halaman (untuk edit snippet)
+        - Public user: tampilkan halaman pilih jenis (snippet)
+        - Portal user (kandidat): redirect ke apply/step2/status sesuai state
+        """
+        user = request.env.user
+        
+        # Internal user (admin) → render halaman untuk edit snippet
+        if user.has_group('base.group_user'):
+            return request.render('iso17024_portall.pengajuan_sertifikasi_page')
+        
+        # Portal user (kandidat) → smart redirect
+        if not user._is_public():
+            partner = user.partner_id
+            return request.redirect(self._get_smart_redirect_url(partner))
+        
+        # Public user → render halaman dengan snippet
+        return request.render('iso17024_portall.pengajuan_sertifikasi_page')
+
+    # ---------------------------------------------------------
+    # ROUTE: Pilih Level - Smart Redirect  
+    # ---------------------------------------------------------
+    @http.route('/pilih-level', type='http', auth='public', website=True)
+    def pilih_level(self, **kw):
+        """
+        Halaman pilih level sertifikasi.
+        - Internal user (admin): tampilkan halaman (untuk edit snippet)
+        - Public user: tampilkan halaman pilih level (snippet)
+        - Portal user (kandidat): redirect ke apply/step2/status sesuai state
+        """
+        user = request.env.user
+        
+        # Internal user (admin) → render halaman untuk edit snippet
+        if user.has_group('base.group_user'):
+            return request.render('iso17024_portall.pilih_level_page')
+        
+        # Portal user (kandidat) → smart redirect
+        if not user._is_public():
+            partner = user.partner_id
+            return request.redirect(self._get_smart_redirect_url(partner))
+        
+        # Public user → render halaman dengan snippet
+        return request.render('iso17024_portall.pilih_level_page')
+
+    # ---------------------------------------------------------
+    # 1. HALAMAN SIGN UP CUSTOM (Dengan Context dari Website)
     # ---------------------------------------------------------
     @http.route('/certification/signup', type='http', auth='public', website=True)
     def custom_signup(self, **kw):
-        # Logic: Jika user sudah login (bukan public), lempar ke aplikasi
+        # Jika user sudah login, cek status registrasi
         if not request.env.user._is_public():
+            partner = request.env.user.partner_id
+            # Jika pending, lempar ke halaman pending
+            if partner.registration_state == 'pending':
+                return request.redirect('/certification/pending')
+            # Jika approved, lempar ke apply
+            elif partner.registration_state == 'approved':
+                return request.redirect('/certification/apply')
+            # Jika none/rejected tapi sudah login, tetap ke apply
             return request.redirect('/certification/apply')
+        
+        # Ambil context dari URL params
+        cert_type = kw.get('type', 'new')  # 'new' atau 'recert'
+        cert_level = kw.get('level', 'level1')  # 'level1' atau 'level2'
             
         return request.render('iso17024_portall.custom_signup_page', {
             'error': kw.get('error'),
-            'values': kw
+            'values': kw,
+            'cert_type': cert_type,
+            'cert_level': cert_level,
         })
 
     # ---------------------------------------------------------
-    # 2. PROSES SUBMIT SIGN UP
+    # 2. PROSES SUBMIT SIGN UP (Simpan Context + Set Pending)
     # ---------------------------------------------------------
     @http.route('/certification/signup/submit', type='http', auth='public', methods=['POST'], website=True)
     def custom_signup_submit(self, **kw):
@@ -30,44 +122,135 @@ class IsoPortalController(AuthSignupHome):
             name = kw.get('name')
             password = kw.get('password')
             confirm = kw.get('confirm_password')
+            
+            # Ambil pilihan sertifikasi dari form
+            cert_type = kw.get('cert_type', 'new')
+            cert_level = kw.get('cert_level', 'level1')
 
             if password != confirm:
-                return request.redirect('/certification/signup?error=Password tidak sama')
+                return request.redirect(f'/certification/signup?type={cert_type}&level={cert_level}&error=Password tidak sama')
 
             # Buat User Baru
-            request.env['res.users'].sudo().signup({
+            result = request.env['res.users'].sudo().signup({
                 'login': login,
                 'email': login,
                 'name': name,
                 'password': password,
             })
+            
+            # Cari partner yang baru dibuat dan update data registrasi
+            user = request.env['res.users'].sudo().search([('login', '=', login)], limit=1)
+            if user and user.partner_id:
+                user.partner_id.sudo().write({
+                    'registration_state': 'pending',
+                    'pending_cert_type': cert_type,
+                    'pending_cert_level': cert_level,
+                    'registration_date': fields.Datetime.now(),
+                })
+                # Post message
+                user.partner_id.sudo().message_post(
+                    body=f"<b style='color:blue'>📝 REGISTRASI BARU</b><br/>"
+                         f"Jenis: {cert_type}<br/>"
+                         f"Level: {cert_level}<br/>"
+                         f"Menunggu verifikasi admin."
+                )
 
-            # PERBAIKAN 3: Redirect ke Login dengan parameter login
-            # Ini aman dan tidak bikin error 500
-            return request.redirect('/web/login?login=%s' % login)
+            # Redirect ke halaman pending PUBLIC (tanpa perlu login)
+            # User TIDAK BISA login sampai admin approve
+            import urllib.parse
+            return request.redirect('/certification/pending?email=%s&name=%s' % (
+                urllib.parse.quote(login),
+                urllib.parse.quote(name)
+            ))
 
         except Exception as e:
-            return request.redirect('/certification/signup?error=' + str(e))
+            cert_type = kw.get('cert_type', 'new')
+            cert_level = kw.get('cert_level', 'level1')
+            return request.redirect(f'/certification/signup?type={cert_type}&level={cert_level}&error=' + str(e))
 
     # ---------------------------------------------------------
-    # 3. OVERRIDE LOGIN REDIRECT (Logic "Pintu Ajaib")
+    # 3. HALAMAN PENDING (PUBLIC - Tanpa Login)
     # ---------------------------------------------------------
-    # PERBAIKAN 4: Gunakan auth='public' (bukan 'none') agar request.env aman
-    @http.route('/web/login', type='http', auth="public")
-    def web_login(self, redirect=None, **kw):
-        # Panggil fungsi asli punya Odoo (super)
-        response = super(IsoPortalController, self).web_login(redirect, **kw)
+    @http.route('/certification/pending', type='http', auth='public', website=True)
+    def pending_page(self, **kw):
+        import urllib.parse
         
-        # Cek apakah Login BERHASIL?
-        # Odoo otomatis nambahin param 'login_success' kalau password benar
-        if request.params.get('login_success'):
-            user = request.env.user
-            
-            # Logic: Jika BUKAN Karyawan (artinya Asesi), lempar ke halaman Apply
-            # Kita pakai not has_group('base.group_user') -> group_user adalah Internal User
-            if not user.has_group('base.group_user'):
+        # Jika user sudah login dan approved, redirect ke apply
+        if not request.env.user._is_public():
+            partner = request.env.user.partner_id
+            if partner.registration_state == 'approved':
                 return request.redirect('/certification/apply')
         
+        # Ambil info dari URL params (untuk user yang baru signup)
+        email = urllib.parse.unquote(kw.get('email', ''))
+        name = urllib.parse.unquote(kw.get('name', ''))
+        
+        # Cari partner berdasarkan email jika ada
+        partner = None
+        if email:
+            partner = request.env['res.partner'].sudo().search([('email', '=', email)], limit=1)
+        
+        return request.render('iso17024_portall.pending_verification_page', {
+            'email': email,
+            'name': name,
+            'partner': partner,
+            'user': request.env.user if not request.env.user._is_public() else None,
+        })
+
+    # ---------------------------------------------------------
+    # 4. OVERRIDE LOGIN - BLOCK PENDING USERS
+    # ---------------------------------------------------------
+    @http.route('/web/login', type='http', auth="public")
+    def web_login(self, redirect=None, **kw):
+        # Cek SEBELUM login apakah user ini pending
+        login_email = kw.get('login', '')
+        if login_email and request.httprequest.method == 'POST':
+            # Cari user berdasarkan email
+            user = request.env['res.users'].sudo().search([('login', '=', login_email)], limit=1)
+            if user and user.partner_id:
+                partner = user.partner_id
+                # BLOCK login jika status pending
+                if partner.registration_state == 'pending':
+                    return request.render('web.login', {
+                        'error': 'Akun Anda belum diverifikasi oleh Admin. Silakan tunggu email konfirmasi.',
+                        'login': login_email,
+                    })
+                # BLOCK login jika status rejected
+                elif partner.registration_state == 'rejected':
+                    return request.render('web.login', {
+                        'error': 'Pendaftaran Anda ditolak. Silakan hubungi admin untuk informasi lebih lanjut.',
+                        'login': login_email,
+                    })
+        
+        # Lanjutkan login normal
+        response = super(IsoPortalController, self).web_login(redirect, **kw)
+
+        if request.params.get('login_success'):
+            user = request.env.user
+            partner = user.partner_id
+
+            # === SESSION TRACKING: Create new session, kick old devices ===
+            try:
+                request.env['cert.user.session'].sudo().create_session(
+                    user_id=user.id,
+                    session_token=request.session.sid,
+                    ip_address=request.httprequest.remote_addr,
+                    user_agent=request.httprequest.user_agent.string if request.httprequest.user_agent else '',
+                )
+            except Exception as e:
+                import logging
+                _logger = logging.getLogger(__name__)
+                _logger.error(f"Failed to create session tracking: {e}")
+            # === END SESSION TRACKING ===
+
+            # Jika BUKAN Internal User (artinya kandidat portal)
+            if not user.has_group('base.group_user'):
+                # Cek status registrasi - approved bisa lanjut
+                if partner.registration_state == 'approved':
+                    return request.redirect('/certification/apply')
+                # Default untuk none/lainnya → apply (backward compatibility untuk user lama)
+                return request.redirect('/certification/apply')
+
         return response
 
     # ---------------------------------------------------------
@@ -75,18 +258,22 @@ class IsoPortalController(AuthSignupHome):
     # ---------------------------------------------------------
     @http.route('/certification/status', type='http', auth='user', website=True)
     def application_status(self, **kw):
-        """Halaman status untuk user yang sudah submit aplikasi"""
+        partner = request.env.user.partner_id
+        
+        # Cek status registrasi dulu
+        if partner.registration_state == 'pending':
+            return request.redirect('/certification/pending')
+        
         app = request.env['certification.application'].search([
-            ('partner_id', '=', request.env.user.partner_id.id)
+            ('partner_id', '=', partner.id)
         ], limit=1)
         
-        # Jika belum punya aplikasi atau masih draft, redirect ke wizard
         if not app or app.state == 'draft':
             return request.redirect('/certification/apply')
 
-        # Jika status 'payment', redirect ke halaman bayar
-        if app.state == 'payment':
-            return request.redirect('/certification/payment')
+        # State payment tetap ke status page (tombol bayar Xendit di sana)
+        # if app.state == 'payment':
+        #     return request.redirect('/certification/payment')
         
         return request.render('iso17024_portall.application_status_page', {
             'application': app,
@@ -94,80 +281,82 @@ class IsoPortalController(AuthSignupHome):
         })
 
     # ---------------------------------------------------------
-    # 6. HALAMAN APLIKASI / WIZARD
+    # 6. HALAMAN STEP 1: UPLOAD BERKAS (NEW 2-STEP FLOW)
     # ---------------------------------------------------------
     @http.route('/certification/apply', type='http', auth='user', website=True)
     def certification_wizard(self, **kw):
+        partner = request.env.user.partner_id
+        
+        # Cek status registrasi - harus approved untuk akses
+        if partner.registration_state == 'pending':
+            return request.redirect('/certification/pending')
+        
         app = request.env['certification.application'].search([
-            ('partner_id', '=', request.env.user.partner_id.id)
+            ('partner_id', '=', partner.id)
         ], limit=1)
         
-        # Cek apakah user sedang ingin mengedit (mode perbaikan)
         edit_mode = kw.get('edit')
         
-        # LOGIC SMART REDIRECT
         if app:
-            # Jika dalam mode edit dan status = revision, izinkan edit
             if edit_mode and app.state == 'revision':
-                # Reset ke draft agar bisa edit, arahkan ke step terakhir
                 app.sudo().write({'state': 'draft'})
-                if app.current_step >= 3:
-                    return request.redirect('/certification/apply/step3')
-                elif app.current_step == 2:
-                    return request.redirect('/certification/apply/step2')
+                # Stay on step 1 for revision
             
-            # Jika TIDAK dalam edit mode
             if not edit_mode:
-                # Status selain draft -> ke halaman Status
                 if app.state not in ['draft']:
-                    # Special check: kalau state 'payment', ke payment page
-                    if app.state == 'payment':
-                        return request.redirect('/certification/payment')
+                    # Semua state kecuali draft → ke status page
                     return request.redirect('/certification/status')
                 
-                # Jika masih draft, arahkan ke step terakhir
-                if app.current_step == 2:
+                # 2-STEP FLOW: If step >= 2, redirect to step2 (Review)
+                if app.current_step >= 2:
                     return request.redirect('/certification/apply/step2')
-                elif app.current_step == 3:
-                    return request.redirect('/certification/apply/step3')
-                elif app.current_step >= 4:
-                    return request.redirect('/certification/apply/step4')
 
+        # Render Step 1: Upload Berkas
         return request.render('iso17024_portall.application_wizard_page', {
             'application': app,
             'user': request.env.user,
+            'partner': partner,
         })
     
     # ---------------------------------------------------------
-    # SUBMIT STEP 1 (UPDATED)
+    # SUBMIT STEP 1: UPLOAD BERKAS (NEW 2-STEP FLOW)
     # ---------------------------------------------------------
     @http.route('/certification/apply/step1/submit', type='http', auth='user', methods=['POST'], website=True)
     def submit_step_1(self, **kw):
         user = request.env.user
         partner = user.partner_id
         
+        def get_file_data(field_name):
+            file = kw.get(field_name)
+            if file and hasattr(file, 'read'):
+                return base64.b64encode(file.read())
+            return False
+        
+        # Core data
         vals = {
             'partner_id': partner.id,
-            'nik': kw.get('nik'),
-            'birth_date': kw.get('birth_date'),
-            
-            # --- SIMPAN FIELD BARU ---
-            'place_of_birth': kw.get('place_of_birth'),
-            'last_education': kw.get('last_education'),
-            # -------------------------
-            
-            'phone': kw.get('phone'),
-            'address': kw.get('address'),
-            'nationality_id': int(kw.get('nationality_id')) if kw.get('nationality_id') else False,
-            'special_needs': True if kw.get('special_needs') == 'on' else False,
-            'special_needs_desc': kw.get('special_needs_desc'),
             'state': 'draft',
+            'current_step': 1,
+            # Pre-fill dari pending data
+            'application_type': partner.pending_cert_type or 'new',
+            'scheme': partner.pending_cert_level or 'level1',
         }
-        # Update Nama di User/Partner juga
-        if kw.get('name'):
-            partner.sudo().write({'name': kw.get('name')})
+        
+        # File uploads mapping
+        files_map = {
+            'pas_foto': 'pas_foto',
+            'ktp_file': 'ktp_file',
+            'cv_file': 'cv_file',
+            'ijazah_file': 'ijazah_file',
+            'training_cert': 'training_cert',
+            'cert_level1_file': 'cert_level1_file',
+        }
 
-        # Cek Aplikasi Lama atau Buat Baru
+        for input_name, db_field in files_map.items():
+            file_data = get_file_data(input_name)
+            if file_data:
+                vals[db_field] = file_data
+
         existing_app = request.env['certification.application'].sudo().search([
             ('partner_id', '=', partner.id)
         ], limit=1)
@@ -177,11 +366,10 @@ class IsoPortalController(AuthSignupHome):
         else:
             request.env['certification.application'].sudo().create(vals)
             
-        # Redirect ke Step 2 (Upload Berkas)
         return request.redirect('/certification/apply/step2')
     
     # ---------------------------------------------------------
-    # HALAMAN STEP 2: UPLOAD DOKUMEN (SEKARANG LEBIH DULU)
+    # HALAMAN STEP 2: REVIEW & DECLARATION (NEW 2-STEP FLOW)
     # ---------------------------------------------------------
     @http.route('/certification/apply/step2', type='http', auth='user', website=True)
     def step2_page(self, **kw):
@@ -191,153 +379,14 @@ class IsoPortalController(AuthSignupHome):
 
         if not app:
             return request.redirect('/certification/apply')
-            
-        # Cek Edit Mode untuk Step 2 juga (jika nanti mundur dari step 3)
-        edit_mode = kw.get('edit')
-        
-        # Jika user sudah di Step 3 tapi buka Step 2 tanpa mode edit -> Lempar ke Step 3
-        if app.current_step == 3 and not edit_mode:
-             return request.redirect('/certification/apply/step3')
 
         return request.render('iso17024_portall.application_step2_page', {
-            'application': app
+            'application': app,
+            'partner': request.env.user.partner_id,
         })
 
     # ---------------------------------------------------------
-    # SUBMIT STEP 2: UPLOAD FILE (SEKARANG DI STEP 2)
-    # ---------------------------------------------------------
-    @http.route('/certification/apply/step2/submit', type='http', auth='user', methods=['POST'], website=True)
-    def submit_step_2(self, **kw):
-        app = request.env['certification.application'].search([
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ], limit=1)
-
-        if app:
-            def get_file_data(field_name):
-                file = kw.get(field_name)
-                if file and hasattr(file, 'read'):
-                    return base64.b64encode(file.read())
-                return False
-
-            vals = {'current_step': 2}
-
-            # Mapping Input Name (HTML) -> Database Field (Python)
-            files_map = {
-                # Dokumen Wajib
-                'cv_file': 'cv_file',
-                'pas_foto': 'pas_foto',
-                'ktp_file': 'ktp_file',
-                'ijazah_file': 'ijazah_file',
-                'ishihara_test': 'ishihara_test',
-                'skck_file': 'skck_file',
-                'training_cert': 'training_cert',
-                
-                # Dokumen Resertifikasi (opsional di step ini, dicek di step 3)
-                'previous_cert_file': 'previous_cert_file',
-                'logbook_file': 'logbook_file',
-                
-                # Dokumen Level 2 (opsional di step ini, dicek di step 3)
-                'cert_level1_file': 'cert_level1_file',
-                
-                # Dokumen Tambahan
-                'additional_file': 'additional_file',
-            }
-
-            for input_name, db_field in files_map.items():
-                file_data = get_file_data(input_name)
-                if file_data:
-                    vals[db_field] = file_data
-
-            app.sudo().write(vals)
-
-        # Lanjut ke Step 3 (Pilih Skema)
-        return request.redirect('/certification/apply/step3')
-    
-    # ---------------------------------------------------------
-    # HALAMAN STEP 3: PILIH SKEMA (SEKARANG DI STEP 3)
-    # ---------------------------------------------------------
-    @http.route('/certification/apply/step3', type='http', auth='user', website=True)
-    def step3_page(self, **kw):
-        app = request.env['certification.application'].search([
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ], limit=1)
-
-        # Jika belum ada aplikasi, tendang ke step 1
-        if not app:
-            return request.redirect('/certification/apply')
-            
-        # Cek Edit Mode (agar tombol Back dari Step 4 bisa jalan)
-        edit_mode = kw.get('edit')
-        
-        # Jika user sudah selesai (Step 4) tapi buka Step 3 tanpa mode edit -> Lempar ke Step 4
-        if app.current_step == 4 and not edit_mode:
-             return request.redirect('/certification/apply/step4')
-
-        return request.render('iso17024_portall.application_step3_page', {
-            'application': app
-        })
-    
-    # ---------------------------------------------------------
-    # SUBMIT STEP 3: PILIH SKEMA + VALIDASI DOKUMEN KHUSUS
-    # ---------------------------------------------------------
-    @http.route('/certification/apply/step3/submit', type='http', auth='user', methods=['POST'], website=True)
-    def submit_step_3(self, **kw):
-        app = request.env['certification.application'].search([
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ], limit=1)
-
-        if app:
-            application_type = kw.get('application_type')
-            scheme = kw.get('scheme')
-            
-            # ======== VALIDASI DOKUMEN KHUSUS ========
-            missing_docs = []
-            
-            # Cek dokumen Level 2
-            if scheme == 'level2' and not app.cert_level1_file:
-                missing_docs.append('Sertifikat Level 1 (Prasyarat Level 2)')
-            
-            # Cek dokumen Resertifikasi
-            if application_type == 'recert':
-                if not app.previous_cert_file:
-                    missing_docs.append('Sertifikat Lama (Kadaluwarsa)')
-                if not app.logbook_file:
-                    missing_docs.append('Logbook Surveillance 3 Tahun')
-            
-            # Jika ada dokumen yang kurang, redirect kembali dengan error
-            if missing_docs:
-                error_msg = 'Dokumen berikut wajib diupload: ' + ', '.join(missing_docs)
-                return request.redirect('/certification/apply/step3?error=' + error_msg)
-            
-            # Simpan data skema
-            vals = {
-                'application_type': application_type,
-                'previous_cert_number': kw.get('previous_cert_number'),
-                'scheme': scheme,
-                'current_step': 3,
-            }
-            app.sudo().write(vals)
-
-        return request.redirect('/certification/apply/step4')
-    
-    # ---------------------------------------------------------
-    # HALAMAN STEP 4: DECLARATION (FINAL)
-    # ---------------------------------------------------------
-    @http.route('/certification/apply/step4', type='http', auth='user', website=True)
-    def step4_page(self, **kw):
-        app = request.env['certification.application'].search([
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ], limit=1)
-
-        if not app:
-            return request.redirect('/certification/apply')
-
-        return request.render('iso17024_portall.application_step4_page', {
-            'application': app
-        })
-
-    # ---------------------------------------------------------
-    # FINAL SUBMIT (KUNCI DATA)
+    # FINAL SUBMIT (STEP 2 - KUNCI DATA)
     # ---------------------------------------------------------
     @http.route('/certification/apply/submit_final', type='http', auth='user', methods=['POST'], website=True)
     def submit_final(self, **kw):
@@ -346,25 +395,24 @@ class IsoPortalController(AuthSignupHome):
         ], limit=1)
 
         if app:
-            # Simpan data deklarasi
             app.sudo().write({
-                'declaration_compliance': True if kw.get('declaration_compliance') == 'on' else False,
+                'declaration_color_blind': True if kw.get('declaration_color_blind') == 'on' else False,
+                'declaration_healthy': True if kw.get('declaration_healthy') == 'on' else False,
+                'declaration_no_phobia': True if kw.get('declaration_no_phobia') == 'on' else False,
+                'declaration_english': True if kw.get('declaration_english') == 'on' else False,
                 'declaration_truth': True if kw.get('declaration_truth') == 'on' else False,
-                'declaration_liability': True if kw.get('declaration_liability') == 'on' else False,
                 'digital_signature': kw.get('digital_signature'),
-                
-                # Ubah status jadi 'submitted' (Dikunci)
                 'state': 'submitted',
-                'current_step': 4
+                'current_step': 2,
+                'admin_note': False,  # Clear admin note after resubmit
             })
+            # Clear revision flags after resubmit
+            app.sudo()._clear_revision_flags()
             
-            # (Opsional) Kirim Email Konfirmasi disini
-            
-        # Redirect ke Halaman Dashboard/Sukses
-        return request.redirect('/certification/apply')
+        return request.redirect('/certification/status')
 
     # ---------------------------------------------------------
-    # 7. HALAMAN PEMBAYARAN (XENDIT UI)
+    # 7. HALAMAN PEMBAYARAN
     # ---------------------------------------------------------
     @http.route('/certification/payment', type='http', auth='user', website=True)
     def payment_page(self, **kw):
@@ -372,13 +420,9 @@ class IsoPortalController(AuthSignupHome):
             ('partner_id', '=', request.env.user.partner_id.id)
         ], limit=1)
 
-        # Hanya boleh masuk jika status 'payment'
         if not app or app.state != 'payment':
             return request.redirect('/certification/status')
 
-        # Hitung harga berdasarkan skema (Rupiah = USD x 16.000)
-        # Level 1: $450 = Rp 7.200.000, Level 2: $850 = Rp 13.600.000
-        # Admin Fee: $100 = Rp 1.600.000
         prices = {
             'level1': {'base': 7200000, 'admin': 1600000, 'name': 'Coating Inspector Level 1'},
             'level2': {'base': 13600000, 'admin': 1600000, 'name': 'Coating Inspector Level 2'},
@@ -396,17 +440,329 @@ class IsoPortalController(AuthSignupHome):
 
     @http.route('/certification/payment/confirm', type='http', auth='user', website=True)
     def payment_confirm(self, **kw):
-        """User submit pembayaran - status jadi pending, menunggu konfirmasi admin"""
         app = request.env['certification.application'].search([
             ('partner_id', '=', request.env.user.partner_id.id)
         ], limit=1)
 
         if app and app.state == 'payment':
-            # Hanya set payment_status ke pending, TIDAK langsung verified
-            # Admin yang akan konfirmasi pembayaran
             app.sudo().write({
                 'payment_status': 'pending',
             })
             app.sudo().message_post(body="<b style='color:blue'>💰 PEMBAYARAN DIKIRIM</b><br/>User telah submit pembayaran. Menunggu konfirmasi admin.")
         
         return request.redirect('/certification/status')
+
+    # ---------------------------------------------------------
+    # 8. XENDIT WEBHOOK CALLBACK
+    # ---------------------------------------------------------
+    @http.route('/xendit/callback', type='json', auth='public', csrf=False, methods=['POST'])
+    def xendit_callback(self, **kw):
+        """Handle Xendit payment webhook callback"""
+        import json
+        import logging
+        _logger = logging.getLogger(__name__)
+        
+        try:
+            # Get JSON data from request
+            data = request.get_json_data()
+            _logger.info(f"Xendit callback received: {json.dumps(data)}")
+            
+            external_id = data.get('external_id', '')
+            status = data.get('status', '')
+            xendit_id = data.get('id', '')
+            
+            # Parse application ID from external_id (format: CERT-{id})
+            if external_id.startswith('CERT-'):
+                app_id = int(external_id.replace('CERT-', ''))
+                
+                app = request.env['certification.application'].sudo().browse(app_id)
+                
+                if app.exists():
+                    if status == 'PAID':
+                        app.write({
+                            'xendit_status': 'paid',
+                            'payment_status': 'paid',
+                            'state': 'verified',
+                            'payment_date': fields.Datetime.now(),
+                            'payment_method': data.get('payment_method', 'xendit'),
+                        })
+                        app.message_post(
+                            body=f"<b style='color:green'>✅ PEMBAYARAN DITERIMA (Xendit)</b><br/>"
+                                 f"ID: {xendit_id}<br/>"
+                                 f"Metode: {data.get('payment_method', '-')}"
+                        )
+                        _logger.info(f"Application {app_id} payment confirmed via Xendit")
+                        
+                    elif status == 'EXPIRED':
+                        app.write({'xendit_status': 'expired'})
+                        app.message_post(body="<b style='color:orange'>⏰ INVOICE XENDIT KADALUARSA</b>")
+                        
+                    elif status == 'FAILED':
+                        app.write({'xendit_status': 'failed'})
+                        app.message_post(body="<b style='color:red'>❌ PEMBAYARAN GAGAL</b>")
+                        
+            return {'status': 'ok'}
+            
+        except Exception as e:
+            _logger.error(f"Xendit callback error: {str(e)}")
+            return {'status': 'error', 'message': str(e)}
+    
+    # ---------------------------------------------------------
+    # 9. XENDIT PAYMENT REDIRECT PAGES
+    # ---------------------------------------------------------
+    @http.route('/certification/payment/success', type='http', auth='public', website=True)
+    def payment_success(self, **kw):
+        """Redirect page after successful Xendit payment"""
+        app_id = kw.get('app_id')
+        
+        return request.render('iso17024_portall.payment_success_page', {
+            'app_id': app_id,
+        })
+    
+    @http.route('/certification/payment/failed', type='http', auth='public', website=True)
+    def payment_failed(self, **kw):
+        """Redirect page after failed Xendit payment"""
+        app_id = kw.get('app_id')
+        
+        return request.render('iso17024_portall.payment_failed_page', {
+            'app_id': app_id,
+        })
+
+    # ---------------------------------------------------------
+    # 10. QUIZ / EXAM ROUTES
+    # ---------------------------------------------------------
+    
+    @http.route('/certification/quiz/intro/<int:app_id>', type='http', auth='user', website=True)
+    def quiz_intro(self, app_id, **kw):
+        """Quiz introduction page - show quiz details before starting"""
+        from datetime import datetime
+        
+        app = request.env['certification.application'].sudo().browse(app_id)
+        
+        # Validasi akses
+        if not app.exists() or app.partner_id.id != request.env.user.partner_id.id:
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        # Cek status harus scheduled
+        if app.state != 'scheduled':
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        # Cek tanggal ujian sudah tiba
+        if app.exam_date and app.exam_date > fields.Datetime.now():
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        # Cek apakah sudah pernah mengerjakan quiz (done)
+        existing_attempt = request.env['cert.quiz.attempt'].sudo().search([
+            ('application_id', '=', app.id),
+            ('state', '=', 'done')
+        ], limit=1)
+        
+        if existing_attempt:
+            # Redirect to result page if already done
+            return request.redirect(f'/certification/quiz/result/{existing_attempt.id}')
+        
+        # Cari quiz berdasarkan scheme
+        quiz = request.env['cert.quiz'].sudo().search([
+            ('scheme', '=', app.scheme),
+            ('published', '=', True)
+        ], limit=1)
+        
+        if not quiz:
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        return request.render('iso17024_portall.quiz_intro_page', {
+            'quiz': quiz,
+            'application': app,
+        })
+    
+    @http.route('/certification/quiz/start/<int:app_id>', type='http', auth='user', methods=['POST'], website=True)
+    def quiz_start(self, app_id, **kw):
+        """Start a new quiz attempt"""
+        from datetime import datetime
+        
+        app = request.env['certification.application'].sudo().browse(app_id)
+        
+        # Validasi akses
+        if not app.exists() or app.partner_id.id != request.env.user.partner_id.id:
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        if app.state != 'scheduled':
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        # Cek tanggal ujian sudah tiba
+        if app.exam_date and app.exam_date > fields.Datetime.now():
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        # Cek apakah sudah ada attempt in_progress
+        existing_attempt = request.env['cert.quiz.attempt'].sudo().search([
+            ('application_id', '=', app.id),
+            ('state', '=', 'in_progress')
+        ], limit=1)
+        
+        if existing_attempt:
+            return request.redirect(f'/certification/quiz/take/{existing_attempt.id}')
+        
+        # Cek apakah sudah pernah mengerjakan quiz (done)
+        done_attempt = request.env['cert.quiz.attempt'].sudo().search([
+            ('application_id', '=', app.id),
+            ('state', '=', 'done')
+        ], limit=1)
+        
+        if done_attempt:
+            return request.redirect(f'/certification/quiz/result/{done_attempt.id}')
+        
+        # Cari quiz berdasarkan scheme
+        quiz = request.env['cert.quiz'].sudo().search([
+            ('scheme', '=', app.scheme),
+            ('published', '=', True)
+        ], limit=1)
+        
+        if not quiz:
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        # Create new attempt
+        attempt = request.env['cert.quiz.attempt'].sudo().create({
+            'application_id': app.id,
+            'user_id': request.env.user.id,
+            'quiz_id': quiz.id,
+        })
+        
+        return request.redirect(f'/certification/quiz/take/{attempt.id}')
+    
+    @http.route('/certification/quiz/take/<int:attempt_id>', type='http', auth='user', website=True)
+    def quiz_take(self, attempt_id, **kw):
+        """Quiz runner page - show questions and timer"""
+        attempt = request.env['cert.quiz.attempt'].sudo().browse(attempt_id)
+
+        if not attempt.exists():
+            return request.redirect('/certification/status')
+
+        # Validasi user
+        if attempt.user_id.id != request.env.user.id:
+            return request.render('iso17024_portall.quiz_access_denied')
+
+        # === SESSION VALIDATION: Check if this device is still valid ===
+        session_valid = request.env['cert.user.session'].sudo().validate_session(
+            user_id=request.env.user.id,
+            session_token=request.session.sid
+        )
+        if not session_valid:
+            return request.render('iso17024_portall.session_invalid_page', {
+                'attempt': attempt,
+            })
+        # === END SESSION VALIDATION ===
+
+        # Jika sudah selesai, redirect ke result
+        if attempt.state == 'done':
+            return request.redirect(f'/certification/quiz/result/{attempt.id}')
+
+        return request.render('iso17024_portall.quiz_runner_page', {
+            'attempt': attempt,
+            'lines': attempt.answer_line_ids,
+        })
+    
+    @http.route('/certification/quiz/submit/<int:attempt_id>', type='http', auth='user', methods=['POST'], website=True)
+    def quiz_submit(self, attempt_id, **post):
+        """Submit quiz answers and calculate score"""
+        attempt = request.env['cert.quiz.attempt'].sudo().browse(attempt_id)
+        
+        if not attempt.exists():
+            return request.redirect('/certification/status')
+        
+        # Validasi user
+        if attempt.user_id.id != request.env.user.id:
+            return request.render('iso17024_portall.quiz_access_denied')
+        
+        # Jika sudah selesai, redirect ke result
+        if attempt.state == 'done':
+            return request.redirect(f'/certification/quiz/result/{attempt.id}')
+        
+        # Simpan jawaban
+        for field_name, value in post.items():
+            if field_name.startswith('question_'):
+                try:
+                    line_id = int(field_name.split('_')[1])
+                    line = request.env['cert.answer.line'].sudo().browse(line_id)
+                    if line.exists() and line.attempt_id.id == attempt.id:
+                        line.write({'selected': value})
+                except (ValueError, IndexError):
+                    continue
+        
+        # Finish attempt and calculate scores
+        attempt.action_finish()
+        
+        # Update application exam_result based on quiz result
+        if attempt.application_id:
+            if attempt.is_passed:
+                attempt.application_id.sudo().write({'exam_result': 'passed'})
+                attempt.application_id.sudo().message_post(
+                    body=f"<b style='color:green'>✅ UJIAN LULUS</b><br/>"
+                         f"Skor: {attempt.score_percentage:.0f}% ({attempt.score_total}/{attempt.max_score})"
+                )
+            else:
+                attempt.application_id.sudo().write({'exam_result': 'failed'})
+                attempt.application_id.sudo().message_post(
+                    body=f"<b style='color:red'>❌ UJIAN TIDAK LULUS</b><br/>"
+                         f"Skor: {attempt.score_percentage:.0f}% ({attempt.score_total}/{attempt.max_score})<br/>"
+                         f"Minimum: {attempt.quiz_id.passing_score}%"
+                )
+        
+        return request.redirect(f'/certification/quiz/result/{attempt.id}')
+    
+    @http.route('/certification/quiz/result/<int:attempt_id>', type='http', auth='user', website=True)
+    def quiz_result(self, attempt_id, **kw):
+        """Quiz result page - show score and pass/fail status"""
+        attempt = request.env['cert.quiz.attempt'].sudo().browse(attempt_id)
+
+        if not attempt.exists():
+            return request.redirect('/certification/status')
+
+        # Validasi user
+        if attempt.user_id.id != request.env.user.id:
+            return request.render('iso17024_portall.quiz_access_denied')
+
+        return request.render('iso17024_portall.quiz_result_page', {
+            'attempt': attempt,
+        })
+
+    @http.route('/certification/quiz/check_session', type='json', auth='user', methods=['POST'])
+    def quiz_check_session(self, **post):
+        """Check if current session is still valid (for multi-device detection)"""
+        session_valid = request.env['cert.user.session'].sudo().validate_session(
+            user_id=request.env.user.id,
+            session_token=request.session.sid
+        )
+        return {
+            'valid': session_valid,
+            'message': 'Session aktif' if session_valid else 'Anda telah login dari device lain. Session ini tidak valid lagi.'
+        }
+
+    @http.route('/certification/quiz/violation/<int:attempt_id>', type='json', auth='user', methods=['POST'])
+    def quiz_violation(self, attempt_id, **post):
+        """Log quiz security violation (fullscreen exit, tab switch, etc)"""
+        attempt = request.env['cert.quiz.attempt'].sudo().browse(attempt_id)
+
+        if not attempt.exists():
+            return {'error': 'Attempt not found'}
+
+        # Validasi user
+        if attempt.user_id.id != request.env.user.id:
+            return {'error': 'Access denied'}
+
+        # Jika sudah selesai, ignore
+        if attempt.state == 'done':
+            return {'error': 'Quiz already finished'}
+
+        violation_type = post.get('type', 'unknown')
+        result = attempt.log_violation(violation_type)
+
+        # Log to application chatter if this is a penalty or auto_submit
+        if result.get('action') in ['penalty', 'auto_submit']:
+            attempt.application_id.sudo().message_post(
+                body=f"<b style='color:orange'>⚠️ PELANGGARAN KEAMANAN</b><br/>"
+                     f"Tipe: {violation_type}<br/>"
+                     f"Pelanggaran ke-{result.get('count')}<br/>"
+                     f"Total Pengurangan: {result.get('total_penalty')}%"
+            )
+
+        return result

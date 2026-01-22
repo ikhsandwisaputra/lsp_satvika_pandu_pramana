@@ -1,0 +1,166 @@
+<odoo>
+    <!-- Payment Success Page -->
+    <template id="payment_success_page" name="Payment Success">
+        <t t-call="website.layout">
+            <style>
+                .success-container {
+                    min-height: 80vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+                }
+                .success-card {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 50px;
+                    text-align: center;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+                    max-width: 500px;
+                }
+                .success-icon {
+                    width: 100px;
+                    height: 100px;
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 25px;
+                    font-size: 50px;
+                    color: white;
+                }
+                .success-title {
+                    color: #064e3b;
+                    font-size: 28px;
+                    font-weight: 800;
+                    margin-bottom: 15px;
+                }
+                .success-text {
+                    color: #6b7280;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    margin-bottom: 30px;
+                }
+                .btn-status {
+                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                    color: white;
+                    padding: 15px 40px;
+                    border-radius: 10px;
+                    text-decoration: none;
+                    font-weight: 700;
+                    display: inline-block;
+                    transition: transform 0.2s;
+                }
+                .btn-status:hover {
+                    transform: translateY(-2px);
+                    color: white;
+                }
+            </style>
+            
+            <div class="success-container">
+                <div class="success-card">
+                    <div class="success-icon">✓</div>
+                    <h1 class="success-title">Pembayaran Berhasil!</h1>
+                    <p class="success-text">
+                        Terima kasih! Pembayaran Anda telah kami terima. 
+                        Tim kami akan segera memproses aplikasi sertifikasi Anda.
+                    </p>
+                    <a href="/certification/status" class="btn-status">
+                        Lihat Status Aplikasi
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Payment Failed Page -->
+    <template id="payment_failed_page" name="Payment Failed">
+        <t t-call="website.layout">
+            <style>
+                .failed-container {
+                    min-height: 80vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+                }
+                .failed-card {
+                    background: white;
+                    border-radius: 20px;
+                    padding: 50px;
+                    text-align: center;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+                    max-width: 500px;
+                }
+                .failed-icon {
+                    width: 100px;
+                    height: 100px;
+                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 25px;
+                    font-size: 50px;
+                    color: white;
+                }
+                .failed-title {
+                    color: #991b1b;
+                    font-size: 28px;
+                    font-weight: 800;
+                    margin-bottom: 15px;
+                }
+                .failed-text {
+                    color: #6b7280;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    margin-bottom: 30px;
+                }
+                .btn-retry {
+                    background: linear-gradient(135deg, #d4af37 0%, #b5952f 100%);
+                    color: white;
+                    padding: 15px 40px;
+                    border-radius: 10px;
+                    text-decoration: none;
+                    font-weight: 700;
+                    display: inline-block;
+                    margin-right: 10px;
+                    transition: transform 0.2s;
+                }
+                .btn-retry:hover {
+                    transform: translateY(-2px);
+                    color: white;
+                }
+                .btn-help {
+                    background: #f1f5f9;
+                    color: #475569;
+                    padding: 15px 30px;
+                    border-radius: 10px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    display: inline-block;
+                }
+            </style>
+            
+            <div class="failed-container">
+                <div class="failed-card">
+                    <div class="failed-icon">✕</div>
+                    <h1 class="failed-title">Pembayaran Gagal</h1>
+                    <p class="failed-text">
+                        Maaf, terjadi masalah dalam memproses pembayaran Anda. 
+                        Silakan coba lagi atau hubungi tim support kami.
+                    </p>
+                    <div>
+                        <a href="/certification/status" class="btn-retry">
+                            Coba Lagi
+                        </a>
+                        <a href="mailto:admin@lsp-satvika.com" class="btn-help">
+                            Hubungi Kami
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

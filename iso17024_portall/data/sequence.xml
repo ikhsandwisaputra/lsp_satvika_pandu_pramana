@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Registration Code Level 1 -->
+    <record id="seq_candidate_registration_level1" model="ir.sequence">
+        <field name="name">Registration Code Level 1</field>
+        <field name="code">candidate.registration.level1</field>
+        <field name="prefix"></field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+    
+    <!-- Sequence for Registration Code Level 2 -->
+    <record id="seq_candidate_registration_level2" model="ir.sequence">
+        <field name="name">Registration Code Level 2</field>
+        <field name="code">candidate.registration.level2</field>
+        <field name="prefix"></field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+</odoo>

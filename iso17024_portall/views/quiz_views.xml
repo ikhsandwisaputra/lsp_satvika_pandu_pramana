@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================ -->
+    <!-- QUIZ VIEWS -->
+    <!-- ============================================ -->
+    
+    <!-- Quiz Form View -->
+    <record id="view_cert_quiz_form" model="ir.ui.view">
+        <field name="name">cert.quiz.form</field>
+        <field name="model">cert.quiz</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="published" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nama Kuis"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="scheme"/>
+                            <field name="time_limit_minutes"/>
+                            <field name="passing_score"/>
+                        </group>
+                        <group>
+                            <field name="question_count"/>
+                            <field name="attempt_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Daftar Soal" name="questions">
+                            <field name="question_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="content" widget="html"/>
+                                    <field name="correct_choice"/>
+                                    <field name="weight"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="sequence"/>
+                                        <field name="content"/>
+                                        <field name="weight"/>
+                                    </group>
+                                    <group col="2">
+                                        <group string="Pilihan Jawaban">
+                                            <field name="choice_a"/>
+                                            <field name="choice_b"/>
+                                            <field name="choice_c"/>
+                                            <field name="choice_d"/>
+                                        </group>
+                                        <group string="Kunci Jawaban">
+                                            <field name="correct_choice" widget="radio"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Deskripsi" name="description">
+                            <field name="description" placeholder="Deskripsi kuis untuk peserta..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Quiz List View -->
+    <record id="view_cert_quiz_list" model="ir.ui.view">
+        <field name="name">cert.quiz.list</field>
+        <field name="model">cert.quiz</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="scheme"/>
+                <field name="time_limit_minutes"/>
+                <field name="passing_score"/>
+                <field name="question_count"/>
+                <field name="attempt_count"/>
+                <field name="published" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Quiz Action -->
+    <record id="action_cert_quiz" model="ir.actions.act_window">
+        <field name="name">Daftar Kuis</field>
+        <field name="res_model">cert.quiz</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat kuis pertama Anda!
+            </p>
+            <p>
+                Kuis akan digunakan untuk ujian sertifikasi peserta.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- QUESTION VIEWS (Optional - for standalone editing) -->
+    <!-- ============================================ -->
+    
+    <record id="view_cert_question_form" model="ir.ui.view">
+        <field name="name">cert.question.form</field>
+        <field name="model">cert.question</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="quiz_id"/>
+                        <field name="sequence"/>
+                        <field name="weight"/>
+                    </group>
+                    <separator string="Pertanyaan"/>
+                    <field name="content"/>
+                    <group col="2">
+                        <group string="Pilihan Jawaban">
+                            <field name="choice_a"/>
+                            <field name="choice_b"/>
+                            <field name="choice_c"/>
+                            <field name="choice_d"/>
+                        </group>
+                        <group string="Kunci Jawaban">
+                            <field name="correct_choice" widget="radio"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- ATTEMPT VIEWS -->
+    <!-- ============================================ -->
+
+    <!-- Attempt List View -->
+    <record id="view_cert_quiz_attempt_list" model="ir.ui.view">
+        <field name="name">cert.quiz.attempt.list</field>
+        <field name="model">cert.quiz.attempt</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="application_id"/>
+                <field name="user_id"/>
+                <field name="quiz_id"/>
+                <field name="started_at"/>
+                <field name="finished_at"/>
+                <field name="score_total"/>
+                <field name="max_score"/>
+                <field name="score_percentage" widget="progressbar"/>
+                <field name="is_passed" widget="boolean"/>
+                <field name="violation_count" string="⚠️ Pelanggaran"
+                       decoration-danger="violation_count &gt;= 2"
+                       decoration-warning="violation_count == 1"/>
+                <field name="penalty_percentage" string="Penalti (%)"
+                       decoration-danger="penalty_percentage &gt; 0"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'in_progress'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Attempt Form View -->
+    <record id="view_cert_quiz_attempt_form" model="ir.ui.view">
+        <field name="name">cert.quiz.attempt.form</field>
+        <field name="model">cert.quiz.attempt</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="application_id"/>
+                            <field name="user_id"/>
+                            <field name="quiz_id"/>
+                        </group>
+                        <group>
+                            <field name="started_at"/>
+                            <field name="finished_at"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <group string="Hasil">
+                        <field name="score_total"/>
+                        <field name="max_score"/>
+                        <field name="score_percentage"/>
+                        <field name="is_passed"/>
+                    </group>
+                    <group string="🔒 Log Keamanan" invisible="violation_count == 0">
+                        <group>
+                            <field name="violation_count"/>
+                            <field name="penalty_percentage"/>
+                        </group>
+                        <group>
+                            <field name="security_log" widget="text" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detail Jawaban" name="answers">
+                            <field name="answer_line_ids" readonly="1">
+                                <list>
+                                    <field name="question_id"/>
+                                    <field name="selected"/>
+                                    <field name="is_correct" widget="boolean"/>
+                                    <field name="score_awarded"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Attempt Action -->
+    <record id="action_cert_quiz_attempt" model="ir.actions.act_window">
+        <field name="name">Hasil Ujian</field>
+        <field name="res_model">cert.quiz.attempt</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <!-- ============================================ -->
+    <!-- QUIZ MENUS -->
+    <!-- ============================================ -->
+    
+    <!-- Menu Bank Soal -->
+    <menuitem id="menu_iso_bank_soal" 
+              name="Bank Soal" 
+              parent="menu_iso_root" 
+              sequence="10"/>
+    
+    <menuitem id="menu_iso_quiz_list" 
+              name="Daftar Kuis" 
+              parent="menu_iso_bank_soal" 
+              action="action_cert_quiz" 
+              sequence="1"/>
+    
+    <menuitem id="menu_iso_quiz_attempts" 
+              name="Hasil Ujian" 
+              parent="menu_iso_bank_soal" 
+              action="action_cert_quiz_attempt" 
+              sequence="2"/>
+
+</odoo>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Email Template: Registration Approved -->
+    <record id="email_template_registration_approved" model="mail.template">
+        <field name="name">Registrasi Kandidat Disetujui</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="email_from">"LSP Satvika Pandu Pramana" &lt;noreply@lsp-satvika.id&gt;</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="subject">✅ Selamat! Registrasi Anda Telah Diverifikasi - {{ object.registration_code }}</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #137fec; padding: 30px 0;">
+        <tr>
+            <td align="center">
+                <h1 style="color: white; margin: 0; font-size: 24px;">LSP Satvika Indonesia</h1>
+                <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0;">Lembaga Sertifikasi Profesi</p>
+            </td>
+        </tr>
+    </table>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; padding: 30px 20px;">
+        <tr>
+            <td>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="display: inline-block; width: 80px; height: 80px; background-color: #dcfce7; border-radius: 50%; line-height: 80px;">
+                        <span style="font-size: 40px;">✅</span>
+                    </div>
+                </div>
+                
+                <h2 style="color: #1e293b; text-align: center; margin-bottom: 20px;">
+                    Selamat, <t t-out="object.name"/>!
+                </h2>
+                
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; text-align: center;">
+                    Registrasi akun Anda telah <strong style="color: #22c55e;">berhasil diverifikasi</strong> oleh tim kami. 
+                    Sekarang Anda dapat login dan melanjutkan proses pendaftaran sertifikasi.
+                </p>
+                
+                <div style="background-color: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; padding: 20px; margin: 30px 0; text-align: center;">
+                    <p style="color: #166534; margin: 0 0 10px 0; font-size: 14px;">Kode Registrasi Anda:</p>
+                    <h1 style="color: #15803d; margin: 0; font-size: 32px; letter-spacing: 2px;">
+                        <t t-out="object.registration_code"/>
+                    </h1>
+                </div>
+                
+                <div style="background-color: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                    <h3 style="color: #1e293b; margin: 0 0 15px 0; font-size: 16px;">📋 Detail Pendaftaran:</h3>
+                    <table width="100%" style="color: #475569; font-size: 14px;">
+                        <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">Nama Lengkap</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right; font-weight: bold;"><t t-out="object.name"/></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">Email</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right; font-weight: bold;"><t t-out="object.email"/></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">Jenis Sertifikasi</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right; font-weight: bold;">
+                                <t t-if="object.pending_cert_type == 'new'">Sertifikasi Baru</t>
+                                <t t-elif="object.pending_cert_type == 'recert'">Resertifikasi</t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0;">Level</td>
+                            <td style="padding: 8px 0; text-align: right; font-weight: bold;">
+                                <t t-if="object.pending_cert_level == 'level1'">Coating Inspector Grade 1.0</t>
+                                <t t-elif="object.pending_cert_level == 'level2'">Coating Inspector Grade 2.0</t>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="/web/login" 
+                       style="display: inline-block; background-color: #137fec; color: white; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: bold;">
+                        🔐 Login Sekarang
+                    </a>
+                </div>
+                
+                <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px 20px; margin: 20px 0;">
+                    <h4 style="color: #1e40af; margin: 0 0 10px 0;">📌 Langkah Selanjutnya:</h4>
+                    <ol style="color: #1e40af; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.8;">
+                        <li>Login menggunakan email dan password yang sudah didaftarkan</li>
+                        <li>Lengkapi data diri dan upload dokumen persyaratan</li>
+                        <li>Lakukan pembayaran biaya sertifikasi</li>
+                        <li>Tunggu jadwal asesmen dari admin</li>
+                    </ol>
+                </div>
+                
+                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;"/>
+                
+                <p style="color: #94a3b8; font-size: 13px; text-align: center; line-height: 1.6;">
+                    Jika Anda memiliki pertanyaan, silakan hubungi kami di:<br/>
+                    📧 info@lsp-satvika.id | 📞 (021) 1234-5678
+                </p>
+            </td>
+        </tr>
+    </table>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #1e293b; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <p style="color: rgba(255,255,255,0.6); margin: 0; font-size: 12px;">
+                    © 2026 LSP Satvika Indonesia. All rights reserved.
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+        </field>
+        <field name="auto_delete">False</field>
+    </record>
+</odoo>

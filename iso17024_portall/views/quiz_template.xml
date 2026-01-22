@@ -1,0 +1,1175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Quiz Introduction Page -->
+    <template id="quiz_intro_page" name="Quiz Introduction">
+        <t t-call="website.layout">
+            <t t-set="title">Mulai Ujian Sertifikasi</t>
+            <t t-set="head">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+            </t>
+            
+            <style>
+                :root {
+                    --iso-navy: #0f172a;
+                    --iso-gold: #d4af37;
+                }
+                
+                .quiz-intro-page { 
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
+                    min-height: 100vh; 
+                    padding: 40px 0; 
+                }
+                
+                .quiz-card {
+                    background: white;
+                    border-radius: 16px;
+                    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.1);
+                    overflow: hidden;
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+                
+                .quiz-header {
+                    background: linear-gradient(135deg, var(--iso-navy) 0%, #1e293b 100%);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                }
+                
+                .quiz-header h2 { margin: 0; font-weight: 700; }
+                .quiz-header .subtitle { color: #94a3b8; font-size: 0.9rem; margin-top: 8px; }
+                
+                .quiz-body { padding: 30px; }
+                
+                .quiz-info-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 16px;
+                    margin-bottom: 24px;
+                }
+                
+                .quiz-info-item {
+                    background: #f8fafc;
+                    padding: 16px;
+                    border-radius: 8px;
+                    text-align: center;
+                }
+                
+                .quiz-info-item .label { color: #64748b; font-size: 0.8rem; text-transform: uppercase; }
+                .quiz-info-item .value { font-size: 1.5rem; font-weight: 700; color: var(--iso-navy); margin-top: 4px; }
+                
+                .quiz-description {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 16px;
+                    border-radius: 0 8px 8px 0;
+                    margin-bottom: 24px;
+                }
+                
+                .quiz-rules {
+                    background: #f0f9ff;
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 24px;
+                }
+                
+                .quiz-rules h5 { color: #0284c7; margin-bottom: 12px; }
+                .quiz-rules ul { margin: 0; padding-left: 20px; color: #475569; }
+                
+                .btn-start-quiz {
+                    display: block;
+                    width: 100%;
+                    padding: 16px 32px;
+                    background: linear-gradient(135deg, var(--iso-gold) 0%, #b5952f 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    text-align: center;
+                    text-decoration: none;
+                }
+                
+                .btn-start-quiz:hover { background: #c9a227; color: white; text-decoration: none; }
+            </style>
+            
+            <div class="quiz-intro-page">
+                <div class="container">
+                    <div class="quiz-card">
+                        <div class="quiz-header">
+                            <p class="subtitle mb-1">Ujian Sertifikasi</p>
+                            <h2><t t-esc="quiz.name"/></h2>
+                        </div>
+                        
+                        <div class="quiz-body">
+                            <div class="quiz-info-grid">
+                                <div class="quiz-info-item">
+                                    <div class="label">Durasi Ujian</div>
+                                    <div class="value"><t t-esc="quiz.time_limit_minutes"/> menit</div>
+                                </div>
+                                <div class="quiz-info-item">
+                                    <div class="label">Jumlah Soal</div>
+                                    <div class="value"><t t-esc="quiz.question_count"/> soal</div>
+                                </div>
+                                <div class="quiz-info-item">
+                                    <div class="label">Nilai Minimum</div>
+                                    <div class="value"><t t-esc="quiz.passing_score"/>%</div>
+                                </div>
+                                <div class="quiz-info-item">
+                                    <div class="label">Tipe Soal</div>
+                                    <div class="value">Pilihan Ganda</div>
+                                </div>
+                            </div>
+                            
+                            <t t-if="quiz.description">
+                                <div class="quiz-description">
+                                    <strong>📋 Deskripsi:</strong>
+                                    <p class="mb-0 mt-2" t-esc="quiz.description"/>
+                                </div>
+                            </t>
+                            
+                            <div class="quiz-rules">
+                                <h5>📝 Peraturan Ujian:</h5>
+                                <ul>
+                                    <li>Jawab semua soal sebelum waktu habis</li>
+                                    <li><strong style="color: #dc2626;">🔒 Ujian akan berjalan dalam mode FULLSCREEN</strong></li>
+                                    <li><strong style="color: #dc2626;">⚠️ DILARANG keluar fullscreen atau pindah tab/window</strong></li>
+                                    <li><strong style="color: #dc2626;">📷 KAMERA WAJIB AKTIF - Wajah harus terlihat sepanjang ujian</strong></li>
+                                    <li>Jawaban akan otomatis terkirim jika waktu habis</li>
+                                    <li>Pastikan koneksi internet stabil</li>
+                                </ul>
+                            </div>
+
+                            <div class="alert alert-info" style="background: #eff6ff; border-left: 4px solid #3b82f6;">
+                                <h6 style="color: #1d4ed8; margin-bottom: 8px;">📷 Persyaratan Kamera:</h6>
+                                <ul style="margin: 0; padding-left: 20px; color: #1e40af;">
+                                    <li>Izinkan akses kamera saat diminta oleh browser</li>
+                                    <li>Pastikan pencahayaan cukup dan wajah terlihat jelas</li>
+                                    <li>Jangan menutup kamera atau meninggalkan kursi</li>
+                                    <li>Sistem akan mendeteksi jika wajah tidak terlihat &gt; 10 detik</li>
+                                </ul>
+                            </div>
+
+                            <div class="alert alert-danger" style="background: #fef2f2; border-left: 4px solid #dc2626;">
+                                <h6 style="color: #dc2626; margin-bottom: 8px;">⚡ Konsekuensi Pelanggaran:</h6>
+                                <ul style="margin: 0; padding-left: 20px; color: #7f1d1d;">
+                                    <li><strong>Pelanggaran 1x:</strong> Peringatan</li>
+                                    <li><strong>Pelanggaran 2x:</strong> Pengurangan nilai 10%</li>
+                                    <li><strong>Pelanggaran 3x:</strong> Ujian otomatis dikumpulkan</li>
+                                </ul>
+                            </div>
+                            
+                            <form t-attf-action="/certification/quiz/start/#{application.id}" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <button type="submit" class="btn-start-quiz">
+                                    🚀 Mulai Ujian Sekarang
+                                </button>
+                            </form>
+
+                            <div class="text-center mt-3">
+                                <a href="/certification/status" class="text-muted">
+                                    ← Kembali ke Status Pendaftaran
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Quiz Runner Page -->
+    <template id="quiz_runner_page" name="Quiz Runner">
+        <t t-call="website.layout">
+            <t t-set="title">Ujian Berlangsung</t>
+
+            <!-- Face Detection Libraries -->
+            <t t-set="head">
+                <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/dist/face-api.min.js"></script>
+            </t>
+
+            <style>
+                :root {
+                    --iso-navy: #0f172a;
+                    --iso-gold: #d4af37;
+                }
+                
+                body { background: #f1f5f9; }
+                
+                .quiz-runner-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+                
+                .quiz-timer-bar {
+                    position: sticky;
+                    top: 0;
+                    background: white;
+                    padding: 16px 24px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    margin-bottom: 24px;
+                    z-index: 100;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .quiz-title { font-weight: 700; color: var(--iso-navy); margin: 0; }
+                
+                .timer-display {
+                    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+                    color: white;
+                    padding: 8px 20px;
+                    border-radius: 8px;
+                    font-weight: 700;
+                    font-size: 1.3rem;
+                    font-family: monospace;
+                }
+                
+                .timer-display.warning { animation: pulse 1s infinite; }
+                
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.7; }
+                }
+                
+                .question-card {
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                    margin-bottom: 16px;
+                    overflow: hidden;
+                }
+                
+                .question-header {
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    padding: 12px 20px;
+                    border-bottom: 1px solid #e2e8f0;
+                }
+                
+                .question-number { color: var(--iso-gold); font-weight: 700; }
+                
+                .question-content { padding: 20px; }
+                .question-text { font-size: 1.05rem; margin-bottom: 16px; color: #1e293b; }
+                
+                .choice-option {
+                    display: block;
+                    padding: 12px 16px;
+                    margin-bottom: 8px;
+                    background: #f8fafc;
+                    border: 2px solid #e2e8f0;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                
+                .choice-option:hover { border-color: var(--iso-gold); background: #fffbeb; }
+                .choice-option input { margin-right: 12px; }
+                .choice-option.selected { border-color: var(--iso-gold); background: #fef3c7; }
+                
+                .submit-section {
+                    background: white;
+                    padding: 24px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                    text-align: center;
+                }
+                
+                .btn-submit-quiz {
+                    padding: 16px 48px;
+                    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                }
+                
+                .btn-submit-quiz:hover { background: #16a34a; }
+
+                /* Fullscreen Lock Styles */
+                .violation-overlay {
+                    position: fixed;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(0,0,0,0.95);
+                    z-index: 9999;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }
+
+                .violation-modal {
+                    background: white;
+                    padding: 40px;
+                    border-radius: 16px;
+                    text-align: center;
+                    max-width: 500px;
+                    margin: 20px;
+                    animation: shake 0.5s ease-in-out;
+                }
+
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-10px); }
+                    75% { transform: translateX(10px); }
+                }
+
+                .violation-warning { border: 4px solid #f59e0b; }
+                .violation-penalty { border: 4px solid #ef4444; }
+                .violation-submit { border: 4px solid #dc2626; background: #fef2f2; }
+
+                .violation-icon { font-size: 64px; margin-bottom: 16px; }
+                .violation-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; }
+                .violation-message { color: #64748b; margin-bottom: 24px; }
+                .violation-count { background: #f1f5f9; padding: 8px 16px; border-radius: 8px; margin-bottom: 16px; }
+
+                .btn-back-fullscreen {
+                    padding: 14px 32px;
+                    background: linear-gradient(135deg, var(--iso-navy) 0%, #1e293b 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    font-size: 1rem;
+                }
+
+                .btn-back-fullscreen:hover { background: #1e293b; }
+
+                /* Fullscreen indicator */
+                .fullscreen-indicator {
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    background: #22c55e;
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    z-index: 101;
+                }
+
+                .fullscreen-indicator.warning {
+                    background: #ef4444;
+                    animation: blink 1s infinite;
+                }
+
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                }
+
+                /* Fullscreen Gate Overlay */
+                .fullscreen-gate {
+                    position: fixed;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                    z-index: 10000;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    color: white;
+                    text-align: center;
+                    padding: 20px;
+                }
+
+                .fullscreen-gate.hidden { display: none; }
+
+                .gate-icon { font-size: 80px; margin-bottom: 24px; }
+                .gate-title { font-size: 2rem; font-weight: 700; margin-bottom: 16px; }
+                .gate-subtitle { color: #94a3b8; margin-bottom: 32px; max-width: 500px; }
+
+                .btn-enter-fullscreen {
+                    padding: 18px 48px;
+                    background: linear-gradient(135deg, #d4af37 0%, #b5952f 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-weight: 700;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    animation: pulse-gold 2s infinite;
+                }
+
+                @keyframes pulse-gold {
+                    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+                    50% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
+                }
+
+                .btn-enter-fullscreen:hover {
+                    background: linear-gradient(135deg, #b5952f 0%, #9a7f28 100%);
+                    transform: scale(1.05);
+                }
+
+                .gate-warning {
+                    margin-top: 24px;
+                    padding: 16px 24px;
+                    background: rgba(239, 68, 68, 0.2);
+                    border: 1px solid rgba(239, 68, 68, 0.5);
+                    border-radius: 8px;
+                    color: #fca5a5;
+                    font-size: 0.9rem;
+                    max-width: 500px;
+                }
+            </style>
+
+            <!-- Fullscreen Gate Overlay - Must click to enter fullscreen -->
+            <div class="fullscreen-gate" id="fullscreenGate">
+                <div class="gate-icon">🔒</div>
+                <div class="gate-title">Mode Ujian Fullscreen</div>
+                <div class="gate-subtitle">
+                    Untuk memulai ujian, Anda harus masuk ke mode fullscreen dan mengaktifkan kamera.
+                    Klik tombol di bawah untuk melanjutkan.
+                </div>
+                <button class="btn-enter-fullscreen" id="enterFullscreenBtn">
+                    🚀 Masuk Mode Ujian
+                </button>
+                <div class="gate-warning">
+                    ⚠️ <strong>Peringatan:</strong> Keluar dari fullscreen, pindah tab, atau wajah tidak terdeteksi akan dianggap pelanggaran!
+                </div>
+                <div class="gate-warning" style="margin-top: 12px; background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); color: #93c5fd;">
+                    📷 <strong>Kamera:</strong> Browser akan meminta izin akses kamera. Pastikan wajah Anda terlihat jelas sepanjang ujian.
+                </div>
+            </div>
+
+            <div class="quiz-runner-container">
+                <div class="quiz-timer-bar">
+                    <h4 class="quiz-title"><t t-esc="attempt.quiz_id.name"/></h4>
+                    <div class="timer-display" id="timer_display">00:00</div>
+                </div>
+                
+                <form id="quiz_form" t-attf-action="/certification/quiz/submit/#{attempt.id}" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    
+                    <t t-foreach="lines" t-as="line">
+                        <div class="question-card">
+                            <div class="question-header">
+                                <span class="question-number">Soal <t t-esc="line_index + 1"/></span>
+                                <span class="text-muted float-end">/ <t t-esc="len(lines)"/></span>
+                            </div>
+                            <div class="question-content">
+                                <div class="question-text">
+                                    <t t-raw="line.question_id.content"/>
+                                </div>
+                                
+                                <label class="choice-option" t-attf-for="q_#{line.id}_a">
+                                    <input type="radio" t-attf-name="question_#{line.id}" t-attf-id="q_#{line.id}_a" value="A"/>
+                                    <strong>A.</strong> <t t-esc="line.question_id.choice_a"/>
+                                </label>
+                                <label class="choice-option" t-attf-for="q_#{line.id}_b">
+                                    <input type="radio" t-attf-name="question_#{line.id}" t-attf-id="q_#{line.id}_b" value="B"/>
+                                    <strong>B.</strong> <t t-esc="line.question_id.choice_b"/>
+                                </label>
+                                <label class="choice-option" t-attf-for="q_#{line.id}_c">
+                                    <input type="radio" t-attf-name="question_#{line.id}" t-attf-id="q_#{line.id}_c" value="C"/>
+                                    <strong>C.</strong> <t t-esc="line.question_id.choice_c"/>
+                                </label>
+                                <label class="choice-option" t-attf-for="q_#{line.id}_d">
+                                    <input type="radio" t-attf-name="question_#{line.id}" t-attf-id="q_#{line.id}_d" value="D"/>
+                                    <strong>D.</strong> <t t-esc="line.question_id.choice_d"/>
+                                </label>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <div class="submit-section">
+                        <p class="text-muted mb-3">Pastikan semua soal sudah dijawab sebelum submit!</p>
+                        <button type="submit" class="btn-submit-quiz">
+                            ✓ Kirim Jawaban &amp; Selesai
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    var attemptId = <t t-esc="attempt.id"/>;
+                    var limitSeconds = <t t-esc="attempt.time_limit_seconds"/>;
+                    var display = document.getElementById('timer_display');
+                    var form = document.getElementById('quiz_form');
+                    var violationCount = <t t-esc="attempt.violation_count or 0"/>;
+                    var isSubmitting = false;
+                    var isProcessingViolation = false;
+                    var quizStarted = false;
+
+                    // Gate elements
+                    var gate = document.getElementById('fullscreenGate');
+                    var enterBtn = document.getElementById('enterFullscreenBtn');
+
+                    // Create fullscreen indicator
+                    var indicator = document.createElement('div');
+                    indicator.className = 'fullscreen-indicator';
+                    indicator.innerHTML = '🔒 Mode Ujian Aktif';
+                    document.body.appendChild(indicator);
+
+                    // ========== FULLSCREEN FUNCTIONS ==========
+                    function enterFullscreen() {
+                        var elem = document.documentElement;
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen().catch(function(err) {
+                                console.log('Fullscreen request failed:', err);
+                            });
+                        } else if (elem.webkitRequestFullscreen) {
+                            elem.webkitRequestFullscreen();
+                        } else if (elem.msRequestFullscreen) {
+                            elem.msRequestFullscreen();
+                        }
+                    }
+
+                    function isFullscreen() {
+                        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+                    }
+
+                    // ========== VIOLATION MODAL ==========
+                    function showViolationModal(type, data) {
+                        // Remove existing modal if any
+                        var existing = document.querySelector('.violation-overlay');
+                        if (existing) existing.remove();
+
+                        var overlay = document.createElement('div');
+                        overlay.className = 'violation-overlay';
+
+                        var modalClass = 'violation-modal ';
+                        var icon = '⚠️';
+                        var title = 'Peringatan!';
+                        var btnText = '🔒 Kembali ke Mode Ujian';
+
+                        if (type === 'penalty') {
+                            modalClass += 'violation-penalty';
+                            icon = '❌';
+                            title = 'Pengurangan Nilai!';
+                        } else if (type === 'auto_submit') {
+                            modalClass += 'violation-submit';
+                            icon = '🚫';
+                            title = 'Ujian Dihentikan!';
+                            btnText = 'Mengirim jawaban...';
+                        } else {
+                            modalClass += 'violation-warning';
+                        }
+
+                        overlay.innerHTML =
+                            '&lt;div class="' + modalClass + '"&gt;' +
+                                '&lt;div class="violation-icon"&gt;' + icon + '&lt;/div&gt;' +
+                                '&lt;div class="violation-title"&gt;' + title + '&lt;/div&gt;' +
+                                '&lt;div class="violation-count"&gt;Pelanggaran ke-' + data.count + ' dari 3&lt;/div&gt;' +
+                                '&lt;div class="violation-message"&gt;' + data.message + '&lt;/div&gt;' +
+                                (type !== 'auto_submit' ?
+                                    '&lt;button class="btn-back-fullscreen" onclick="window.backToFullscreen()"&gt;' + btnText + '&lt;/button&gt;' :
+                                    '&lt;div style="color: #dc2626; font-weight: 600;"&gt;' + btnText + '&lt;/div&gt;'
+                                ) +
+                            '&lt;/div&gt;';
+
+                        document.body.appendChild(overlay);
+
+                        // Auto submit after 3 seconds for auto_submit type
+                        if (type === 'auto_submit') {
+                            setTimeout(function() {
+                                isSubmitting = true;
+                                form.submit();
+                            }, 3000);
+                        }
+                    }
+
+                    // Global function for button click
+                    window.backToFullscreen = function() {
+                        var overlay = document.querySelector('.violation-overlay');
+                        if (overlay) overlay.remove();
+                        enterFullscreen();
+                        isProcessingViolation = false;
+                    };
+
+                    // ========== VIOLATION HANDLER ==========
+                    function handleViolation(violationType) {
+                        if (isSubmitting || isProcessingViolation) return;
+                        if (isFullscreen()) return; // Still in fullscreen, ignore
+
+                        isProcessingViolation = true;
+                        indicator.classList.add('warning');
+                        indicator.innerHTML = '⚠️ Pelanggaran Terdeteksi!';
+
+                        // Log to server
+                        fetch('/certification/quiz/violation/' + attemptId, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: { type: violationType },
+                                id: Math.floor(Math.random() * 1000000)
+                            })
+                        })
+                        .then(function(response) { return response.json(); })
+                        .then(function(data) {
+                            if (data.result) {
+                                violationCount = data.result.count;
+                                showViolationModal(data.result.action, data.result);
+                            }
+                        })
+                        .catch(function(err) {
+                            console.error('Violation log failed:', err);
+                            isProcessingViolation = false;
+                        });
+                    }
+
+                    // ========== EVENT LISTENERS ==========
+                    // Note: Fullscreen change is handled in FULLSCREEN GATE section below
+
+                    document.addEventListener('webkitfullscreenchange', function() {
+                        if (!isFullscreen() &amp;&amp; quizStarted &amp;&amp; !isSubmitting) {
+                            handleViolation('fullscreen_exit');
+                        }
+                    });
+
+                    // Tab visibility change detection
+                    document.addEventListener('visibilitychange', function() {
+                        if (document.hidden &amp;&amp; !isSubmitting) {
+                            handleViolation('tab_switch');
+                        }
+                    });
+
+                    // Window blur detection (alt+tab, etc)
+                    window.addEventListener('blur', function() {
+                        if (!isSubmitting &amp;&amp; isFullscreen()) {
+                            // Small delay to avoid false positives
+                            setTimeout(function() {
+                                if (!document.hasFocus() &amp;&amp; !isSubmitting) {
+                                    handleViolation('window_blur');
+                                }
+                            }, 100);
+                        }
+                    });
+
+                    // Prevent right-click
+                    document.addEventListener('contextmenu', function(e) {
+                        e.preventDefault();
+                        return false;
+                    });
+
+                    // Prevent keyboard shortcuts
+                    document.addEventListener('keydown', function(e) {
+                        // Prevent F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+                        if (e.key === 'F12' ||
+                            (e.ctrlKey &amp;&amp; e.shiftKey &amp;&amp; (e.key === 'I' || e.key === 'J')) ||
+                            (e.ctrlKey &amp;&amp; e.key === 'u')) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    });
+
+                    // ========== HIGHLIGHT SELECTED CHOICE ==========
+                    document.querySelectorAll('.choice-option input').forEach(function(input) {
+                        input.addEventListener('change', function() {
+                            this.closest('.question-content').querySelectorAll('.choice-option').forEach(function(opt) {
+                                opt.classList.remove('selected');
+                            });
+                            this.closest('.choice-option').classList.add('selected');
+                        });
+                    });
+
+                    // ========== TIMER COUNTDOWN ==========
+                    var timer = setInterval(function() {
+                        limitSeconds--;
+
+                        var m = Math.floor(limitSeconds / 60);
+                        var s = limitSeconds % 60;
+
+                        if (m &lt; 10) m = "0" + m;
+                        if (s &lt; 10) s = "0" + s;
+
+                        display.textContent = m + ":" + s;
+
+                        // Warning when 5 minutes left
+                        if (limitSeconds &lt;= 300) {
+                            display.classList.add('warning');
+                        }
+
+                        if (limitSeconds &lt;= 0) {
+                            clearInterval(timer);
+                            isSubmitting = true;
+                            alert("⏰ Waktu Habis! Jawaban akan dikirim otomatis.");
+                            form.submit();
+                        }
+                    }, 1000);
+
+                    // ========== FULLSCREEN GATE ==========
+                    // Initially hide quiz content until fullscreen is entered
+                    function showQuiz() {
+                        gate.classList.add('hidden');
+                        quizStarted = true;
+                    }
+
+                    function showGate() {
+                        gate.classList.remove('hidden');
+                    }
+
+                    // Handle enter fullscreen button click
+                    enterBtn.addEventListener('click', function() {
+                        var elem = document.documentElement;
+                        if (elem.requestFullscreen) {
+                            elem.requestFullscreen().then(function() {
+                                showQuiz();
+                            }).catch(function(err) {
+                                console.log('Fullscreen failed:', err);
+                                alert('Gagal masuk fullscreen. Silakan coba lagi atau izinkan fullscreen di browser Anda.');
+                            });
+                        } else if (elem.webkitRequestFullscreen) {
+                            elem.webkitRequestFullscreen();
+                            setTimeout(showQuiz, 300);
+                        } else if (elem.msRequestFullscreen) {
+                            elem.msRequestFullscreen();
+                            setTimeout(showQuiz, 300);
+                        }
+                    });
+
+                    // Check if already in fullscreen (shouldn't happen, but just in case)
+                    if (isFullscreen()) {
+                        showQuiz();
+                    }
+
+                    // Update fullscreen change handler to show gate when exiting
+                    var originalFullscreenHandler = document.onfullscreenchange;
+                    document.addEventListener('fullscreenchange', function() {
+                        if (!isFullscreen() &amp;&amp; quizStarted &amp;&amp; !isSubmitting) {
+                            // Show gate again when user exits fullscreen
+                            // But first log violation
+                            handleViolation('fullscreen_exit');
+                        } else if (isFullscreen()) {
+                            indicator.classList.remove('warning');
+                            indicator.innerHTML = '🔒 Mode Ujian Aktif';
+                            if (!quizStarted) showQuiz();
+                        }
+                    });
+
+                    // ========== SESSION VALIDATION (Multi-Device Detection) ==========
+                    function checkSession() {
+                        if (isSubmitting) return;
+
+                        fetch('/certification/quiz/check_session', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: {},
+                                id: Math.floor(Math.random() * 1000000)
+                            })
+                        })
+                        .then(function(response) { return response.json(); })
+                        .then(function(data) {
+                            if (data.result &amp;&amp; !data.result.valid) {
+                                // Session invalid - show modal and redirect
+                                showSessionInvalidModal(data.result.message);
+                            }
+                        })
+                        .catch(function(err) {
+                            console.error('Session check failed:', err);
+                        });
+                    }
+
+                    function showSessionInvalidModal(message) {
+                        // Remove existing modal if any
+                        var existing = document.querySelector('.violation-overlay');
+                        if (existing) existing.remove();
+
+                        var overlay = document.createElement('div');
+                        overlay.className = 'violation-overlay';
+                        overlay.innerHTML =
+                            '&lt;div class="violation-modal violation-penalty"&gt;' +
+                                '&lt;div class="violation-icon"&gt;🔐&lt;/div&gt;' +
+                                '&lt;div class="violation-title"&gt;Session Tidak Valid&lt;/div&gt;' +
+                                '&lt;div class="violation-message"&gt;' + message + '&lt;/div&gt;' +
+                                '&lt;div style="color: #dc2626; font-weight: 600; margin-top: 16px;"&gt;' +
+                                    'Mengalihkan ke halaman login...' +
+                                '&lt;/div&gt;' +
+                            '&lt;/div&gt;';
+
+                        document.body.appendChild(overlay);
+
+                        // Redirect to session invalid page after 3 seconds
+                        setTimeout(function() {
+                            window.location.href = '/certification/quiz/take/' + attemptId;
+                        }, 3000);
+                    }
+
+                    // Check session every 30 seconds
+                    setInterval(checkSession, 30000);
+                    // Also check immediately when quiz starts
+                    setTimeout(checkSession, 5000);
+
+                    // ========== FACE PRESENCE DETECTION ==========
+                    var faceDetectionEnabled = true; // Can be controlled by quiz settings
+                    var faceDetectionReady = false;
+
+                    // Handler for face detection violations
+                    window.handleFaceViolationResponse = function(data) {
+                        if (data) {
+                            violationCount = data.count;
+                            showViolationModal(data.action, {
+                                count: data.count,
+                                message: data.message || 'Wajah tidak terdeteksi oleh kamera. Pastikan wajah Anda terlihat jelas di kamera.'
+                            });
+                        }
+                    };
+
+                    // Initialize face detection after fullscreen entered
+                    function initFaceDetection() {
+                        if (!faceDetectionEnabled || faceDetectionReady) return;
+
+                        // Check if FaceDetection module is loaded
+                        if (typeof window.FaceDetection === 'undefined') {
+                            console.log('[Quiz] FaceDetection module not loaded, loading script...');
+                            var script = document.createElement('script');
+                            script.src = '/iso17024_portall/static/src/js/face_detection.js';
+                            script.onload = function() {
+                                startFaceDetection();
+                            };
+                            document.head.appendChild(script);
+                        } else {
+                            startFaceDetection();
+                        }
+                    }
+
+                    function startFaceDetection() {
+                        console.log('[Quiz] Initializing face detection...');
+
+                        window.FaceDetection.initialize({
+                            attemptId: attemptId,
+                            FACE_MISSING_THRESHOLD: 10, // 10 seconds before violation
+                            WARNING_THRESHOLD: 5, // Warning at 5 seconds
+                            DETECTION_INTERVAL: 2000, // Check every 2 seconds
+                            onViolation: function(type) {
+                                console.log('[Quiz] Face detection violation:', type);
+                                // The violation is already sent to server by FaceDetection module
+                            }
+                        }).then(function(success) {
+                            if (success) {
+                                faceDetectionReady = true;
+                                window.FaceDetection.startDetection();
+                                console.log('[Quiz] Face detection started');
+                            }
+                        }).catch(function(err) {
+                            console.error('[Quiz] Face detection init failed:', err);
+                        });
+                    }
+
+                    // Stop face detection on quiz submit
+                    var originalFormSubmit = form.onsubmit;
+                    form.addEventListener('submit', function() {
+                        if (faceDetectionReady &amp;&amp; window.FaceDetection) {
+                            window.FaceDetection.destroy();
+                        }
+                    });
+
+                    // Modify the showQuiz function to also init face detection
+                    var originalShowQuiz = showQuiz;
+                    showQuiz = function() {
+                        originalShowQuiz();
+                        // Small delay to let fullscreen settle
+                        setTimeout(initFaceDetection, 1000);
+                    };
+                });
+            </script>
+        </t>
+    </template>
+
+    <!-- Quiz Result Page -->
+    <template id="quiz_result_page" name="Quiz Result">
+        <t t-call="website.layout">
+            <t t-set="title">Hasil Ujian</t>
+            <t t-set="head">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+            </t>
+            
+            <style>
+                :root {
+                    --iso-navy: #0f172a;
+                    --iso-gold: #d4af37;
+                }
+                
+                .quiz-result-page { 
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
+                    min-height: 100vh; 
+                    padding: 40px 0; 
+                }
+                
+                .result-card {
+                    background: white;
+                    border-radius: 16px;
+                    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.1);
+                    overflow: hidden;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    text-align: center;
+                }
+                
+                .result-header {
+                    padding: 40px 30px;
+                }
+                
+                .result-header.passed {
+                    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                    color: white;
+                }
+                
+                .result-header.failed {
+                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                    color: white;
+                }
+                
+                .result-icon { font-size: 64px; }
+                .result-status { font-size: 1.5rem; font-weight: 700; margin-top: 16px; }
+                
+                .result-body { padding: 30px; }
+                
+                .score-circle {
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 50%;
+                    background: #f1f5f9;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 auto 24px;
+                    border: 6px solid var(--iso-gold);
+                }
+                
+                .score-value { font-size: 2.5rem; font-weight: 700; color: var(--iso-navy); }
+                .score-label { font-size: 0.8rem; color: #64748b; }
+                
+                .score-breakdown {
+                    background: #f8fafc;
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 24px;
+                }
+                
+                .score-item { display: flex; justify-content: space-between; padding: 8px 0; }
+                .score-item:not(:last-child) { border-bottom: 1px solid #e2e8f0; }
+                
+                .btn-back-status {
+                    display: inline-block;
+                    padding: 14px 32px;
+                    background: var(--iso-navy);
+                    color: white;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-weight: 600;
+                }
+                
+                .btn-back-status:hover { background: #1e293b; color: white; text-decoration: none; }
+            </style>
+            
+            <div class="quiz-result-page">
+                <div class="container">
+                    <div class="result-card">
+                        <div t-attf-class="result-header #{attempt.is_passed and 'passed' or 'failed'}">
+                            <div class="result-icon">
+                                <t t-if="attempt.is_passed">🎉</t>
+                                <t t-else="">😔</t>
+                            </div>
+                            <div class="result-status">
+                                <t t-if="attempt.is_passed">SELAMAT! ANDA LULUS</t>
+                                <t t-else="">MAAF, ANDA BELUM LULUS</t>
+                            </div>
+                        </div>
+                        
+                        <div class="result-body">
+                            <div class="score-circle">
+                                <div class="score-value"><t t-esc="'%.0f' % attempt.score_percentage"/>%</div>
+                                <div class="score-label">Nilai Anda</div>
+                            </div>
+                            
+                            <div class="score-breakdown">
+                                <div class="score-item">
+                                    <span>Jawaban Benar</span>
+                                    <strong><t t-esc="attempt.score_total"/> / <t t-esc="attempt.max_score"/></strong>
+                                </div>
+                                <div class="score-item">
+                                    <span>Nilai Minimum Lulus</span>
+                                    <strong><t t-esc="attempt.quiz_id.passing_score"/>%</strong>
+                                </div>
+                                <div class="score-item">
+                                    <span>Waktu Pengerjaan</span>
+                                    <strong>
+                                        <t t-if="attempt.finished_at and attempt.started_at">
+                                            <t t-set="duration" t-value="(attempt.finished_at - attempt.started_at).total_seconds()"/>
+                                            <t t-esc="int(duration // 60)"/> menit <t t-esc="int(duration % 60)"/> detik
+                                        </t>
+                                    </strong>
+                                </div>
+                            </div>
+                            
+                            <t t-if="attempt.is_passed">
+                                <div class="alert alert-success mb-4">
+                                    <strong>🏆 Selamat!</strong> Anda telah berhasil menyelesaikan ujian dengan nilai memuaskan. 
+                                    Hasil ujian akan diproses oleh admin untuk penerbitan sertifikat.
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="alert alert-warning mb-4">
+                                    <strong>💪 Jangan menyerah!</strong> Hubungi admin untuk informasi mengenai kesempatan ujian ulang.
+                                </div>
+                            </t>
+                            
+                            <a href="/certification/status" class="btn-back-status">
+                                ← Kembali ke Status Pendaftaran
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Access Denied Page -->
+    <template id="quiz_access_denied" name="Quiz Access Denied">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="alert alert-danger text-center" style="max-width: 500px; margin: 0 auto; padding: 40px;">
+                    <h3>🚫 Akses Ditolak</h3>
+                    <p class="mb-4">Anda tidak memiliki akses untuk mengikuti ujian ini.</p>
+                    <p class="text-muted">Kemungkinan penyebab:</p>
+                    <ul class="text-start">
+                        <li>Ujian belum dijadwalkan</li>
+                        <li>Tanggal ujian belum tiba</li>
+                        <li>Anda sudah menyelesaikan ujian ini</li>
+                    </ul>
+                    <a href="/certification/status" class="btn btn-primary mt-3">
+                        ← Kembali ke Status Pendaftaran
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Session Invalid Page (Multi-Device Detection) -->
+    <template id="session_invalid_page" name="Session Invalid">
+        <t t-call="website.layout">
+            <t t-set="title">Session Tidak Valid</t>
+
+            <style>
+                .session-invalid-page {
+                    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+                    min-height: 100vh;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 20px;
+                }
+
+                .session-card {
+                    background: white;
+                    border-radius: 16px;
+                    box-shadow: 0 20px 60px rgba(220, 38, 38, 0.15);
+                    max-width: 500px;
+                    text-align: center;
+                    overflow: hidden;
+                }
+
+                .session-header {
+                    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+                    color: white;
+                    padding: 40px 30px;
+                }
+
+                .session-icon { font-size: 64px; margin-bottom: 16px; }
+                .session-title { font-size: 1.5rem; font-weight: 700; margin: 0; }
+
+                .session-body { padding: 30px; }
+
+                .session-message {
+                    background: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    padding: 16px;
+                    border-radius: 0 8px 8px 0;
+                    text-align: left;
+                    margin-bottom: 24px;
+                    color: #92400e;
+                }
+
+                .session-info {
+                    background: #f1f5f9;
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 24px;
+                    text-align: left;
+                }
+
+                .session-info h6 { color: #475569; margin-bottom: 12px; }
+                .session-info ul { margin: 0; padding-left: 20px; color: #64748b; }
+
+                .btn-relogin {
+                    display: inline-block;
+                    padding: 14px 32px;
+                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                    color: white;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    margin-right: 12px;
+                }
+
+                .btn-relogin:hover { background: #1e293b; color: white; text-decoration: none; }
+
+                .btn-status {
+                    display: inline-block;
+                    padding: 14px 32px;
+                    background: #e2e8f0;
+                    color: #475569;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-weight: 600;
+                }
+
+                .btn-status:hover { background: #cbd5e1; color: #1e293b; text-decoration: none; }
+            </style>
+
+            <div class="session-invalid-page">
+                <div class="session-card">
+                    <div class="session-header">
+                        <div class="session-icon">🔐</div>
+                        <h2 class="session-title">Session Tidak Valid</h2>
+                    </div>
+
+                    <div class="session-body">
+                        <div class="session-message">
+                            <strong>⚠️ Akun Anda telah login dari device lain!</strong>
+                            <p class="mb-0 mt-2">
+                                Sistem mendeteksi bahwa akun Anda sedang aktif di perangkat lain.
+                                Untuk keamanan ujian, hanya satu perangkat yang diizinkan.
+                            </p>
+                        </div>
+
+                        <div class="session-info">
+                            <h6>📋 Yang Perlu Dilakukan:</h6>
+                            <ul>
+                                <li>Pastikan Anda hanya login dari satu perangkat</li>
+                                <li>Tutup semua browser atau perangkat lain yang login akun Anda</li>
+                                <li>Login ulang di perangkat ini untuk melanjutkan ujian</li>
+                            </ul>
+                        </div>
+
+                        <p class="text-muted mb-4">
+                            <small>Jika ini bukan Anda, segera hubungi admin dan ganti password akun Anda.</small>
+                        </p>
+
+                        <a href="/web/login" class="btn-relogin">
+                            🔑 Login Ulang
+                        </a>
+                        <a href="/certification/status" class="btn-status">
+                            ← Kembali
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

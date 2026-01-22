@@ -133,3 +133,46 @@
     transform: translateY(-2px);
     box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3) !important;
 }
+
+/* ========================================
+   Certification Level Snippet Styles
+   ======================================== */
+
+.s_certification_level {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Type Selector Options */
+.s_certification_level .s_cert_type_option {
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.s_certification_level .s_cert_type_option:hover {
+    border-color: #137fec !important;
+    background-color: rgba(19, 127, 236, 0.03) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(19, 127, 236, 0.15);
+}
+
+.s_certification_level .s_cert_type_active {
+    border-color: #137fec !important;
+    background-color: rgba(19, 127, 236, 0.05) !important;
+}
+
+/* Level Cards */
+.s_certification_level .s_cert_level_card {
+    transition: all 0.3s ease;
+}
+
+.s_certification_level .s_cert_level_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Button Hover */
+.s_certification_level .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(19, 127, 236, 0.3) !important;
+    background-color: #0d6efd !important;
+}

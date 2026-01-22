@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Email Template: Revision Notification -->
+    <record id="email_template_revision_notification" model="mail.template">
+        <field name="name">Notifikasi Revisi Dokumen</field>
+        <field name="model_id" ref="iso17024_portall.model_certification_application"/>
+        <field name="email_from">"LSP Satvika Pandu Pramana" &lt;noreply@lsp-satvika.id&gt;</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="subject">⚠️ Perlu Revisi Dokumen - Aplikasi Sertifikasi Anda</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f59e0b; padding: 30px 0;">
+        <tr>
+            <td align="center">
+                <h1 style="color: white; margin: 0; font-size: 24px;">LSP Satvika Indonesia</h1>
+                <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0;">Lembaga Sertifikasi Profesi</p>
+            </td>
+        </tr>
+    </table>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; padding: 30px 20px;">
+        <tr>
+            <td>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="display: inline-block; width: 80px; height: 80px; background-color: #fef3c7; border-radius: 50%; line-height: 80px;">
+                        <span style="font-size: 40px;">⚠️</span>
+                    </div>
+                </div>
+                
+                <h2 style="color: #1e293b; text-align: center; margin-bottom: 20px;">
+                    Perlu Revisi Dokumen
+                </h2>
+                
+                <p style="color: #475569; font-size: 16px; line-height: 1.6; text-align: center;">
+                    Halo <strong><t t-out="object.partner_id.name"/></strong>,<br/>
+                    Dokumen aplikasi sertifikasi Anda memerlukan perbaikan.
+                </p>
+                
+                <!-- Daftar Dokumen yang Perlu Direvisi -->
+                <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; margin: 30px 0;">
+                    <h3 style="color: #92400e; margin: 0 0 15px 0; font-size: 16px;">📄 Dokumen yang Perlu Diperbaiki:</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #92400e; font-size: 14px; line-height: 2;">
+                        <t t-if="object.revision_pas_foto">
+                            <li>Pas Foto (4x6 Background Merah)</li>
+                        </t>
+                        <t t-if="object.revision_ktp">
+                            <li>KTP</li>
+                        </t>
+                        <t t-if="object.revision_cv">
+                            <li>CV / Daftar Riwayat Hidup</li>
+                        </t>
+                        <t t-if="object.revision_ijazah">
+                            <li>Ijazah Terakhir</li>
+                        </t>
+                        <t t-if="object.revision_training">
+                            <li>Sertifikat Pelatihan Coating</li>
+                        </t>
+                        <t t-if="object.revision_cert_level1">
+                            <li>Sertifikat Level 1 (Prasyarat Level 2)</li>
+                        </t>
+                        <t t-if="object.revision_previous_cert">
+                            <li>Sertifikat Lama (Kadaluwarsa) - Resertifikasi</li>
+                        </t>
+                        <t t-if="object.revision_logbook">
+                            <li>Logbook Surveillance 3 Tahun - Resertifikasi</li>
+                        </t>
+                    </ul>
+                </div>
+                
+                <!-- Catatan Admin -->
+                <t t-if="object.admin_note">
+                    <div style="background-color: #f8fafc; border-left: 4px solid #64748b; padding: 15px 20px; margin: 20px 0;">
+                        <h4 style="color: #1e293b; margin: 0 0 10px 0;">📝 Catatan dari Admin:</h4>
+                        <p style="color: #475569; margin: 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap;"><t t-out="object.admin_note"/></p>
+                    </div>
+                </t>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="/web/login" 
+                       style="display: inline-block; background-color: #f59e0b; color: white; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: bold;">
+                        🔧 Perbaiki Dokumen Sekarang
+                    </a>
+                </div>
+                
+                <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px 20px; margin: 20px 0;">
+                    <h4 style="color: #1e40af; margin: 0 0 10px 0;">📌 Langkah Selanjutnya:</h4>
+                    <ol style="color: #1e40af; margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.8;">
+                        <li>Login menggunakan email dan password Anda</li>
+                        <li>Klik tombol "Perbaiki Dokumen" pada halaman status</li>
+                        <li>Upload ulang dokumen yang diminta (dokumen lain tetap tersimpan)</li>
+                        <li>Submit ulang aplikasi Anda</li>
+                    </ol>
+                </div>
+                
+                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;"/>
+                
+                <p style="color: #94a3b8; font-size: 13px; text-align: center; line-height: 1.6;">
+                    Jika Anda memiliki pertanyaan, silakan hubungi kami di:<br/>
+                    📧 info@lsp-satvika.id | 📞 (021) 1234-5678
+                </p>
+            </td>
+        </tr>
+    </table>
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #1e293b; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <p style="color: rgba(255,255,255,0.6); margin: 0; font-size: 12px;">
+                    © 2026 LSP Satvika Indonesia. All rights reserved.
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+        </field>
+        <field name="auto_delete">False</field>
+    </record>
+</odoo>

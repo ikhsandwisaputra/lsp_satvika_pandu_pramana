@@ -31,7 +31,7 @@
                        decoration-danger="payment_status == 'unpaid'" 
                        decoration-warning="payment_status == 'pending'" 
                        decoration-success="payment_status == 'paid'"/>
-                <field name="current_step" string="Step" widget="badge"/>
+                <field name="current_step" string="Step (1-2)" widget="badge"/>
                 <field name="state" widget="badge" 
                        decoration-info="state == 'draft'"
                        decoration-warning="state in ['submitted', 'revision']" 
@@ -74,8 +74,30 @@
                     <button name="action_set_schedule" string="📅 Jadwalkan Ujian" 
                             type="object" class="btn-info" 
                             invisible="state != 'verified'"/>
+                    
+                    <!-- TOMBOL HASIL ASESMEN -->
+                    <button name="action_mark_passed" string="✓ Nyatakan Lulus" 
+                            type="object" class="btn-success" 
+                            invisible="state != 'scheduled' or exam_result == 'passed'"
+                            confirm="Yakin menyatakan asesi ini LULUS asesmen?"/>
                             
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,revision,payment,verified,scheduled,rejected"/>
+                    <button name="action_mark_failed" string="✗ Tidak Lulus" 
+                            type="object" class="btn-danger" 
+                            invisible="state != 'scheduled' or exam_result != 'pending'"/>
+                    
+                    <!-- TOMBOL TERBITKAN SERTIFIKAT -->
+                    <button name="action_issue_certificate" string="🏆 Terbitkan Sertifikat"
+                            type="object" class="btn-primary"
+                            invisible="exam_result != 'passed' or cert_number"
+                            confirm="Yakin menerbitkan sertifikat untuk asesi ini?"/>
+
+                    <!-- TOMBOL RESET QUIZ (UJIAN ULANG) -->
+                    <button name="action_reset_quiz" string="🔄 Reset Quiz (Ujian Ulang)"
+                            type="object" class="btn-secondary"
+                            invisible="state != 'scheduled' or exam_result == 'pending'"
+                            confirm="PERINGATAN: Aksi ini akan menghapus data ujian quiz peserta dan mengizinkan ujian ulang. Yakin ingin melanjutkan?"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,payment,verified,scheduled,certified"/>
                 </header>
                 <sheet>
                     <!-- ALERT BOX UNTUK CATATAN ADMIN -->
@@ -121,63 +143,103 @@
                     </group>
 
                     <notebook>
-                        <page string="Verifikasi Berkas">
-                            <div class="alert alert-info">
-                                Silakan download berkas, cek, lalu centang Valid jika sesuai.
+                        <page string="📸 Preview Dokumen">
+                            <div class="alert alert-success">
+                                <strong>💡 Preview Mode:</strong> Gambar langsung tampil, klik untuk zoom. PDF klik untuk buka di tab baru.
                             </div>
                             
-                            <group string="📋 Dokumen Dasar (Wajib Semua Asesi)">
-                                <group>
-                                    <field name="cv_file" widget="binary" filename="cv_filename" string="Daftar Riwayat Hidup (CV)"/>
-                                    <field name="pas_foto" widget="binary" filename="pas_foto_filename"/>
-                                    <field name="ktp_file" widget="binary" filename="ktp_filename"/>
+                            <!-- Preview Grid: 2 columns -->
+                            <group>
+                                <group string="📷 Pas Foto">
+                                    <field name="preview_pas_foto" nolabel="1"/>
+                                    <field name="revision_pas_foto" string="↰ Minta Revisi"/>
+                                </group>
+                                <group string="🪪 KTP">
+                                    <field name="preview_ktp" nolabel="1"/>
+                                    <field name="revision_ktp" string="↰ Minta Revisi"/>
                                     <field name="is_ktp_valid"/>
                                 </group>
-                                <group>
-                                    <field name="ijazah_file" widget="binary" filename="ijazah_filename"/>
+                            </group>
+                            
+                            <group>
+                                <group string="📄 CV / Daftar Riwayat Hidup">
+                                    <field name="preview_cv" nolabel="1"/>
+                                    <field name="revision_cv" string="↰ Minta Revisi"/>
+                                </group>
+                                <group string="🎓 Ijazah Terakhir">
+                                    <field name="preview_ijazah" nolabel="1"/>
+                                    <field name="revision_ijazah" string="↰ Minta Revisi"/>
                                     <field name="is_ijazah_valid"/>
+                                </group>
+                            </group>
+                            
+                            <group>
+                                <group string="📜 Sertifikat Pelatihan">
+                                    <field name="preview_training" nolabel="1"/>
+                                    <field name="revision_training" string="↰ Minta Revisi"/>
+                                </group>
+                                <group string="🏆 Sertifikat Level 1" invisible="scheme != 'level2'">
+                                    <field name="preview_cert_level1" nolabel="1"/>
+                                    <field name="revision_cert_level1" string="↰ Minta Revisi"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="📝 Catatan untuk Asesi (Jika Revisi)"/>
+                            <field name="admin_note" placeholder="Contoh: Foto KTP buram, mohon upload ulang yang jelas."/>
+                        </page>
+                        
+                        <page string="📁 File Asli (Download)">
+                            <div class="alert alert-info">
+                                Halaman ini untuk download file asli jika diperlukan.
+                            </div>
+                            
+                            <group string="📋 Dokumen Dasar">
+                                <group>
+                                    <field name="pas_foto" widget="binary" filename="pas_foto_filename"/>
+                                    <field name="ktp_file" widget="binary" filename="ktp_filename"/>
+                                </group>
+                                <group>
+                                    <field name="cv_file" widget="binary" filename="cv_filename" string="CV"/>
+                                    <field name="ijazah_file" widget="binary" filename="ijazah_filename"/>
                                     <field name="skck_file" widget="binary" filename="skck_filename"/>
                                 </group>
                             </group>
 
-                            <group string="🏥 Dokumen Kesehatan">
+                            <group string="🏥 Dokumen Kesehatan &amp; Sertifikat">
                                 <group>
                                     <field name="ishihara_test" widget="binary" filename="ishihara_filename" string="Surat Sehat &amp; Tes Buta Warna"/>
                                     <field name="is_ishihara_valid"/>
                                 </group>
                                 <group>
-                                    <field name="training_cert" widget="binary" filename="training_filename" string="Sertifikat Pelatihan Coating"/>
+                                    <field name="training_cert" widget="binary" filename="training_filename" string="Sertifikat Pelatihan"/>
                                 </group>
                             </group>
                             
                             <group string="🏆 Dokumen Khusus Level 2" invisible="scheme != 'level2'">
                                 <group>
-                                    <field name="cert_level1_file" widget="binary" filename="cert_level1_filename" string="Sertifikat Level 1 (Prasyarat)"/>
+                                    <field name="cert_level1_file" widget="binary" filename="cert_level1_filename" string="Sertifikat Level 1"/>
                                 </group>
                                 <group/>
                             </group>
                             
-                            <group string="🔄 Dokumen Khusus Resertifikasi" invisible="application_type != 'recert'">
+                            <group string="🔄 Dokumen Resertifikasi" invisible="application_type != 'recert'">
                                 <group>
-                                    <field name="previous_cert_file" widget="binary" filename="previous_cert_filename" string="Sertifikat Lama (Kadaluwarsa)"/>
+                                    <field name="previous_cert_file" widget="binary" filename="previous_cert_filename" string="Sertifikat Lama"/>
                                 </group>
                                 <group>
-                                    <field name="logbook_file" widget="binary" filename="logbook_filename" string="Logbook Surveillance 3 Tahun"/>
+                                    <field name="logbook_file" widget="binary" filename="logbook_filename" string="Logbook"/>
                                 </group>
                             </group>
                             
-                            <group string="📎 Dokumen Tambahan (Opsional)">
+                            <group string="📎 Dokumen Tambahan">
                                 <group>
-                                    <field name="additional_file" widget="binary" filename="additional_filename" string="File Pendukung Lainnya"/>
+                                    <field name="additional_file" widget="binary" filename="additional_filename"/>
                                 </group>
                                 <group/>
                             </group>
-                            
-                            <separator string="Catatan untuk Asesi (Jika Revisi)"/>
-                            <field name="admin_note" placeholder="Contoh: Foto KTP buram, mohon upload ulang yang jelas."/>
                         </page>
                         
-                        <page string="💰 Info Pembayaran" invisible="state not in ['payment', 'verified']">
+                        <page string="💰 Info Pembayaran" invisible="state not in ['payment', 'verified', 'scheduled']">
                             <group>
                                 <group string="Detail Tagihan">
                                     <field name="payment_amount" widget="monetary"/>
@@ -185,16 +247,28 @@
                                            decoration-danger="payment_status == 'unpaid'" 
                                            decoration-warning="payment_status == 'pending'" 
                                            decoration-success="payment_status == 'paid'"/>
+                                    <field name="invoice_id" readonly="1"/>
                                 </group>
+                                <group string="Info Xendit">
+                                    <field name="xendit_invoice_id" readonly="1"/>
+                                    <field name="xendit_status" widget="badge" 
+                                           decoration-warning="xendit_status == 'pending'"
+                                           decoration-success="xendit_status == 'paid'"
+                                           decoration-muted="xendit_status == 'expired'"
+                                           decoration-danger="xendit_status == 'failed'"/>
+                                    <field name="xendit_payment_url" widget="url" readonly="1"/>
+                                </group>
+                            </group>
+                            <group>
                                 <group string="Info Transaksi">
                                     <field name="payment_method"/>
                                     <field name="payment_date"/>
                                     <field name="confirmed_by"/>
                                 </group>
-                            </group>
-                            <group string="Bukti Pembayaran">
-                                <field name="payment_proof" widget="binary" filename="payment_proof_filename"/>
-                                <field name="payment_note" placeholder="Catatan tambahan terkait pembayaran..."/>
+                                <group string="Bukti Pembayaran">
+                                    <field name="payment_proof" widget="binary" filename="payment_proof_filename"/>
+                                    <field name="payment_note" placeholder="Catatan tambahan terkait pembayaran..."/>
+                                </group>
                             </group>
                         </page>
                         
@@ -208,7 +282,7 @@
                             <group>
                                 <group string="Waktu Ujian">
                                     <field name="exam_date"/>
-                                    <field name="exam_time" placeholder="Contoh: 09:00 - 12:00 WIB"/>
+                                    <field name="exam_time" widget="float_time"/>
                                 </group>
                                 <group string="Lokasi Ujian">
                                     <field name="exam_location" placeholder="Nama gedung/tempat"/>
@@ -221,6 +295,33 @@
                             <group string="Info Penjadwalan" invisible="state != 'scheduled'">
                                 <field name="scheduled_by" readonly="1"/>
                                 <field name="schedule_date" readonly="1"/>
+                            </group>
+                        </page>
+                        
+                        <page string="🏆 Hasil &amp; Sertifikat" invisible="state not in ['scheduled', 'certified']">
+                            <div class="alert alert-info" invisible="exam_result != 'pending'">
+                                Setelah asesmen selesai, klik tombol "✓ Nyatakan Lulus" atau "✗ Tidak Lulus" di atas.
+                            </div>
+                            <div class="alert alert-success" invisible="exam_result != 'passed'">
+                                <strong>✅ Asesi dinyatakan LULUS!</strong> Silakan klik tombol "🏆 Terbitkan Sertifikat" untuk menerbitkan sertifikat.
+                            </div>
+                            <div class="alert alert-danger" invisible="exam_result != 'failed'">
+                                <strong>❌ Asesi dinyatakan TIDAK LULUS.</strong>
+                            </div>
+                            
+                            <group>
+                                <group string="Hasil Asesmen">
+                                    <field name="exam_result" widget="badge"
+                                           decoration-warning="exam_result == 'pending'"
+                                           decoration-success="exam_result == 'passed'"
+                                           decoration-danger="exam_result == 'failed'"/>
+                                </group>
+                                <group string="Info Sertifikat" invisible="not cert_number">
+                                    <field name="cert_number"/>
+                                    <field name="cert_issue_date"/>
+                                    <field name="cert_valid_until"/>
+                                    <field name="cert_issued_by"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>

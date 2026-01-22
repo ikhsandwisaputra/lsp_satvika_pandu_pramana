@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pending_verification_page" name="Waiting for Admin Verification">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="s_pending_verification pt-5 pb-5" style="background-color: #f6f7f8; min-height: 80vh;">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-7 col-md-9">
+                                <!-- Main Card -->
+                                <div class="bg-white rounded-4 shadow-sm p-5 text-center">
+                                    
+                                    <!-- Success Icon -->
+                                    <div class="mb-4">
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 100px; height: 100px; background-color: rgba(34, 197, 94, 0.15);">
+                                            <i class="fa fa-check-circle" style="font-size: 3rem; color: #22c55e;"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Title -->
+                                    <h2 class="fw-bold mb-3" style="color: #1e293b;">Pendaftaran Berhasil!</h2>
+                                    
+                                    <!-- Description -->
+                                    <p class="text-muted mb-4 mx-auto" style="max-width: 480px;">
+                                        Terima kasih telah mendaftar! Akun Anda sedang dalam proses verifikasi oleh admin. 
+                                        Anda akan menerima email konfirmasi setelah akun diverifikasi.
+                                    </p>
+                                    
+                                    <!-- Status Badge -->
+                                    <div class="mb-4">
+                                        <span class="badge rounded-pill px-4 py-2" style="background-color: #fef3c7; color: #92400e; font-size: 0.9rem;">
+                                            <i class="fa fa-hourglass-half me-1"></i> Status: Menunggu Verifikasi
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Registration Info Card -->
+                                    <div class="bg-light rounded-3 p-4 text-start mb-4">
+                                        <h5 class="fw-bold mb-3" style="color: #1e293b; font-size: 1rem;">
+                                            <i class="fa fa-file-text-o me-2 text-primary"></i>Detail Pendaftaran
+                                        </h5>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                <p class="text-muted small mb-1">Nama Lengkap</p>
+                                                <p class="fw-semibold mb-0" style="color: #1e293b;">
+                                                    <t t-if="name" t-esc="name"/>
+                                                    <t t-elif="partner" t-esc="partner.name"/>
+                                                    <t t-else="">-</t>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="text-muted small mb-1">Email</p>
+                                                <p class="fw-semibold mb-0" style="color: #1e293b;">
+                                                    <t t-if="email" t-esc="email"/>
+                                                    <t t-elif="partner" t-esc="partner.email"/>
+                                                    <t t-else="">-</t>
+                                                </p>
+                                            </div>
+                                            <t t-if="partner">
+                                                <div class="col-sm-6">
+                                                    <p class="text-muted small mb-1">Jenis Sertifikasi</p>
+                                                    <p class="fw-semibold mb-0" style="color: #1e293b;">
+                                                        <t t-if="partner.pending_cert_type == 'new'">
+                                                            <span class="text-primary"><i class="fa fa-graduation-cap me-1"></i>Sertifikasi Baru</span>
+                                                        </t>
+                                                        <t t-elif="partner.pending_cert_type == 'recert'">
+                                                            <span class="text-success"><i class="fa fa-refresh me-1"></i>Resertifikasi</span>
+                                                        </t>
+                                                        <t t-else="">-</t>
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <p class="text-muted small mb-1">Level</p>
+                                                    <p class="fw-semibold mb-0" style="color: #1e293b;">
+                                                        <t t-if="partner.pending_cert_level == 'level1'">Coating Inspector Grade 1.0</t>
+                                                        <t t-elif="partner.pending_cert_level == 'level2'">Coating Inspector Grade 2.0</t>
+                                                        <t t-else="">-</t>
+                                                    </p>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Important Notice -->
+                                    <div class="alert mb-4" style="background-color: #fef3c7; border: 1px solid #fcd34d; color: #92400e;" role="alert">
+                                        <i class="fa fa-exclamation-triangle me-2"></i>
+                                        <strong>Penting:</strong> Anda <strong>belum bisa login</strong> sampai akun diverifikasi oleh admin.
+                                    </div>
+                                    
+                                    <!-- Info Message -->
+                                    <div class="alert mb-4" style="background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af;" role="alert">
+                                        <i class="fa fa-info-circle me-2"></i>
+                                        Proses verifikasi biasanya memakan waktu <strong>1x24 jam</strong>. 
+                                        Silakan cek email Anda secara berkala untuk notifikasi.
+                                    </div>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                                        <a href="/" class="btn btn-outline-secondary px-4 py-2">
+                                            <i class="fa fa-home me-2"></i>Kembali ke Beranda
+                                        </a>
+                                        <a href="/contactus" class="btn btn-primary px-4 py-2">
+                                            <i class="fa fa-envelope me-2"></i>Hubungi Kami
+                                        </a>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <!-- Footer Note -->
+                                <div class="text-center mt-4">
+                                    <p class="text-muted small mb-0">
+                                        Ada pertanyaan? Hubungi kami di 
+                                        <a href="mailto:info@lsp-satvika.id" class="text-primary">info@lsp-satvika.id</a>
+                                    </p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

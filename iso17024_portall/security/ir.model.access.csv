@@ -1,3 +1,13 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_cert_app_user,cert.app.user,model_certification_application,base.group_user,1,1,1,1
 access_cert_app_portal,cert.app.portal,model_certification_application,base.group_portal,1,1,1,0
+access_cert_quiz_user,cert.quiz.user,model_cert_quiz,base.group_user,1,1,1,1
+access_cert_quiz_portal,cert.quiz.portal,model_cert_quiz,base.group_portal,1,0,0,0
+access_cert_question_user,cert.question.user,model_cert_question,base.group_user,1,1,1,1
+access_cert_question_portal,cert.question.portal,model_cert_question,base.group_portal,1,0,0,0
+access_cert_quiz_attempt_user,cert.quiz.attempt.user,model_cert_quiz_attempt,base.group_user,1,1,1,1
+access_cert_quiz_attempt_portal,cert.quiz.attempt.portal,model_cert_quiz_attempt,base.group_portal,1,1,1,0
+access_cert_answer_line_user,cert.answer.line.user,model_cert_answer_line,base.group_user,1,1,1,1
+access_cert_answer_line_portal,cert.answer.line.portal,model_cert_answer_line,base.group_portal,1,1,1,0
+access_cert_user_session_user,cert.user.session.user,model_cert_user_session,base.group_user,1,1,1,1
+access_cert_user_session_portal,cert.user.session.portal,model_cert_user_session,base.group_portal,1,0,0,0

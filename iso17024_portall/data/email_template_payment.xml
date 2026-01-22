@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Email Template: Payment Notification -->
+    <record id="email_template_payment_notification" model="mail.template">
+        <field name="name">Sertifikasi - Notifikasi Pembayaran</field>
+        <field name="model_id" ref="iso17024_portall.model_certification_application"/>
+        <field name="email_from">"LSP Satvika Pandu Pramana" &lt;noreply@lsp-satvika.com&gt;</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="subject">✅ Dokumen Diverifikasi - Silakan Lakukan Pembayaran</field>
+        <field name="body_html" type="html">
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
+    
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+        <h1 style="margin: 0; font-size: 24px;">LSP Satvika Indonesia</h1>
+        <p style="margin: 10px 0 0 0; opacity: 0.8; font-size: 14px;">Lembaga Sertifikasi Profesi</p>
+    </div>
+    
+    <!-- Body -->
+    <div style="background: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        
+        <p style="font-size: 16px; color: #334155;">
+            Yth. <strong><t t-out="object.partner_id.name"/></strong>,
+        </p>
+        
+        <div style="background: #ecfdf5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+            <p style="margin: 0; color: #065f46; font-weight: 600;">
+                ✅ Dokumen Anda telah diverifikasi dan dinyatakan LENGKAP!
+            </p>
+        </div>
+        
+        <p style="color: #64748b; line-height: 1.6;">
+            Selanjutnya, silakan lakukan pembayaran biaya sertifikasi sesuai dengan rincian berikut:
+        </p>
+        
+        <!-- Invoice Details -->
+        <div style="background: #f1f5f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px 0; color: #64748b;">Skema Sertifikasi</td>
+                    <td style="padding: 8px 0; text-align: right; font-weight: 600; color: #0f172a;">
+                        <t t-if="object.scheme == 'level1'">Coating Inspector Level 1</t>
+                        <t t-else="">Coating Inspector Level 2</t>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: #64748b;">Nomor Invoice</td>
+                    <td style="padding: 8px 0; text-align: right; font-weight: 600; color: #0f172a;">
+                        <t t-out="object.invoice_id.name or '-'"/>
+                    </td>
+                </tr>
+                <tr style="border-top: 1px solid #e2e8f0;">
+                    <td style="padding: 12px 0; color: #0f172a; font-weight: 700; font-size: 16px;">Total Pembayaran</td>
+                    <td style="padding: 12px 0; text-align: right; font-weight: 700; font-size: 18px; color: #d4af37;">
+                        Rp <t t-out="'{:,.0f}'.format(object.payment_amount).replace(',', '.')"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Payment Button -->
+        <div style="text-align: center; margin: 30px 0;">
+            <a t-att-href="object.xendit_payment_url or '#'" 
+               style="display: inline-block; background: linear-gradient(135deg, #d4af37 0%, #b5952f 100%); color: white; padding: 15px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 6px rgba(212, 175, 55, 0.3);">
+                💳 BAYAR SEKARANG
+            </a>
+        </div>
+        
+        <p style="color: #94a3b8; font-size: 13px; text-align: center;">
+            Link pembayaran berlaku selama <strong>3 hari</strong>. Setelah itu akan otomatis kadaluarsa.
+        </p>
+        
+        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;"/>
+        
+        <p style="color: #64748b; font-size: 14px; line-height: 1.6;">
+            Jika Anda mengalami kendala dalam melakukan pembayaran, silakan hubungi kami di:<br/>
+            📧 <a href="mailto:admin@lsp-satvika.com" style="color: #d4af37;">admin@lsp-satvika.com</a><br/>
+            📱 WhatsApp: <a href="https://wa.me/6281234567890" style="color: #d4af37;">+62 812-3456-7890</a>
+        </p>
+        
+    </div>
+    
+    <!-- Footer -->
+    <div style="text-align: center; padding: 20px; color: #94a3b8; font-size: 12px;">
+        <p style="margin: 0;">© 2026 LSP Satvika Indonesia. All rights reserved.</p>
+    </div>
+    
+</div>
+        </field>
+    </record>
+</odoo>

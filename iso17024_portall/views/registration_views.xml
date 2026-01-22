@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ======================================================
+         CANDIDATE REGISTRATION ADMIN VIEWS
+         ====================================================== -->
+    
+    <!-- Action for Pending Registrations -->
+    <record id="action_pending_registrations" model="ir.actions.act_window">
+        <field name="name">Registrasi Kandidat</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_partner_registration_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_partner_registration_form')})]"/>
+        <field name="domain">[('registration_state', 'in', ['pending', 'approved', 'rejected'])]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada registrasi kandidat.
+            </p>
+        </field>
+    </record>
+
+    <!-- List View for Candidate Registrations -->
+    <record id="view_partner_registration_list" model="ir.ui.view">
+        <field name="name">res.partner.registration.list</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Registrasi Kandidat"
+                  decoration-warning="registration_state == 'pending'"
+                  decoration-success="registration_state == 'approved'"
+                  decoration-danger="registration_state == 'rejected'">
+                <field name="name" string="Nama Kandidat"/>
+                <field name="email"/>
+                <field name="registration_code" string="Kode Registrasi"/>
+                <field name="pending_cert_type" string="Jenis" widget="badge"
+                       decoration-info="pending_cert_type == 'new'"
+                       decoration-warning="pending_cert_type == 'recert'"/>
+                <field name="pending_cert_level" string="Level"/>
+                <field name="registration_date" string="Tanggal Daftar"/>
+                <field name="registration_state" string="Status" widget="badge"
+                       decoration-warning="registration_state == 'pending'"
+                       decoration-success="registration_state == 'approved'"
+                       decoration-danger="registration_state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View for Candidate Registration -->
+    <record id="view_partner_registration_form" model="ir.ui.view">
+        <field name="name">res.partner.registration.form</field>
+        <field name="model">res.partner</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form string="Detail Registrasi Kandidat">
+                <header>
+                    <!-- APPROVE Button -->
+                    <button name="action_approve_registration" 
+                            string="✅ Approve Registrasi" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="registration_state != 'pending'"
+                            confirm="Yakin ingin menyetujui registrasi kandidat ini? Kode registrasi akan di-generate."/>
+                    
+                    <!-- REJECT Button -->
+                    <button name="action_reject_registration" 
+                            string="❌ Tolak Registrasi" 
+                            type="object" 
+                            class="btn-danger"
+                            invisible="registration_state != 'pending'"/>
+                    
+                    <field name="registration_state" widget="statusbar" 
+                           statusbar_visible="pending,approved,rejected"/>
+                </header>
+                <sheet>
+                    <!-- Alert for Approved -->
+                    <div class="alert alert-success" role="alert" invisible="registration_state != 'approved'">
+                        <strong>✅ Registrasi Disetujui!</strong> 
+                        Kode Registrasi: <field name="registration_code" readonly="1" class="fw-bold"/>
+                    </div>
+                    
+                    <!-- Alert for Rejected -->
+                    <div class="alert alert-danger" role="alert" invisible="registration_state != 'rejected'">
+                        <strong>❌ Registrasi Ditolak</strong>
+                        <br/>Alasan: <field name="registration_note" readonly="1"/>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="📋 Info Registrasi">
+                            <field name="email" readonly="1"/>
+                            <field name="registration_code" readonly="1" invisible="registration_state != 'approved'"/>
+                            <field name="registration_date" readonly="1"/>
+                        </group>
+                        <group string="🎓 Pilihan Sertifikasi">
+                            <field name="pending_cert_type" readonly="1" string="Jenis Sertifikasi"/>
+                            <field name="pending_cert_level" readonly="1" string="Level"/>
+                        </group>
+                    </group>
+                    
+                    <group string="📝 Catatan Admin (Wajib untuk Penolakan)" invisible="registration_state == 'approved'">
+                        <field name="registration_note" placeholder="Tuliskan alasan penolakan di sini..." nolabel="1"/>
+                    </group>
+                    
+                    <group string="ℹ️ Info Persetujuan" invisible="registration_state != 'approved'">
+                        <field name="approved_by" readonly="1"/>
+                        <field name="approved_date" readonly="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_candidate_registrations" 
+              name="Registrasi Kandidat" 
+              parent="menu_iso_root" 
+              action="action_pending_registrations" 
+              sequence="0"/>
+
+</odoo>
