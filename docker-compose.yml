@@ -1,0 +1,34 @@
+services:
+  web:
+    build: .
+    container_name: odoo19-web-satvika
+    depends_on:
+      - db
+    ports:
+      - "8019:8069"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    volumes:
+      - odoo19-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    restart: always
+
+  db:
+    image: postgres:16
+    container_name: odoo19-db-satvika
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+    volumes:
+      - odoo19-db-data:/var/lib/postgresql/data
+    ports:
+      - "5445:5432"
+    restart: always
+
+volumes:
+  odoo19-web-data:
+  odoo19-db-data:

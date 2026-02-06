@@ -1,0 +1,108 @@
+Masuk akal banget kekhawatiranmu, Bro! Ini masalah klasik di sistem ujian hybrid (Web biasa + Secure Browser).
+
+Logika terbaik untuk kasus ini adalah "Pencegatan di Pintu Masuk" (Server-Side Validation).
+
+Bayangkan website kamu itu sebuah Gedung:
+
+Lobby (Dashboard/Schedule): Boleh dimasuki siapa saja (Chrome, Firefox, Safari) untuk lihat jadwal.
+
+Ruang Ujian (Quiz): Ada satpamnya. Satpam cuma boleh membukakan pintu kalau orang itu pakai "Seragam Khusus" (User Agent SEB). Kalau pakai baju biasa (Chrome), disuruh pulang.
+
+Berikut adalah cara menerapkannya di kodingan Odoo kamu:
+
+Solusi Teknis: Cek "User Agent" di Controller
+Safe Exam Browser itu unik. Setiap kali dia membuka website, dia mengirimkan kode identitas (User Agent) yang mengandung kata "SEB". Browser biasa (Chrome/Edge) tidak punya kata itu.
+
+Kita akan memodifikasi file iso17024_portall/controllers/main.py  milikmu. Kita tambahkan logika pengecekan di fungsi yang menangani ujian.
+
+1. Buka File controllers/main.py
+Cari fungsi quiz_intro dan quiz_start.
+
+2. Tambahkan Kode "Satpam" (Blocker)
+Sisipkan kode pengecekan ini di bagian paling atas fungsi tersebut.
+
+Kode Modifikasinya:
+
+Python
+    # ---------------------------------------------------------
+    # 10. QUIZ / EXAM ROUTES (Update dengan Security Check)
+    # ---------------------------------------------------------
+    
+    @http.route('/certification/quiz/intro/<int:app_id>', type='http', auth='user', website=True)
+    def quiz_intro(self, app_id, **kw):
+        """Quiz introduction page - show quiz details before starting"""
+        
+        # --- LOGIKA SATPAM BARU MULAI ---
+        # Ambil identitas browser
+        user_agent = request.httprequest.user_agent.string
+        
+        # Cek apakah ada tulisan 'SEB' di identitasnya
+        # Jika TIDAK ADA 'SEB', berarti dia pakai Chrome/Firefox biasa
+        if 'SEB' not in user_agent:
+            # Tampilkan pesan error / suruh buka pakai SEB
+            return request.render('iso17024_portall.must_use_seb_page')
+        # --- LOGIKA SATPAM SELESAI ---
+
+        from datetime import date
+        app = request.env['certification.application'].sudo().browse(app_id)
+        # ... (lanjutkan kodingan asli di bawahnya)
+Lakukan hal yang sama persis untuk route quiz_start dan quiz_take. Ini penting supaya user yang copy-paste link ujian ke Chrome tetap tertolak.
+
+Python
+    @http.route('/certification/quiz/start/<int:app_id>', type='http', auth='user', methods=['POST'], website=True)
+    def quiz_start(self, app_id, **kw):
+        # --- LOGIKA SATPAM ---
+        if 'SEB' not in request.httprequest.user_agent.string:
+            return request.render('iso17024_portall.must_use_seb_page')
+        # ---------------------
+        
+        from datetime import date
+        app = request.env['certification.application'].sudo().browse(app_id)
+        # ... (lanjutkan kodingan asli)
+3. Buat Tampilan Halaman Error (must_use_seb_page)
+Kamu perlu membuat satu template XML sederhana untuk memberitahu user yang ngeyel klik tombol di Chrome.
+
+Buat file baru atau tambahkan di views/quiz_template.xml:
+
+XML
+<template id="must_use_seb_page" name="Akses Ditolak">
+    <t t-call="website.layout">
+        <div class="container mt-5 mb-5 text-center">
+            <div class="alert alert-danger" role="alert">
+                <h1 class="alert-heading">🚫 Akses Ditolak!</h1>
+                <p class="lead">
+                    Ujian tidak dapat diakses melalui browser biasa (Chrome/Firefox/Safari).
+                </p>
+                <hr/>
+                <p>
+                    Silakan buka aplikasi <strong>Safe Exam Browser (SEB)</strong> di komputer Anda, 
+                    lalu login kembali untuk memulai ujian.
+                </p>
+                <a href="/certification/status" class="btn btn-secondary">Kembali ke Jadwal</a>
+            </div>
+        </div>
+    </t>
+</template>
+Hasil Akhirnya Nanti Begini:
+Di Chrome/Website Utama:
+
+User login, masuk menu jadwal.
+
+User melihat tombol "Mulai Ujian".
+
+User (karena penasaran/tidak tahu) klik tombol itu.
+
+HASIL: Muncul halaman peringatan merah: "Akses Ditolak! Harap buka di Safe Exam Browser". Mereka tidak bisa lanjut.
+
+Di Safe Exam Browser (SEB):
+
+User buka file .seb kamu.
+
+Otomatis login dan masuk menu jadwal.
+
+User klik tombol "Mulai Ujian".
+
+HASIL: Karena browser mengirim kode "SEB", server mengizinkan masuk ke halaman soal.
+
+Tips Tambahan untuk UI (Optional)
+Kalau kamu mau lebih keren, di halaman Dashboard/Jadwal, tombolnya bisa kamu bedakan warnanya secara visual (tapi ini butuh sedikit kodingan Javascript atau QWeb condition).

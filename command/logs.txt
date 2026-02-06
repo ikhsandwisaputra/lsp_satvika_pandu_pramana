@@ -1,0 +1,165 @@
+docker logs -f --tail 20 odoo19-web
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 186, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 456, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 170, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "/mnt/extra-addons/iso17024_portall/__init__.py", line 1, in <module>
+    from . import models
+  File "/mnt/extra-addons/iso17024_portall/models/__init__.py", line 1, in <module>
+    from . import application
+  File "/mnt/extra-addons/iso17024_portall/models/application.py", line 256
+    else:
+    ^^^^
+IndentationError: expected an indented block after 'else' statement on line 255
+2026-01-22 06:25:52,995 1 INFO ? werkzeug: 172.21.0.1 - - [22/Jan/2026 06:25:52] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 500 - 12 0.011 0.211
+2026-01-22 06:26:08,259 1 INFO ? odoo.modules.loading: loading 1 modules...
+2026-01-22 06:26:08,268 1 INFO ? odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra)
+2026-01-22 06:26:08,273 1 INFO ? odoo.modules.loading: loading 96 modules...
+2026-01-22 06:26:08,405 1 CRITICAL ? odoo.modules.module: Couldn't load module iso17024_portall
+2026-01-22 06:26:08,409 1 WARNING ? odoo.modules.loading: Transient module states were reset
+2026-01-22 06:26:08,410 1 ERROR ? odoo.registry: Failed to load registry
+2026-01-22 06:26:08,410 1 ERROR ? odoo.http: Exception during request handling.
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 118, in __new__
+    return cls.registries[db_name]
+           ~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/tools/lru.py", line 57, in __getitem__
+    val = self._values[key]
+          ~~~~~~~~~~~~^^^^^
+KeyError: 'db_odoo_19'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/http.py", line 2221, in _serve_db
+    registry = Registry(self.db)
+               ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 120, in __new__
+    return cls.new(db_name)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 186, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 456, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 170, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "/mnt/extra-addons/iso17024_portall/__init__.py", line 1, in <module>
+    from . import models
+  File "/mnt/extra-addons/iso17024_portall/models/__init__.py", line 1, in <module>
+    from . import application
+  File "/mnt/extra-addons/iso17024_portall/models/application.py", line 256
+    else:
+    ^^^^
+IndentationError: expected an indented block after 'else' statement on line 255
+2026-01-22 06:26:08,420 1 INFO ? werkzeug: 172.21.0.1 - - [22/Jan/2026 06:26:08] "GET /odoo/action-235/26 HTTP/1.1" 500 - 12 0.011 0.160
+2026-01-22 06:26:08,498 1 INFO ? odoo.modules.loading: loading 1 modules...
+2026-01-22 06:26:08,511 1 INFO ? odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra)
+2026-01-22 06:26:08,516 1 INFO ? odoo.modules.loading: loading 96 modules...
+2026-01-22 06:26:08,673 1 CRITICAL ? odoo.modules.module: Couldn't load module iso17024_portall
+2026-01-22 06:26:08,676 1 WARNING ? odoo.modules.loading: Transient module states were reset
+2026-01-22 06:26:08,683 1 ERROR ? odoo.registry: Failed to load registry
+2026-01-22 06:26:08,684 1 ERROR ? odoo.http: Exception during request handling.
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 118, in __new__
+    return cls.registries[db_name]
+           ~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/tools/lru.py", line 57, in __getitem__
+    val = self._values[key]
+          ~~~~~~~~~~~~^^^^^
+KeyError: 'db_odoo_19'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/http.py", line 2221, in _serve_db
+    registry = Registry(self.db)
+               ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 120, in __new__
+    return cls.new(db_name)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 186, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 456, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 170, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "/mnt/extra-addons/iso17024_portall/__init__.py", line 1, in <module>
+    from . import models
+  File "/mnt/extra-addons/iso17024_portall/models/__init__.py", line 1, in <module>
+    from . import application
+  File "/mnt/extra-addons/iso17024_portall/models/application.py", line 256
+    else:
+    ^^^^
+IndentationError: expected an indented block after 'else' statement on line 255
+2026-01-22 06:26:08,693 1 INFO ? werkzeug: 172.21.0.1 - - [22/Jan/2026 06:26:08] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 500 - 12 0.011 0.195
+2026-01-22 06:26:10,007 1 INFO ? odoo.modules.loading: loading 1 modules...
+2026-01-22 06:26:10,018 1 INFO ? odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra)
+2026-01-22 06:26:10,022 1 INFO ? odoo.modules.loading: loading 96 modules...
+2026-01-22 06:26:10,134 1 CRITICAL ? odoo.modules.module: Couldn't load module iso17024_portall
+2026-01-22 06:26:10,139 1 WARNING ? odoo.modules.loading: Transient module states were reset
+2026-01-22 06:26:10,140 1 ERROR ? odoo.registry: Failed to load registry
+2026-01-22 06:26:10,140 1 ERROR ? odoo.http: Exception during request handling.
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 118, in __new__
+    return cls.registries[db_name]
+           ~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/tools/lru.py", line 57, in __getitem__
+    val = self._values[key]
+          ~~~~~~~~~~~~^^^^^
+KeyError: 'db_odoo_19'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/odoo/http.py", line 2802, in __call__
+    response = request._serve_db()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/http.py", line 2221, in _serve_db
+    registry = Registry(self.db)
+               ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 120, in __new__
+    return cls.new(db_name)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/tools/func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/odoo/orm/registry.py", line 186, in new
+    load_modules(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 456, in load_modules
+    load_module_graph(
+  File "/usr/lib/python3/dist-packages/odoo/modules/loading.py", line 170, in load_module_graph
+    load_openerp_module(package.name)
+  File "/usr/lib/python3/dist-packages/odoo/modules/module.py", line 505, in load_openerp_module
+    __import__(qualname)
+  File "/mnt/extra-addons/iso17024_portall/__init__.py", line 1, in <module>
+    from . import models
+  File "/mnt/extra-addons/iso17024_portall/models/__init__.py", line 1, in <module>
+    from . import application
+  File "/mnt/extra-addons/iso17024_portall/models/application.py", line 256
+    else:
+    ^^^^
+IndentationError: expected an indented block after 'else' statement on line 255
+2026-01-22 06:26:10,150 1 INFO ? werkzeug: 172.21.0.1 - - [22/Jan/2026 06:26:10] "GET /web/service-worker.js HTTP/1.1" 500 - 12 0.011 0.140

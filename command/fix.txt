@@ -1,0 +1,42 @@
+Berdasarkan log error yang Anda berikan, masalah terjadi karena struktur XML pada file iso17024_portall/data/email_templates.xml tidak sesuai dengan skema validasi Odoo 19.
+
+Pesan error spesifiknya adalah: AssertionError: Element odoo has extra content: data
+
+Ini menunjukkan bahwa tag <data> di dalam tag <odoo> dianggap sebagai konten berlebih atau tidak valid. Pada versi Odoo terbaru (termasuk Odoo 19), penggunaan tag <data> seringkali sudah tidak diperlukan lagi, dan atribut noupdate sebaiknya dipindahkan langsung ke tag utama <odoo>.
+
+Berikut adalah langkah-langkah penyelesaiannya:
+
+1. Perbaiki File XML
+Buka file iso17024_portall/data/email_templates.xml dan ubah strukturnya. Hapus tag <data ...> pembuka dan penutup, lalu pindahkan atribut noupdate="1" ke tag <odoo>.
+
+Kode yang Salah (Saat ini):
+
+XML
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        </data>
+</odoo>
+Kode yang Benar (Perbaikan):
+
+XML
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="email_account_approved" model="mail.template">
+        </record>
+
+    </odoo>
+2. Update Modul
+Setelah menyimpan perubahan pada file XML, Anda perlu melakukan update pada modul tersebut agar perubahan diterapkan ke database. Jalankan perintah berikut di terminal Anda (sesuaikan dengan command yang biasa Anda gunakan):
+
+Bash
+
+docker-compose run --rm web /usr/bin/odoo -d db_odoo_19 -u iso17024_portall --stop-after-init
+Penjelasan Mengapa Error
+Dalam dokumentasi pengembangan Odoo terbaru, struktur XML telah disederhanakan. Tag <data> dulunya digunakan untuk mengelompokkan record (terutama untuk memisahkan data update dan noupdate), namun sekarang Odoo lebih merekomendasikan:
+
+Jika seluruh file berisi data yang tidak boleh di-update (seperti template email yang mungkin diedit user nantinya), gunakan <odoo noupdate="1">.
+
+Jika file berisi data biasa, cukup gunakan <odoo> tanpa tag <data> di dalamnya.

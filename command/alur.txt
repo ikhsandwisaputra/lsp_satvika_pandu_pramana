@@ -1,0 +1,302 @@
+❗ Jawaban Tegas
+
+TIDAK BOLEH pakai email lain.
+SATU EMAIL = SATU ORANG = BISA PUNYA BANYAK SERTIFIKAT / REGISTRASI.
+
+Yang keliru itu menganggap email = nomor registrasi.
+
+🧠 Kesalahan Logika yang PerLU DILURUSKAN
+
+“Email buat sertifikasi baru sudah punya kode registrasi, jadi tidak bisa dipakai lagi”
+
+❌ SALAH KONSEP
+
+Di sistem sertifikasi (apalagi ISO 17024):
+
+Email → identitas akun
+
+Nomor registrasi → identitas sertifikat / pengajuan
+
+Resertifikasi → PENGAJUAN BARU, bukan akun baru
+
+✅ Logika yang BENAR (Standar LSP & ISO 17024)
+1️⃣ Akun (User)
+User
+- id
+- nama
+- email  ← UNIQUE
+
+
+📌 Email tidak pernah berubah, walau sertifikasi berkali-kali.
+
+2️⃣ Pengajuan Sertifikasi
+
+Setiap kali daftar (baru / perpanjangan):
+
+Certification Application
+- id
+- user_id
+- application_type (baru / resertifikasi)
+- scheme
+- level
+- status
+- registration_number  ← UNIQUE
+
+
+👉 DI SINI nomor registrasi dibuat
+👉 Satu user bisa punya banyak application
+
+3️⃣ Sertifikat
+Certificate
+- certificate_number
+- application_id
+- valid_from
+- valid_until
+- status (aktif / kadaluarsa)
+
+🔁 Contoh Nyata (Biar Kebayang)
+Tahun 2024
+
+Email: andi@email.com
+
+Sertifikasi Baru – Coating Inspector Grade 1
+
+Nomor Registrasi: LSP-2024-001
+
+Tahun 2027 (Resertifikasi)
+
+Email: tetap sama
+
+Pilih Resertifikasi
+
+Input nomor sertifikat lama
+
+Sistem buat:
+
+Nomor Registrasi baru: LSP-2027-045
+
+✔ AMAN
+✔ NORMAL
+✔ AUDIT-FRIENDLY
+
+❌ Kalau Dipaksa Pakai Email Baru
+
+Ini justru BERBAHAYA:
+
+❌ satu orang punya banyak akun
+
+❌ histori sertifikat terpisah
+
+❌ auditor akan tanya:
+
+“Bagaimana menjamin ini orang yang sama?”
+
+👉 ISO 17024 bisa merah
+
+📌 Hubungannya dengan Dokumen Review
+
+Di dokumen (halaman 2 & 3) dijelaskan:
+
+nomor registrasi dikirim admin
+
+nomor registrasi nantinya menjadi nomor sertifikat
+
+sistem menampilkan status sertifikat & nomor reg
+
+📄 Artinya:
+
+Nomor registrasi itu milik proses, bukan milik akun
+
+
+Review Website LSP by Mutu 13 j…
+
+🧩 Logika Resertifikasi yang IDEAL
+
+Saat user pilih Resertifikasi:
+
+Login pakai email lama
+
+Input:
+
+Nomor sertifikat lama
+
+Sistem:
+
+Validasi sertifikat milik user tsb
+
+Buat pengajuan baru
+
+Generate nomor registrasi baru
+
+🔒 Rule Penting yang HARUS Kamu Pasang
+
+1 email ❌ tidak boleh banyak akun
+
+1 user ✅ boleh banyak sertifikat
+
+1 sertifikat ❌ tidak boleh di-reuse
+
+1 resertifikasi = 1 pengajuan baru
+
+🧠 Kesimpulan Final (PENTING)
+
+✔ Email TIDAK DIGANTI
+✔ Nomor registrasi SELALU BARU
+✔ Resertifikasi = proses baru, bukan edit lama
+✔ Ini standar LSP & ISO 17024
+
+Kalau mau, aku bisa:
+
+bantu bikin ERD tabel
+
+bantu rule validasi resertifikasi
+
+atau simulasi alur UI user + admin
+
+Tinggal bilang mau lanjut ke bagian mana 🔥
+
+Sources
+DARI DOKUMEN ITU SEBAIKNYA KETIKA USER SUDAH MENDAFTAR SERTIFIKASI BARU Coating Inspector Grade 1.0 DAN SUDAH BAYAR SUDAH UJIAN SUDAH DAPAT SERTIFIKAT ---> APAKAH DIA BISA DAFTAR SERTIFIKASI LAGI Coating Inspector Grade 1.0 LAGIII ??? DI NOMOR REGIS INII ?? KALAU TIDAK BISA DIA BISA MENDAFTAR APA SAJA LAGIII ????
+
+Jawaban ini harus tegas, karena ini menyangkut aturan sertifikasi + audit ISO 17024.
+
+❗ JAWABAN TEGAS
+
+TIDAK BISA mendaftar Sertifikasi Baru Coating Inspector Grade 1.0 lagi
+SELAMA sertifikat Grade 1.0 tersebut MASIH BERLAKU.
+
+❌ Tidak boleh:
+
+Sertifikasi baru
+
+Nomor registrasi baru
+
+Skema & level yang sama
+
+Dalam masa berlaku yang sama
+
+KENAPA TIDAK BOLEH?
+
+Berdasarkan logika sertifikasi profesional & dokumen yang kamu pegang:
+
+Di dokumen dijelaskan bahwa:
+
+Nomor registrasi → menjadi nomor sertifikat
+
+Sistem menampilkan status berlaku sertifikat
+
+Ada mekanisme resertifikasi, bukan sertifikasi ulang
+
+
+Review Website LSP by Mutu 13 j…
+
+👉 Artinya:
+
+Satu orang tidak boleh memiliki dua sertifikat aktif dengan skema & level yang sama.
+
+Kalau ini terjadi → fatal di audit ISO 17024.
+
+📌 ATURAN UTAMA (WAJIB KAMU TANAMKAN DI SISTEM)
+❌ TIDAK BOLEH
+
+Jika kondisi:
+
+User sudah LULUS
+
+Sertifikat MASIH AKTIF
+
+Skema: Coating Inspector
+
+Level: Grade 1.0
+
+🚫 Maka sistem HARUS MENOLAK:
+
+Sertifikasi Baru – Coating Inspector Grade 1.0
+
+✅ YANG BOLEH DIA DAFTAR SETELAH ITU APA SAJA?
+1️⃣ 🔼 Naik Level (PALING UMUM)
+
+Boleh daftar:
+
+Coating Inspector Grade 2.0
+
+(dengan syarat Grade 1.0 sudah dimiliki)
+
+✔ ini normal
+✔ ini justru expected
+
+2️⃣ ♻️ Resertifikasi Grade 1.0
+
+Boleh HANYA JIKA:
+
+Sertifikat Grade 1.0 mendekati habis / sudah habis masa berlaku
+
+➡️ Daftarnya sebagai:
+
+Resertifikasi – Coating Inspector Grade 1.0
+
+
+📌 Nomor registrasi:
+
+SELALU BARU
+
+Sertifikat lama → arsip
+
+3️⃣ 🧩 Skema Sertifikasi LAIN
+
+Kalau LSP punya skema lain, misalnya:
+
+Coating Asset Audit (CAA)
+
+Cathodic Protection Grade 1.0
+
+✔ BOLEH
+✔ Walaupun Grade 1.0 Coating Inspector masih aktif
+
+❌ YANG TIDAK BOLEH SAMA SEKALI
+Kondisi	Boleh?
+Sertifikasi Baru CI Grade 1.0 (padahal masih aktif)	❌
+Dua sertifikat aktif CI Grade 1.0	❌
+Pakai email baru untuk ngakalinnya	❌❌❌
+🧠 LOGIKA SISTEM YANG BENAR (IMPLEMENTASI)
+
+Sebelum user bisa klik Daftar, sistem cek:
+
+Apakah user punya sertifikat AKTIF
+dengan skema & level yang sama?
+
+
+Jika YA → tampilkan:
+
+❌ Anda masih memiliki sertifikat aktif
+✔ Silakan pilih:
+• Resertifikasi
+• Naik level
+• Skema lain
+
+📊 CONTOH STATUS DI DASHBOARD USER
+Sertifikat Aktif:
+✔ Coating Inspector Grade 1.0
+  Berlaku sampai: 12 Jan 2028
+
+Pengajuan yang tersedia:
+✅ Naik Level ke Grade 2.0
+❌ Sertifikasi Baru Grade 1.0
+
+🧠 KESIMPULAN FINAL (INI PEGANGANMU)
+
+✔ Sertifikasi Baru TIDAK BOLEH DUPLIKAT
+✔ Nomor registrasi 1 proses = 1 kali
+✔ Resertifikasi = pengajuan baru
+✔ Naik level & skema lain = BOLEH
+✔ Ini WAJIB untuk lolos audit ISO 17024
+
+Kalau kamu mau, aku bisa:
+
+bikinin rule decision table
+
+contoh pseudo-code validasi
+
+atau flow chart “boleh/tidak boleh daftar”
+
+Tinggal bilang mau lanjut yang mana 🔥
